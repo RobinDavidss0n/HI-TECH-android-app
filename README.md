@@ -1,1 +1,1 @@
-# HI-TECH-andriod-app
+# HI-TECH-android-app
