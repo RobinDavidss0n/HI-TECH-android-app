@@ -22,6 +22,4 @@
         app:menu="@menu/bottom_navigation"
         android:background="?android:windowBackground" />
 
-
-
 </RelativeLayout>

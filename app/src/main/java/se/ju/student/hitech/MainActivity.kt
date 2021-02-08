@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setLogo(R.drawable.ic_hitech_logo)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
