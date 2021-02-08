@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.drawable.ic_hitech_logo)
         supportActionBar?.setDisplayUseLogoEnabled(true)
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("yellow")))
 
         if (savedInstanceState == null) {
             supportFragmentManager
