@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">My App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="news">NEWS</string>
+    <string name="events">EVENTS</string>
+    <string name="shop">HI SHOP</string>
+    <string name="contact">CONTACT</string>
+    <string name="problem">Report problem</string>
+    <string name="login">Admin log in</string>
+    <string name="about">About HI TECH</string>
+</resources>
