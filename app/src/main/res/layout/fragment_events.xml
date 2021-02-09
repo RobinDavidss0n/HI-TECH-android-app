@@ -11,9 +11,10 @@
         android:layout_alignParentTop="true"
         android:fontFamily="@font/avenir_next_bold"
         android:text="@string/events"
+        android:textColor="@color/yellow"
         android:textSize="30sp"
 
         />
 
-    
+
 </RelativeLayout>
