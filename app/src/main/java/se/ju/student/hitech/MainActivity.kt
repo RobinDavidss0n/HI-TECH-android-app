@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun BottomNavigationView.uncheckAllItems() {
+    private fun BottomNavigationView.uncheckAllItems() {
         menu.setGroupCheckable(0, true, false)
         for (i in 0 until menu.size()) {
             menu.getItem(i).isChecked = false
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showReportProblemAlert() {
+    private fun showReportProblemAlert() {
         AlertDialog.Builder(this)
                 .setTitle("Report issue")
                 .setMessage("What is the problem?")
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                 }.show()
     }
 
-    fun changeToFragment(fragment_tag: String) {
+    private fun changeToFragment(fragment_tag: String) {
 
         with(supportFragmentManager.beginTransaction()) {
 
