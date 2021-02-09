@@ -55,12 +55,45 @@
                 android:padding="10dp"
                 android:text="@string/visit_our_website"
                 android:textColor="@color/black"
-                app:cornerRadius="24dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textview_about_content_more" />
 
-            
+            <ImageButton
+                android:background="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_linkedin"
+                android:padding="20dp"
+                android:layout_marginTop="30dp"
+                android:id="@+id/imagebutton_linkedin"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/imagebutton_facebook"
+                app:layout_constraintTop_toBottomOf="@id/button_visit_website"/>
+
+            <ImageButton
+                android:background="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/ic_facebook"
+                android:id="@+id/imagebutton_facebook"
+                app:layout_constraintLeft_toRightOf="@id/imagebutton_linkedin"
+                android:padding="20dp"
+                app:layout_constraintRight_toLeftOf="@id/imagebutton_instagram"
+                app:layout_constraintTop_toBottomOf="@id/button_visit_website" />
+
+            <ImageButton
+                android:background="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_instagram"
+                android:layout_marginTop="30dp"
+                app:layout_constraintLeft_toRightOf="@id/imagebutton_facebook"
+                android:padding="20dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:id="@+id/imagebutton_instagram"
+                app:layout_constraintTop_toBottomOf="@id/button_visit_website"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
