@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_news_newPost"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -14,16 +14,16 @@
         android:backgroundTint="#FDD609"
         android:fontFamily="@font/avenir_next_bold"
         android:shadowColor="#FFFFFF"
-        android:text="New Post"
+        android:text="@string/new_post"
         android:textColor="#000000"
         android:textColorHighlight="#615555"
         android:textColorHint="#716666"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_news_title" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_news_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -31,7 +31,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/avenir_next_bold"
-        android:text="NEWS"
+        android:text="@string/news"
         android:textColor="@color/yellow"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +43,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_news_newPost" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

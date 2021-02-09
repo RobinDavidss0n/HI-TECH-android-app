@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
 class EventsFragment : Fragment() {
+    companion object {
+        const val TAG_FRAGMENT_SHOP = "TAG_FRAGMENT_SHOP"
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_events, container, false)
 
