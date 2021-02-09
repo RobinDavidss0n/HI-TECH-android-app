@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_news"
+        android:icon="@drawable/ic_news"
+        android:iconTint="@color/yellow"
+        android:title="@string/news" />
+
+    <item
+        android:id="@+id/nav_events"
+        android:icon="@drawable/ic_events"
+        android:iconTint="@color/yellow"
+        android:title="@string/events" />
+
+    <item
+        android:id="@+id/nav_shop"
+        android:icon="@drawable/ic_shop"
+        android:iconTint="@color/yellow"
+        android:title="@string/shop" />
+
+    <item
+        android:id="@+id/nav_contact"
+        android:icon="@drawable/ic_chat"
+        android:iconTint="@color/yellow"
+        android:title="@string/contact" />
+
+</menu>
