@@ -59,6 +59,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun BottomNavigationView.uncheckAllItems() {
+        menu.setGroupCheckable(0, true, false)
+        for (i in 0 until menu.size()) {
+            menu.getItem(i).isChecked = false
+        }
+        menu.setGroupCheckable(0, true, true)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.options_menu, menu)
@@ -66,14 +74,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         return when (item.itemId) {
             R.id.nav_login -> {
                 // Toast.makeText(applicationContext, "click on Log in", Toast.LENGTH_LONG).show()
+                bottomNav.uncheckAllItems()
                 changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
                 return true
             }
             R.id.nav_about -> {
                 // Toast.makeText(applicationContext, "click on About", Toast.LENGTH_LONG).show()
+                bottomNav.uncheckAllItems()
                 changeToFragment(TAG_FRAGMENT_ABOUT)
                 return true
             }
@@ -114,5 +125,5 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
     }
-    
+
 }
