@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "941503096481",
+    "project_id": "hi-tech-app-1337",
+    "storage_bucket": "hi-tech-app-1337.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941503096481:android:aeb19420af915f720d72e0",
+        "android_client_info": {
+          "package_name": "se.ju.student.hitech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941503096481-5pqqck1e3f1hhaad5g5fbenu951i4tg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYuOMJRMieDbnJy3wLih8bChEHS6Qr01Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "941503096481-5pqqck1e3f1hhaad5g5fbenu951i4tg2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
