@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setLogo(R.drawable.ic_hitech_logo)
+        supportActionBar?.setLogo(R.drawable.ic_hitech_logo_20)
         supportActionBar?.setDisplayUseLogoEnabled(true)
         //supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("yellow")))
 
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
         bottomNav.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_news -> changeToFragment(TAG_FRAGMENT_NEWS)
