@@ -32,7 +32,6 @@
                 android:text="@string/about_content"
                 android:textColor="@color/yellow"
                 android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -44,7 +43,25 @@
                 android:text="@string/about_content_more"
                 android:textColor="@color/yellow"
                 android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textview_about_content" />
+
+            <Button
+                android:id="@+id/button_visit_website"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@color/yellow"
+                android:padding="10dp"
+                android:text="@string/visit_our_website"
+                android:textColor="@color/black"
+                app:cornerRadius="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textview_about_content_more" />
+
+            
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </RelativeLayout>
