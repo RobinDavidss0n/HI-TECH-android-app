@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                 }.show()
     }
 
-    fun changeToFragment(fragment_tag: String) {
+    private fun changeToFragment(fragment_tag: String) {
 
         with(supportFragmentManager.beginTransaction()) {
 
