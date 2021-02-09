@@ -25,12 +25,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_HITECH)
         setContentView(R.layout.activity_main)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.drawable.ic_hitech_logo)
         supportActionBar?.setDisplayUseLogoEnabled(true)
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("yellow")))
+        //supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("yellow")))
 
         if (savedInstanceState == null) {
             supportFragmentManager
