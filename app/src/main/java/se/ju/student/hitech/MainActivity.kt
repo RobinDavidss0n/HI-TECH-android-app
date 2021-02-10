@@ -1,16 +1,22 @@
 package se.ju.student.hitech
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_CONTACT = "TAG_FRAGMENT_CONTACT"
         const val TAG_FRAGMENT_ADMIN_LOGIN = "TAG_FRAGMENT_ADMIN_LOGIN"
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
+        const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.drawable.ic_hitech_logo_20)
         supportActionBar?.setDisplayUseLogoEnabled(true)
-        //supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("yellow")))
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -77,19 +83,16 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         return when (item.itemId) {
             R.id.nav_login -> {
-                // Toast.makeText(applicationContext, "click on Log in", Toast.LENGTH_LONG).show()
                 bottomNav.uncheckAllItems()
                 changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
                 return true
             }
             R.id.nav_about -> {
-                // Toast.makeText(applicationContext, "click on About", Toast.LENGTH_LONG).show()
                 bottomNav.uncheckAllItems()
                 changeToFragment(TAG_FRAGMENT_ABOUT)
                 return true
             }
             R.id.nav_problem -> {
-                //  Toast.makeText(applicationContext, "click on Problem", Toast.LENGTH_LONG).show()
                 showReportProblemAlert()
                 return true
             }
@@ -97,22 +100,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun showReportProblemAlert() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report_problem, null)
+
         AlertDialog.Builder(this)
-                .setTitle("Report issue")
-                .setMessage("What is the problem?")
+                .setTitle(R.string.problem)
+                .setView(dialogView)
                 .setPositiveButton(
-                        "Send"
+                        R.string.send
                 ) { dialog, whichButton ->
-                    // Send information in textbox
+                    // Send email from users input
+                    val mail = dialogView.findViewById<EditText>(R.id.edittext_problem).text
+                    sendEmail(mail)
                 }.setNegativeButton(
-                        "Go back"
+                        R.string.cancel
                 ) { dialog, whichButton ->
                     // Do nothing
                 }.show()
     }
 
-    private fun changeToFragment(fragment_tag: String) {
+    private fun sendEmail(message: Editable?) {
+        val subject = "Report problem HI TECH Android application"
+
+        // email intent to HI TECH IT Manager
+        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", TAG_ADMIN_EMAIL, null))
+
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message.toString())
+        try {
+            (Intent.createChooser(emailIntent, "Choose email client.."))
+            startActivity(emailIntent)
+        } catch (e: Exception) {
+            Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+    fun changeToFragment(fragment_tag: String) {
 
         with(supportFragmentManager.beginTransaction()) {
 
