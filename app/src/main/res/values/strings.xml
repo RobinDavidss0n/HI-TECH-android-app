@@ -17,4 +17,6 @@
     <string name="cancel">Cancel</string>
     <string name="report_problem_subject_email">Report problem HI TECH Android application</string>
     <string name="choose_email_client">Choose email client..</string>
+    <string name="order_now">PLACE AN ORDER</string>
+    <string name="about_hi_shop">The HI SHOP is managed by the Purchase Manager in the board of HI TECH. The store is for students by students, so you can buy stuff you need. Things for a school day or for epic adventures in your overall, things you need for the student culture in Jönköping and JTH. We have overalls, patches, glue, pencils, and towels for the CAPS event.</string>
 </resources>
