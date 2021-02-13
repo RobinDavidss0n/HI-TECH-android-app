@@ -10,4 +10,5 @@
     <string name="login">Admin log in</string>
     <string name="about">About HI TECH</string>
     <string name="new_post">New Post</string>
+    <string name="create_notification">Create notification</string>
 </resources>
