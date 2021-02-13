@@ -59,6 +59,7 @@
                 android:layout_margin="10dp"
                 android:text="@string/create_notification"
                 app:layout_constraintStart_toStartOf="parent"
+                android:onClick="onCheckBoxClicked"
                 app:layout_constraintTop_toBottomOf="@id/editTextTextPersonName2" />
 
             <Button
