@@ -11,4 +11,6 @@
     <string name="about">About HI TECH</string>
     <string name="new_post">New Post</string>
     <string name="create_notification">Create notification</string>
+    <string name="create_post">CREATE POST</string>
+    <string name="go_back">GO BACK</string>
 </resources>
