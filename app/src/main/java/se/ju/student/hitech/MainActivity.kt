@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +59,8 @@ class MainActivity : AppCompatActivity() {
                     .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NEWS)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
