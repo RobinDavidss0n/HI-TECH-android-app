@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
         const val TAG_MAIN_ACTIVITY = "MainActivity"
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
+        const val TOPIC_NEWS = "/topics/news"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +69,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT)
             }
             true
+        }
+    }
+
+    fun createNotification(title: String, message: String){
+        PushNotification(
+            NotificationData(title, message),
+            TOPIC_NEWS
+        ).also {
+            sendNotification(it)
         }
     }
 
