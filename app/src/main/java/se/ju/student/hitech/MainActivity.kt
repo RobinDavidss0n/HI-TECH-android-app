@@ -8,6 +8,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -16,6 +17,10 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_CONTACT = "TAG_FRAGMENT_CONTACT"
         const val TAG_FRAGMENT_ADMIN_LOGIN = "TAG_FRAGMENT_ADMIN_LOGIN"
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
+        const val TAG_MAIN_ACTIVITY = "MainActivity"
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
     }
 
@@ -62,6 +68,20 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT)
             }
             true
+        }
+    }
+
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+
+            if(response.isSuccessful){
+                Log.d(TAG_MAIN_ACTIVITY, "Response: ${Gson().toJson(response)}")
+            } else{
+                Log.e(TAG_MAIN_ACTIVITY, response.errorBody().toString())
+            }
+        } catch (e: Exception){
+            Log.e(TAG_MAIN_ACTIVITY, e.toString())
         }
     }
 
