@@ -17,4 +17,8 @@
     <string name="cancel">Cancel</string>
     <string name="report_problem_subject_email">Report problem HI TECH Android application</string>
     <string name="choose_email_client">Choose email client..</string>
+    <string name="admin_login_loginButton">Login</string>
+    <string name="admin_login_passwordInputHint">Password</string>
+    <string name="admin_login_emailInputHint">Email</string>
+    <string name="admin_login_registerText">Register</string>
 </resources>

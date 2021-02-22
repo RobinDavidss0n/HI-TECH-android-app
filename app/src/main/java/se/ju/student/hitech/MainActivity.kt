@@ -151,4 +151,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    public fun makeToast(text: String) {
+        Toast.makeText(this, text,Toast.LENGTH_LONG).show()
+    }
+
 }
