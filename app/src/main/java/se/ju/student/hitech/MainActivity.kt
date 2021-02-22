@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
         const val TAG_MAIN_ACTIVITY = "MainActivity"
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
-        const val TOPIC_NEWS = "/topics/news"
+        const val TAG_FRAGMENT_TEST = "TAG_FRAGMENT_TEST"
+        const val TOPIC_NEWS = "news"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,8 +57,11 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
                 .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
                 .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                .add(R.id.fragment_container, test(), TAG_FRAGMENT_TEST)
                 .commitNow()
-            changeToFragment(TAG_FRAGMENT_NEWS)
+          //  changeToFragment(TAG_FRAGMENT_NEWS)
+            changeToFragment(TAG_FRAGMENT_TEST)
+
         }
 
         // subscribe all users to news notifications
@@ -76,10 +80,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun createNotification(title: String, message: String) {
+    fun createNotification(title: String, message: String, topic: String) {
         PushNotification(
             NotificationData(title, message),
-            TOPIC_NEWS
+            topic
         ).also {
             sendNotification(it)
         }
