@@ -1,6 +1,5 @@
 package se.ju.student.hitech
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -9,11 +8,12 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 
 class AdminLoginFragment : Fragment() {
 
-    private lateinit var mAuth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_admin_login, container, false)
@@ -23,73 +23,73 @@ class AdminLoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
 
-        mAuth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         val email = view?.findViewById<TextInputEditText>(R.id.admin_login_emailTextInputEditText)
         val password = view?.findViewById<TextInputEditText>(R.id.admin_login_passwordTextInputEditText)
         val loginButton = view?.findViewById<Button>(R.id.admin_login_loginButton)
-        //val logoutButton = view?.findViewById<Button>(R.id.)
+        val logoutButton = view?.findViewById<Button>(R.id.logout)
 
         loginButton?.setOnClickListener {
             userLogin(email?.text.toString().trim(), password?.text.toString().trim())
         }
 
-        /*logoutButton?.setOnClickListener {
+        logoutButton?.setOnClickListener {
             userLogout()
-        }*/
+        }
 
 
         val register = view?.findViewById<TextView>(R.id.admin_login_register)
 
         register?.setOnClickListener {
-        //fix
-        //startActivity(Intent(this, RegisterUser::class.java))
+            (context as MainActivity).changeToFragment(MainActivity.TAG_REGISTER_USER)
         }
 
 
     }
 
     private fun userLogout() {
-        mAuth.signOut()
+        auth.signOut()
         (context as MainActivity).makeToast("User logged out!")
         //redirect
     }
 
 
     private fun userLogin(email: String, password: String) {
-        val emailInputLayout = view?.findViewById<EditText>(R.id.admin_login_emailTextInputLayout)
-        val passwordInputLayout = view?.findViewById<EditText>(R.id.admin_login_passwordTextInputLayout)
+        val emailInputLayout = view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)
+        val passwordInputLayout = view?.findViewById<TextInputLayout>(R.id.admin_login_passwordTextInputLayout)
+        emailInputLayout?.error = ""
+        passwordInputLayout?.error = ""
 
         if (email.isEmpty()) {
             emailInputLayout?.error = "Email is empty"
-            //Toast.makeText(this, "Email is empty", Toast.LENGTH_LONG).show()
             return
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            //Toast.makeText(this, "Not valid mail", Toast.LENGTH_LONG).show()
+            emailInputLayout?.error = "Not valid mail"
             return
         }
 
         if (password.isEmpty()) {
-            //Toast.makeText(this, "Password is empty", Toast.LENGTH_LONG).show()
+            passwordInputLayout?.error = "Password is empty"
             return
 
         }
 
-        if (mAuth.currentUser != null) {
-            //Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show()
+        if (auth.currentUser != null) {
+            (context as MainActivity).makeToast("Already logged in.")
             return
         }
 
-        val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_loginProgressBar)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)
         progressBar?.visibility = View.VISIBLE
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { signIn ->
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { signIn ->
 
             if (signIn.isSuccessful) {
 
-                val user = mAuth.currentUser
+                val user = auth.currentUser
 
                 if (user != null) {
                     if (user.isEmailVerified)
@@ -97,8 +97,11 @@ class AdminLoginFragment : Fragment() {
                         (context as MainActivity).makeToast("Login successful!")
                     else {
                         user.sendEmailVerification()
-                        (context as MainActivity).makeToast("Check your email to verify your account!")
+                        auth.signOut()
+                        (context as MainActivity).makeToast("Check your email to verify your account.")
                     }
+                }else{
+                    (context as MainActivity).makeToast("Something went wrong, please try again.")
                 }
                 progressBar?.visibility = View.GONE
 
