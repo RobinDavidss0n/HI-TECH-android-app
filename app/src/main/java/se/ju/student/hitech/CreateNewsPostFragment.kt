@@ -1,22 +1,16 @@
 package se.ju.student.hitech
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
-import android.os.Build
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import com.google.firebase.firestore.FirebaseFirestore
 
 class CreateNewsPostFragment : Fragment() {
 
@@ -36,8 +30,8 @@ class CreateNewsPostFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val title = view?.findViewById<EditText>(R.id.editTextTextPersonName)?.text.toString()
-        val content = view?.findViewById<EditText>(R.id.editTextTextPersonName2)?.text.toString()
+        val title = view?.findViewById<EditText>(R.id.editTextNewPostTitle)?.text
+        val content = view?.findViewById<EditText>(R.id.editTextNewPostContent)?.text
 
         view?.findViewById<CheckBox>(R.id.checkbox_notification)
             ?.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -46,18 +40,37 @@ class CreateNewsPostFragment : Fragment() {
                 }
             }
 
-        view?.findViewById<Button>(R.id.button)?.setOnClickListener {
+        view?.findViewById<Button>(R.id.btn_create_news_create_post)?.setOnClickListener {
             if (checked) {
                 // send notification
+                    /*
                 if (title != "" && content != "") {
                  //   (context as MainActivity).createNotification(title, content)
                     checked = false
                 }
+                     */
 
             }
         }
 
+        view?.findViewById<Button>(R.id.btn_create_news_create_post)?.setOnClickListener() {
+            val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+            val novelty = HashMap<String, Any>()
 
+            novelty["title"] = title.toString()
+            novelty["content"] = content.toString()
+
+            db.collection("news")
+                .add(novelty)
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                    (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_NEWS)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                }
+            
+        }
     }
 
 }
