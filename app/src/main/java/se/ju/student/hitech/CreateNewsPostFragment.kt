@@ -41,7 +41,7 @@ class CreateNewsPostFragment : Fragment() {
             }
 
         view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
-            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_NEWS)
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
 
         view?.findViewById<Button>(R.id.btn_create_news_create_post)?.setOnClickListener {
@@ -52,11 +52,14 @@ class CreateNewsPostFragment : Fragment() {
                 novelty["title"] = title.toString()
                 novelty["content"] = content.toString()
 
+                // no image post
+                novelty["post_type"] = 1
+
                 db.collection("news")
                     .add(novelty)
                     .addOnSuccessListener { documentReference ->
                         Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-                        (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_NEWS)
+                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                     }
                     .addOnFailureListener { e ->
                         Log.w(TAG, "Error adding document", e)

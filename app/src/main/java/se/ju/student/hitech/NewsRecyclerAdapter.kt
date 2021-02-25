@@ -1,6 +1,5 @@
 package se.ju.student.hitech
 
-import android.icu.text.CaseMap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +7,65 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+
+class NewsRecyclerAdapter(var news: List<Novelty>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        private const val POST_TYPE_IMAGE: Int = 0
+        private const val POST_TYPE_NO_IMAGE: Int = 1
+    }
+
+    // view holders for all types of items
+    class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun bind(novelty: Novelty) {
+            itemView.findViewById<ImageView>(R.id.news_image).setImageResource(novelty.image)
+            itemView.findViewById<TextView>(R.id.news_title).text = novelty.title
+        }
+    }
+
+    class NoImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun bind(novelty: Novelty) {
+            itemView.findViewById<TextView>(R.id.news_title_no_image).text = novelty.title
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (news[position].post_type == 0L) {
+            POST_TYPE_IMAGE
+        } else {
+            POST_TYPE_NO_IMAGE
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if(viewType == POST_TYPE_NO_IMAGE){
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.card_news, parent, false)
+            return NoImageViewHolder(v)
+        }
+        else{
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.card_news_image, parent, false)
+            return ImageViewHolder(v)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return news.size
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(getItemViewType(position) == POST_TYPE_NO_IMAGE){
+            (holder as NoImageViewHolder).bind(news[position])
+        } else{
+            (holder as ImageViewHolder).bind(news[position])
+        }
+    }
+}
+
+
+/*
 class NewsRecyclerAdapter(private var newsTitles: List<String>, private var newsImages: List<Int>) :
     RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -23,7 +81,7 @@ class NewsRecyclerAdapter(private var newsTitles: List<String>, private var news
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.card_news, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.card_news_image, parent, false)
         return ViewHolder(v)
     }
 
@@ -37,3 +95,4 @@ class NewsRecyclerAdapter(private var newsTitles: List<String>, private var news
     }
 }
 
+*/
