@@ -11,14 +11,11 @@ import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.FirebaseFirestore
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 
 class CreateNewsPostFragment : Fragment() {
 
     private var checked = false
-
-    companion object {
-        const val TAG_FRAGMENT_NEWS = "TAG_FRAGMENT_NEWS"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,20 +37,11 @@ class CreateNewsPostFragment : Fragment() {
                 }
             }
 
-        view?.findViewById<Button>(R.id.btn_create_news_create_post)?.setOnClickListener {
-            if (checked) {
-                // send notification
-                    /*
-                if (title != "" && content != "") {
-                 //   (context as MainActivity).createNotification(title, content)
-                    checked = false
-                }
-                     */
-
-            }
+        view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
+            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_NEWS)
         }
 
-        view?.findViewById<Button>(R.id.btn_create_news_create_post)?.setOnClickListener() {
+        view?.findViewById<Button>(R.id.btn_create_news_create_post)?.setOnClickListener {
             val db: FirebaseFirestore = FirebaseFirestore.getInstance()
             val novelty = HashMap<String, Any>()
 
@@ -69,8 +57,17 @@ class CreateNewsPostFragment : Fragment() {
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error adding document", e)
                 }
-            
+
+            if (checked) {
+                // send notification
+                /*
+            if (title.toString() != "" && content.toString != "") {
+             //   (context as MainActivity).createNotification(title.toString(), content.toString(), TOPIC_NEWS)
+                checked = false
+            }
+                 */
+
+            }
         }
     }
-
 }

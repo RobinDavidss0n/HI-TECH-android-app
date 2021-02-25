@@ -77,7 +77,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/checkbox_notification" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_create_news_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
