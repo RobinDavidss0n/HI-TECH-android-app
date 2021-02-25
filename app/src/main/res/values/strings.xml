@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">My App</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">HI TECH</string>
     <string name="news">NEWS</string>
     <string name="events">EVENTS</string>
     <string name="shop">HI SHOP</string>
