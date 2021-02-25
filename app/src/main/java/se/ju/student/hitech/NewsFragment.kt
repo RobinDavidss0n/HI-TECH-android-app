@@ -30,10 +30,10 @@ class NewsFragment : Fragment() {
        private var contentList = mutableListOf<String>()
        private var imagesList = mutableListOf<Int>()   */
 
-    private var newsList : MutableList<Novelty> = ArrayList()
+    private var newsList: MutableList<Novelty> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val newsListAdapter: NewsRecyclerAdapter = NewsRecyclerAdapter(newsList)
-    //   private  val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+    private val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,17 +47,17 @@ class NewsFragment : Fragment() {
         val rv_recyclerView = view?.findViewById<RecyclerView>(R.id.rv_recyclerView)
         //https://www.youtube.com/watch?v=ai9rSGcDhyQ&t=259s
 
-        //  loadNoveltyData()
+        loadNoveltyData()
 
-   /*     val menuListener = object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+        /*     val menuListener = object : ValueEventListener {
+                 override fun onCancelled(error: DatabaseError) {
+                     TODO("Not yet implemented")
+                 }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(Novelty::class.java)?.let { newsList.add(it) }
-            }
-        }   */
+                 override fun onDataChange(snapshot: DataSnapshot) {
+                     snapshot.getValue(Novelty::class.java)?.let { newsList.add(it) }
+                 }
+             }   */
 
         rv_recyclerView?.adapter = newsListAdapter
 
@@ -74,6 +74,17 @@ class NewsFragment : Fragment() {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
         }
 
+    }
+
+    private fun loadNoveltyData() {
+        db.collection("news").get().addOnCompleteListener {
+            if (it.isSuccessful) {
+                newsList = it.result!!.toObjects(Novelty::class.java)
+                newsListAdapter.news = newsList
+                newsListAdapter.notifyDataSetChanged()
+                progressBar?.visibility = View.GONE
+            }
+        }
     }
 
     /*   private fun loadNoveltyData() {
