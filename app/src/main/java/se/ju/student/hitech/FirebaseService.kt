@@ -24,12 +24,12 @@ class FirebaseService : FirebaseMessagingService() {
         var sharedPref: SharedPreferences? = null
 
         var token: String?
-        get() {
-            return sharedPref?.getString("token", "")
-        }
-        set(value) {
-            sharedPref?.edit()?.putString("token", value)?.apply()
-        }
+            get() {
+                return sharedPref?.getString("token", "")
+            }
+            set(value) {
+                sharedPref?.edit()?.putString("token", value)?.apply()
+            }
     }
 
     override fun onNewToken(newToken: String) {
@@ -43,8 +43,6 @@ class FirebaseService : FirebaseMessagingService() {
         val intent = Intent(this, MainActivity::class.java)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
-        val title = message.notification?.title
-        val content = message.notification?.body
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             createNotificationChannel(notificationManager)
@@ -52,20 +50,16 @@ class FirebaseService : FirebaseMessagingService() {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, FLAG_ONE_SHOT)
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(message.data["title"])
+            .setContentText(message.data["message"])
+            .setNotificationSilent()
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
 
-        if(message.notification != null) {
-            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(title)
-                .setContentText(content)
-                .setNotificationSilent()
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .build()
-
-            notificationManager.notify(notificationID, notification)
-        }
+        notificationManager.notify(notificationID, notification)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
