@@ -30,7 +30,7 @@ class NewsFragment : Fragment() {
        private var contentList = mutableListOf<String>()
        private var imagesList = mutableListOf<Int>()   */
 
-    private var newsList: MutableList<Novelty> = ArrayList()
+    private var newsList: List<Novelty> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val newsListAdapter: NewsRecyclerAdapter = NewsRecyclerAdapter(newsList)
     private val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
@@ -54,8 +54,11 @@ class NewsFragment : Fragment() {
                      TODO("Not yet implemented")
                  }
 
-                 override fun onDataChange(snapshot: DataSnapshot) {
-                     snapshot.getValue(Novelty::class.java)?.let { newsList.add(it) }
+                 override fun onDataChange(snapshot: DataSnapshot?) {
+                     val children = snapshot!!.children
+                     children.forEach{
+
+                     }
                  }
              }   */
 
@@ -83,8 +86,14 @@ class NewsFragment : Fragment() {
                 newsListAdapter.news = newsList
                 newsListAdapter.notifyDataSetChanged()
                 progressBar?.visibility = View.GONE
+                Log.d(TAG, "successful")
+            }
+
+            else{
+                Log.d(TAG, "Not successful")
             }
         }
+
     }
 
     /*   private fun loadNoveltyData() {
