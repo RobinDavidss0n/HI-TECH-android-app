@@ -12,8 +12,8 @@ class NewsRecyclerAdapter(var news: List<Novelty>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
-        private const val POST_TYPE_IMAGE: Int = 0
-        private const val POST_TYPE_NO_IMAGE: Int = 1
+        const val POST_TYPE_IMAGE: Int = 0
+        const val POST_TYPE_NO_IMAGE: Int = 1
     }
 
     // view holders for all types of items

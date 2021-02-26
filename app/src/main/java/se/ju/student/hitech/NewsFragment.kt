@@ -30,7 +30,8 @@ class NewsFragment : Fragment() {
        private var contentList = mutableListOf<String>()
        private var imagesList = mutableListOf<Int>()   */
 
-    private var newsList: List<Novelty> = ArrayList()
+   // private var newsList: List<Novelty> = ArrayList()
+    private var newsList = mutableListOf<Novelty>()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val newsListAdapter: NewsRecyclerAdapter = NewsRecyclerAdapter(newsList)
     private val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
@@ -47,7 +48,7 @@ class NewsFragment : Fragment() {
         val rv_recyclerView = view?.findViewById<RecyclerView>(R.id.rv_recyclerView)
         //https://www.youtube.com/watch?v=ai9rSGcDhyQ&t=259s
 
-        loadNoveltyData()
+        loadNewsData()
 
         /*     val menuListener = object : ValueEventListener {
                  override fun onCancelled(error: DatabaseError) {
@@ -79,12 +80,15 @@ class NewsFragment : Fragment() {
 
     }
 
-    private fun loadNoveltyData() {
+    private fun loadNewsData() {
         db.collection("news").get().addOnCompleteListener {
             if (it.isSuccessful) {
+                // förmodligen fel här någonstans för den loggar successful men listan blir tom
                 newsList = it.result!!.toObjects(Novelty::class.java)
                 newsListAdapter.news = newsList
                 newsListAdapter.notifyDataSetChanged()
+
+                // hur fan får man bort den här jäveln? fungerar ej med View.GONE här
                 progressBar?.visibility = View.GONE
                 Log.d(TAG, "successful")
             }

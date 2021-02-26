@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
+import se.ju.student.hitech.NewsRecyclerAdapter.Companion.POST_TYPE_NO_IMAGE
 
 class CreateNewsPostFragment : Fragment() {
 
@@ -53,7 +54,7 @@ class CreateNewsPostFragment : Fragment() {
                 novelty["content"] = content.toString()
 
                 // no image post
-                novelty["post_type"] = 1
+                novelty["post_type"] = POST_TYPE_NO_IMAGE
 
                 db.collection("news")
                     .add(novelty)
@@ -65,7 +66,7 @@ class CreateNewsPostFragment : Fragment() {
                         Log.w(TAG, "Error adding document", e)
                     }
             }
-            // else toast error message?
+            // else toast error message - fields can't be empty
 
   /*          if (checked) {
                 // send notification
@@ -77,7 +78,7 @@ class CreateNewsPostFragment : Fragment() {
                     )
                     checked = false
                 }
-                // else toast error message?
+                // else toast error message - fields can't be empty
             }   */
         }
     }
