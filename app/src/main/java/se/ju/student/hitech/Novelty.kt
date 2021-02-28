@@ -6,6 +6,6 @@ data class Novelty(
     val title: String = "",
     val content: String = "",
     val image: Int = 0,
-    val post_type: Long = 0,
+    val post_type: Long = 1,
     val date: Timestamp? = null
 )

@@ -10,6 +10,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -36,15 +38,19 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
-                    .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
-                    .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
-                    .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
-                    .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                    .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
-                    .add(R.id.fragment_container,CreateNewsPostFragment(), TAG_FRAGMENT_CREATE_NEWS_POST)
-                    .commitNow()
+                .beginTransaction()
+                .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
+                .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
+                .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
+                .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
+                .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
+                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                .add(
+                    R.id.fragment_container,
+                    CreateNewsPostFragment(),
+                    TAG_FRAGMENT_CREATE_NEWS_POST
+                )
+                .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
 
@@ -101,17 +107,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun showReportProblemAlert() {
         AlertDialog.Builder(this)
-                .setTitle("Report issue")
-                .setMessage("What is the problem?")
-                .setPositiveButton(
-                        "Send"
-                ) { dialog, whichButton ->
-                    // Send information in textbox
-                }.setNegativeButton(
-                        "Go back"
-                ) { dialog, whichButton ->
-                    // Do nothing
-                }.show()
+            .setTitle("Report issue")
+            .setMessage("What is the problem?")
+            .setPositiveButton(
+                "Send"
+            ) { dialog, whichButton ->
+                // Send information in textbox
+            }.setNegativeButton(
+                "Go back"
+            ) { dialog, whichButton ->
+                // Do nothing
+            }.show()
     }
 
     fun changeToFragment(fragment_tag: String) {

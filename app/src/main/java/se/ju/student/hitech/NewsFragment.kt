@@ -24,20 +24,17 @@ import com.squareup.okhttp.internal.Internal.instance
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS_POST
 import java.util.*
 import kotlin.collections.ArrayList
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
 class NewsFragment : Fragment() {
 
-    /*   private var titlesList = mutableListOf<String>()
-       private var contentList = mutableListOf<String>()
-       private var imagesList = mutableListOf<Int>()   */
-
     private var newsList: List<Novelty> = ArrayList()
-
-    //private var newsList = mutableListOf<Novelty>()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val newsListAdapter: NewsRecyclerAdapter = NewsRecyclerAdapter(newsList)
-    private val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+    //  private val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,8 +53,8 @@ class NewsFragment : Fragment() {
         rv_recyclerView?.layoutManager = LinearLayoutManager(context)
         rv_recyclerView?.adapter = newsListAdapter
 
-
-        //  rv_recyclerView?.adapter = NewsRecyclerAdapter(titlesList, imagesList)
+        // progressBar?.visibility = View.GONE
+        //
 
         view?.findViewById<Button>(R.id.btn_news_newPost)?.setOnClickListener() {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
@@ -70,10 +67,12 @@ class NewsFragment : Fragment() {
             newsList = result.toObjects(Novelty::class.java)
             newsListAdapter.news = newsList
             newsListAdapter.notifyDataSetChanged()
-            progressBar?.visibility = View.GONE
 
         }.addOnFailureListener {
             Log.d(TAG, "Error getting documents: ", it)
         }
     }
 }
+
+
+
