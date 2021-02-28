@@ -17,8 +17,9 @@
         android:textSize="30sp" />
 
     <ScrollView
+        android:id="@+id/scrollview_shop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/textview_shop">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,4 +51,12 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <GridView
+        android:id="@+id/gridview_shop_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scrollview_shop"
+        android:layout_centerInParent="true"
+        android:numColumns="2" />
 </RelativeLayout>
