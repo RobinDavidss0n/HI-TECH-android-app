@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
@@ -30,9 +31,11 @@ class NewsFragment : Fragment() {
        private var contentList = mutableListOf<String>()
        private var imagesList = mutableListOf<Int>()   */
 
-   // private var newsList: List<Novelty> = ArrayList()
-    private var newsList = mutableListOf<Novelty>()
+    private var newsList: List<Novelty> = ArrayList()
+
+    //private var newsList = mutableListOf<Novelty>()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+
     private val newsListAdapter: NewsRecyclerAdapter = NewsRecyclerAdapter(newsList)
     private val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
 
@@ -50,29 +53,11 @@ class NewsFragment : Fragment() {
 
         loadNewsData()
 
-        /*     val menuListener = object : ValueEventListener {
-                 override fun onCancelled(error: DatabaseError) {
-                     TODO("Not yet implemented")
-                 }
-
-                 override fun onDataChange(snapshot: DataSnapshot?) {
-                     val children = snapshot!!.children
-                     children.forEach{
-
-                     }
-                 }
-             }   */
-
+        rv_recyclerView?.layoutManager = LinearLayoutManager(context)
         rv_recyclerView?.adapter = newsListAdapter
 
+
         //  rv_recyclerView?.adapter = NewsRecyclerAdapter(titlesList, imagesList)
-
-
-        if (newsListAdapter.itemCount == 0) {
-            Log.d(TAG, "Empty list")
-        } else {
-            Log.d(TAG, "Not empty")
-        }
 
         view?.findViewById<Button>(R.id.btn_news_newPost)?.setOnClickListener() {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
@@ -81,37 +66,14 @@ class NewsFragment : Fragment() {
     }
 
     private fun loadNewsData() {
-        db.collection("news").get().addOnCompleteListener {
-            if (it.isSuccessful) {
-                // förmodligen fel här någonstans för den loggar successful men listan blir tom
-                newsList = it.result!!.toObjects(Novelty::class.java)
-                newsListAdapter.news = newsList
-                newsListAdapter.notifyDataSetChanged()
+        db.collection("news").get().addOnSuccessListener { result ->
+            newsList = result.toObjects(Novelty::class.java)
+            newsListAdapter.news = newsList
+            newsListAdapter.notifyDataSetChanged()
+            progressBar?.visibility = View.GONE
 
-                // hur fan får man bort den här jäveln? fungerar ej med View.GONE här
-                progressBar?.visibility = View.GONE
-                Log.d(TAG, "successful")
-            }
-
-            else{
-                Log.d(TAG, "Not successful")
-            }
+        }.addOnFailureListener {
+            Log.d(TAG, "Error getting documents: ", it)
         }
-
     }
-
-    /*   private fun loadNoveltyData() {
-           getNewsList().addOnCompleteListener{
-               if(it.isSuccessful){
-                   newsList = it.result!!.toObjects(Novelty::class.java)
-                   newsListAdapter.news = newsList
-                   newsListAdapter.notifyDataSetChanged()
-                 //  progressBar?.visibility = View.GONE
-               }
-           }
-       }
-
-       private fun getNewsList(): Task<QuerySnapshot> {
-           return db.collection("news").get()
-       }   */
 }
