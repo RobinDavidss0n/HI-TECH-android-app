@@ -98,26 +98,10 @@ class CreateNewsPostFragment : Fragment() {
             }
 
         createNoveltyButton.setOnClickListener {
-            val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-            val novelty = HashMap<String, Any>()
-
-            novelty["title"] = title.text.toString()
-            novelty["content"] = content.text.toString()
-
-            // no image post
-            novelty["post_type"] = POST_TYPE_NO_IMAGE
-
-
-            db.collection("news")
-                .add(novelty)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error adding document", e)
-                }
+            newsRepository.addNovelty(title.text.toString(),content.text.toString())
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
+
         view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }

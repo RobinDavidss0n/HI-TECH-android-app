@@ -28,12 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class NewsFragment : Fragment() {
-
-    private var newsList: List<Novelty> = ArrayList()
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
-    private val newsListAdapter: NewsRecyclerAdapter = NewsRecyclerAdapter(newsList)
-    //  private val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+      //  private val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
 
 
     override fun onCreateView(
@@ -48,10 +43,9 @@ class NewsFragment : Fragment() {
         val rv_recyclerView = view?.findViewById<RecyclerView>(R.id.rv_recyclerView)
         //https://www.youtube.com/watch?v=ai9rSGcDhyQ&t=259s
 
-        loadNewsData()
 
         rv_recyclerView?.layoutManager = LinearLayoutManager(context)
-        rv_recyclerView?.adapter = newsListAdapter
+        rv_recyclerView?.adapter = newsRepository.loadNewsData()
 
         // progressBar?.visibility = View.GONE
         //
@@ -62,16 +56,6 @@ class NewsFragment : Fragment() {
 
     }
 
-    private fun loadNewsData() {
-        db.collection("news").get().addOnSuccessListener { result ->
-            newsList = result.toObjects(Novelty::class.java)
-            newsListAdapter.news = newsList
-            newsListAdapter.notifyDataSetChanged()
-
-        }.addOnFailureListener {
-            Log.d(TAG, "Error getting documents: ", it)
-        }
-    }
 }
 
 

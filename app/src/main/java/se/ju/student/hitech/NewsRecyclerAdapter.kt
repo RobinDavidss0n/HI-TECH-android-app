@@ -1,5 +1,6 @@
 package se.ju.student.hitech
 
+import android.app.ProgressDialog.show
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import java.lang.Math.log
 
 
 class NewsRecyclerAdapter(var news: List<Novelty>) :
@@ -17,22 +19,13 @@ class NewsRecyclerAdapter(var news: List<Novelty>) :
         const val POST_TYPE_NO_IMAGE: Int = 1
     }
 
-    // view holders for all types of items
-    class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
 
-        init {
-            itemView.setOnClickListener(this)
-        }
+    // view holders for all types of items
+    class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(novelty: Novelty) {
             itemView.findViewById<ImageView>(R.id.news_image).setImageResource(novelty.image)
             itemView.findViewById<TextView>(R.id.news_title).text = novelty.title
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            TODO("Not yet implemented")
         }
 
     }
@@ -69,11 +62,18 @@ class NewsRecyclerAdapter(var news: List<Novelty>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
         if(getItemViewType(position) == POST_TYPE_NO_IMAGE){
             (holder as NoImageViewHolder).bind(news[position])
+            holder.itemView.setOnClickListener{
+                Toast.makeText(holder.itemView.context,"You clicked # ${position+1}",Toast.LENGTH_SHORT).show()
+            }
 
         } else{
             (holder as ImageViewHolder).bind(news[position])
+            holder.itemView.setOnClickListener{
+                Toast.makeText(holder.itemView.context,"You clicked # ${position+1}",Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
