@@ -47,13 +47,12 @@ class NewsRecyclerAdapter(var news: List<Novelty>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        if(viewType == POST_TYPE_NO_IMAGE){
+        return if(viewType == POST_TYPE_NO_IMAGE){
             val v = LayoutInflater.from(parent.context).inflate(R.layout.card_news, parent, false)
-            return NoImageViewHolder(v)
-        }
-        else{
+            NoImageViewHolder(v)
+        } else{
             val v = LayoutInflater.from(parent.context).inflate(R.layout.card_news_image, parent, false)
-            return ImageViewHolder(v)
+            ImageViewHolder(v)
         }
     }
 

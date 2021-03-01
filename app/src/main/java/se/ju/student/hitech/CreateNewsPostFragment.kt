@@ -22,7 +22,7 @@ class CreateNewsPostFragment : Fragment() {
     private var checked = false
     lateinit var title: EditText
     lateinit var content: EditText
-    lateinit var createNoveltyButton:Button
+    lateinit var createNoveltyButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,55 +33,39 @@ class CreateNewsPostFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-         title = view?.findViewById(R.id.editTextNewPostTitle)!!
-         content = view?.findViewById(R.id.editTextNewPostContent)!!
+        title = view?.findViewById(R.id.editTextNewPostTitle)!!
+        content = view?.findViewById(R.id.editTextNewPostContent)!!
         createNoveltyButton = view?.findViewById(R.id.btn_create_news_create_post)!!
 
-        title.addTextChangedListener(object: TextWatcher {
+        title.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 createNoveltyButton.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(count > 0) {
-                    createNoveltyButton.isEnabled  = true
-                }else{
-                    createNoveltyButton.isEnabled = false
-                }
+                createNoveltyButton.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if(title.length() > 0 && content.length()>0) {
-                    createNoveltyButton.isEnabled  = true
-                }else{
-                    createNoveltyButton.isEnabled = false
-                }
+                createNoveltyButton.isEnabled = title.length() > 0 && content.length() > 0
 
 
             }
 
         })
-        content.addTextChangedListener(object: TextWatcher {
+        content.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 createNoveltyButton.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(count > 0) {
-                    createNoveltyButton.isEnabled  = true
-                }else{
-                    createNoveltyButton.isEnabled = false
-                }
+                createNoveltyButton.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if(content.length() > 0 && title.length()>0) {
-                    createNoveltyButton.isEnabled  = true
-                }else{
-                    createNoveltyButton.isEnabled = false
-                }
+                createNoveltyButton.isEnabled = content.length() > 0 && title.length() > 0
 
 
             }
@@ -98,26 +82,26 @@ class CreateNewsPostFragment : Fragment() {
             }
 
         createNoveltyButton.setOnClickListener {
-            newsRepository.addNovelty(title.text.toString(),content.text.toString())
+            newsRepository.addNovelty(title.text.toString(), content.text.toString())
+            /*          if (checked) {
+               // send notification
+               if (title.toString() != "" && notificationContent.toString() != "") {
+                   (context as MainActivity).createNotification(
+                       title.toString(),
+                       notificationContent.toString(),
+                       TOPIC_NEWS
+                   )
+                   checked = false
+               }
+               // else toast error message - fields can't be empty
+           }   */
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
 
         view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
-            // else toast error message - fields can't be empty
 
-  /*          if (checked) {
-                // send notification
-                if (title.toString() != "" && notificationContent.toString() != "") {
-                    (context as MainActivity).createNotification(
-                        title.toString(),
-                        notificationContent.toString(),
-                        TOPIC_NEWS
-                    )
-                    checked = false
-                }
-                // else toast error message - fields can't be empty
-            }   */
-        }
+
     }
+}
