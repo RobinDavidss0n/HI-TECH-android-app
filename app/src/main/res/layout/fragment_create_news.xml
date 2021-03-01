@@ -78,14 +78,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="300dp"
-                android:background="@color/yellow"
+                android:background="@drawable/button_background_selector"
                 android:fontFamily="@font/avenir_next_bold"
                 android:padding="10dp"
                 android:text="@string/create_post"
                 android:textColor="@color/black"
+                android:enabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkbox_notification" />
+                app:layout_constraintTop_toBottomOf="@+id/checkbox_notification"
+                />
 
             <Button
                 android:id="@+id/btn_create_news_back"

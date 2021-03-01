@@ -2,6 +2,8 @@ package se.ju.student.hitech
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,9 @@ import se.ju.student.hitech.NewsRecyclerAdapter.Companion.POST_TYPE_NO_IMAGE
 class CreateNewsPostFragment : Fragment() {
 
     private var checked = false
+    lateinit var title: EditText
+    lateinit var content: EditText
+    lateinit var createNoveltyButton:Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,9 +33,60 @@ class CreateNewsPostFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+         title = view?.findViewById(R.id.editTextNewPostTitle)!!
+         content = view?.findViewById(R.id.editTextNewPostContent)!!
+        createNoveltyButton = view?.findViewById(R.id.btn_create_news_create_post)!!
 
-        val title = view?.findViewById<EditText>(R.id.editTextNewPostTitle)?.text
-        val content = view?.findViewById<EditText>(R.id.editTextNewPostContent)?.text
+        title.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                createNoveltyButton.isEnabled = false
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(count > 0) {
+                    createNoveltyButton.isEnabled  = true
+                }else{
+                    createNoveltyButton.isEnabled = false
+                }
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if(title.length() > 0 && content.length()>0) {
+                    createNoveltyButton.isEnabled  = true
+                }else{
+                    createNoveltyButton.isEnabled = false
+                }
+
+
+            }
+
+        })
+        content.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                createNoveltyButton.isEnabled = false
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(count > 0) {
+                    createNoveltyButton.isEnabled  = true
+                }else{
+                    createNoveltyButton.isEnabled = false
+                }
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if(content.length() > 0 && title.length()>0) {
+                    createNoveltyButton.isEnabled  = true
+                }else{
+                    createNoveltyButton.isEnabled = false
+                }
+
+
+            }
+
+        })
         val notificationContent =
             view?.findViewById<EditText>(R.id.editTextNewPostNotificationContent)?.text
 
@@ -41,31 +97,30 @@ class CreateNewsPostFragment : Fragment() {
                 }
             }
 
-        view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
-            (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-        }
-
-        view?.findViewById<Button>(R.id.btn_create_news_create_post)?.setOnClickListener {
+        createNoveltyButton.setOnClickListener {
             val db: FirebaseFirestore = FirebaseFirestore.getInstance()
             val novelty = HashMap<String, Any>()
 
-            if (title.toString() != "" && content.toString() != "") {
-                novelty["title"] = title.toString()
-                novelty["content"] = content.toString()
+            novelty["title"] = title.text.toString()
+            novelty["content"] = content.text.toString()
 
-                // no image post
-                novelty["post_type"] = POST_TYPE_NO_IMAGE
+            // no image post
+            novelty["post_type"] = POST_TYPE_NO_IMAGE
 
-                db.collection("news")
-                    .add(novelty)
-                    .addOnSuccessListener { documentReference ->
-                        Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document", e)
-                    }
-            }
+
+            db.collection("news")
+                .add(novelty)
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                }
+        }
+        view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+        }
             // else toast error message - fields can't be empty
 
   /*          if (checked) {
@@ -82,4 +137,3 @@ class CreateNewsPostFragment : Fragment() {
             }   */
         }
     }
-}

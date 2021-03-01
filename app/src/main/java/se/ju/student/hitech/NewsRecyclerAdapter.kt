@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -17,12 +18,23 @@ class NewsRecyclerAdapter(var news: List<Novelty>) :
     }
 
     // view holders for all types of items
-    class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+
+        init {
+            itemView.setOnClickListener(this)
+        }
 
         fun bind(novelty: Novelty) {
             itemView.findViewById<ImageView>(R.id.news_image).setImageResource(novelty.image)
             itemView.findViewById<TextView>(R.id.news_title).text = novelty.title
+            itemView.setOnClickListener(this)
         }
+
+        override fun onClick(v: View?) {
+            TODO("Not yet implemented")
+        }
+
     }
 
     class NoImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -41,6 +53,7 @@ class NewsRecyclerAdapter(var news: List<Novelty>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
         if(viewType == POST_TYPE_NO_IMAGE){
             val v = LayoutInflater.from(parent.context).inflate(R.layout.card_news, parent, false)
             return NoImageViewHolder(v)
@@ -58,6 +71,7 @@ class NewsRecyclerAdapter(var news: List<Novelty>) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(getItemViewType(position) == POST_TYPE_NO_IMAGE){
             (holder as NoImageViewHolder).bind(news[position])
+
         } else{
             (holder as ImageViewHolder).bind(news[position])
         }
