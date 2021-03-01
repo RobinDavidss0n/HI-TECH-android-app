@@ -9,35 +9,55 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AdminLoginFragment : Fragment() {
 
-    private lateinit var auth: FirebaseAuth
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_admin_login, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.fragment_admin_login, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         super.onCreate(savedInstanceState)
 
-
-        auth = FirebaseAuth.getInstance()
-
-        val email = view?.findViewById<TextInputEditText>(R.id.admin_login_emailTextInputEditText)
-        val password = view?.findViewById<TextInputEditText>(R.id.admin_login_passwordTextInputEditText)
+        val emailInput =
+            view?.findViewById<TextInputEditText>(R.id.admin_login_emailTextInputEditText)
+        val passwordInput =
+            view?.findViewById<TextInputEditText>(R.id.admin_login_passwordTextInputEditText)
         val loginButton = view?.findViewById<Button>(R.id.admin_login_loginButton)
         val logoutButton = view?.findViewById<Button>(R.id.logout)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)
 
         loginButton?.setOnClickListener {
-            userLogin(email?.text.toString().trim(), password?.text.toString().trim())
+            if (verifyLoginInputs(
+                    emailInput?.text.toString().trim(),
+                    passwordInput?.text.toString()
+                )
+            ) {
+                progressBar?.visibility = View.VISIBLE
+                CoroutineScope(IO).launch {
+                    userLogin(emailInput?.text.toString().trim(), passwordInput?.text.toString())
+                }
+
+            }
+
         }
 
         logoutButton?.setOnClickListener {
-            userLogout()
-        }
+            progressBar?.visibility = View.VISIBLE
+            CoroutineScope(IO).launch {
+                userLogout()
+            }
 
+        }
 
         val register = view?.findViewById<TextView>(R.id.admin_login_register)
 
@@ -48,68 +68,73 @@ class AdminLoginFragment : Fragment() {
 
     }
 
-    private fun userLogout() {
-        auth.signOut()
-        (context as MainActivity).makeToast("User logged out!")
-        //redirect
-    }
-
-
-    private fun userLogin(email: String, password: String) {
-        val emailInputLayout = view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)
-        val passwordInputLayout = view?.findViewById<TextInputLayout>(R.id.admin_login_passwordTextInputLayout)
+    private fun verifyLoginInputs(email: String, password: String): Boolean {
+        val emailInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)
+        val passwordInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.admin_login_passwordTextInputLayout)
         emailInputLayout?.error = ""
         passwordInputLayout?.error = ""
 
         if (email.isEmpty()) {
             emailInputLayout?.error = "Email is empty"
-            return
+            return false
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInputLayout?.error = "Not valid mail"
-            return
+            return false
         }
 
         if (password.isEmpty()) {
             passwordInputLayout?.error = "Password is empty"
-            return
+            return false
 
         }
+        return true
+    }
 
-        if (auth.currentUser != null) {
-            (context as MainActivity).makeToast("Already logged in.")
-            return
-        }
+    private suspend fun userLogin(email: String, password: String) {
 
+        val userRepository = UserRepository()
         val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)
-        progressBar?.visibility = View.VISIBLE
 
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { signIn ->
-
-            if (signIn.isSuccessful) {
-
-                val user = auth.currentUser
-
-                if (user != null) {
-                    if (user.isEmailVerified)
-                    //redirect
-                        (context as MainActivity).makeToast("Login successful!")
-                    else {
-                        user.sendEmailVerification()
-                        auth.signOut()
-                        (context as MainActivity).makeToast("Check your email to verify your account.")
-                    }
-                }else{
-                    (context as MainActivity).makeToast("Something went wrong, please try again.")
-                }
+        if (userRepository.checkIfLoggedIn()) {
+            withContext(Main) {
+                (context as MainActivity).makeToast("Already logged in.")
                 progressBar?.visibility = View.GONE
-
-            } else {
-                (context as MainActivity).makeToast("Failed to login, please check your credentials.")
-                progressBar?.visibility = View.GONE
-
             }
+
+        } else {
+
+            userRepository.userLogin(email, password) { result ->
+                progressBar?.visibility = View.GONE
+                when (result) {
+
+                    "successful" -> (context as MainActivity).makeToast("Login successful!")
+                    "failed" -> (context as MainActivity).makeToast("Failed to login, please check your credentials.")
+                    "emailNotVerified" -> (context as MainActivity).makeToast("Check your email to verify your account.")
+
+                }
+            }
+
+
         }
+    }
+
+    private suspend fun userLogout() {
+
+        val userRepository = UserRepository()
+        val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)
+
+        userRepository.userLogout()
+
+        withContext(Main) {
+            progressBar?.visibility = View.GONE
+            (context as MainActivity).makeToast("User logged out!")
+            //redirect
+        }
+
+
     }
 }
