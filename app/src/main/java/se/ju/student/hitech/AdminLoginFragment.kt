@@ -17,6 +17,8 @@ import kotlinx.coroutines.withContext
 
 class AdminLoginFragment : Fragment() {
 
+    lateinit var  progressBar: ProgressBar
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +36,7 @@ class AdminLoginFragment : Fragment() {
             view?.findViewById<TextInputEditText>(R.id.admin_login_passwordTextInputEditText)
         val loginButton = view?.findViewById<Button>(R.id.admin_login_loginButton)
         val logoutButton = view?.findViewById<Button>(R.id.logout)
-        val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)
+        progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)!!
 
         loginButton?.setOnClickListener {
             if (verifyLoginInputs(
@@ -42,20 +44,16 @@ class AdminLoginFragment : Fragment() {
                     passwordInput?.text.toString()
                 )
             ) {
-                progressBar?.visibility = View.VISIBLE
-                CoroutineScope(IO).launch {
-                    userLogin(emailInput?.text.toString().trim(), passwordInput?.text.toString())
-                }
-
+                progressBar.visibility = View.VISIBLE
+                userLogin(emailInput?.text.toString().trim(), passwordInput?.text.toString())
             }
 
         }
 
         logoutButton?.setOnClickListener {
-            progressBar?.visibility = View.VISIBLE
-            CoroutineScope(IO).launch {
-                userLogout()
-            }
+            progressBar.visibility = View.VISIBLE
+            userLogout()
+
 
         }
 
@@ -94,26 +92,28 @@ class AdminLoginFragment : Fragment() {
         return true
     }
 
-    private suspend fun userLogin(email: String, password: String) {
+    private fun userLogin(email: String, password: String) {
 
         val userRepository = UserRepository()
-        val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)
 
         if (userRepository.checkIfLoggedIn()) {
-            withContext(Main) {
-                (context as MainActivity).makeToast("Already logged in.")
-                progressBar?.visibility = View.GONE
-            }
+
+            (context as MainActivity).makeToast("Already logged in.")
+            progressBar.visibility = View.GONE
+
 
         } else {
 
             userRepository.userLogin(email, password) { result ->
-                progressBar?.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 when (result) {
 
                     "successful" -> (context as MainActivity).makeToast("Login successful!")
-                    "failed" -> (context as MainActivity).makeToast("Failed to login, please check your credentials.")
+                    //redirect
+                    "invalidEmail" -> (context as MainActivity).makeToast("No user is tied to this email, pleas use a correct email.")
+                    "invalidPassword" -> (context as MainActivity).makeToast("Wrong password, try again.")
                     "emailNotVerified" -> (context as MainActivity).makeToast("Check your email to verify your account.")
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
 
                 }
             }
@@ -122,19 +122,17 @@ class AdminLoginFragment : Fragment() {
         }
     }
 
-    private suspend fun userLogout() {
+    private fun userLogout() {
 
         val userRepository = UserRepository()
         val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)
 
         userRepository.userLogout()
 
-        withContext(Main) {
-            progressBar?.visibility = View.GONE
-            (context as MainActivity).makeToast("User logged out!")
-            //redirect
-        }
 
+        progressBar?.visibility = View.GONE
+        (context as MainActivity).makeToast("User logged out!")
+        //redirect
 
     }
 }

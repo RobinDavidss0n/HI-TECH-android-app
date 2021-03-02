@@ -1,7 +1,6 @@
 package se.ju.student.hitech
 
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +12,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.*
 
 class RegisterUserFragment : Fragment() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
+    private val progressBar = view?.findViewById<ProgressBar>(R.id.register_user_progressBar)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,11 +28,9 @@ class RegisterUserFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         super.onCreate(savedInstanceState)
 
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
-
-        val email = view?.findViewById<TextInputEditText>(R.id.register_user_emailTextInputEditText)
-        val password =
+        val emailInput =
+            view?.findViewById<TextInputEditText>(R.id.register_user_emailTextInputEditText)
+        val passwordInput =
             view?.findViewById<TextInputEditText>(R.id.register_user_passwordTextInputEditText)
         val rePassword =
             view?.findViewById<TextInputEditText>(R.id.register_user_repeatPasswordTextInputEditText)
@@ -45,25 +40,31 @@ class RegisterUserFragment : Fragment() {
 
 
         registerButton?.setOnClickListener {
-            registerUser(
-                email?.text.toString().trim(),
-                password?.text.toString().trim(),
-                rePassword?.text.toString().trim(),
-                name?.text.toString().trim(),
-                role?.text.toString().trim()
-            )
+            if (verifyRegisterUserInputs(
+                    emailInput?.text.toString().trim(),
+                    passwordInput?.text.toString(),
+                    rePassword?.text.toString().trim(),
+                    name?.text.toString().trim(),
+                    role?.text.toString().trim()
+                )
+            ) {
+                progressBar?.visibility = View.VISIBLE
+                createUser(
+                    emailInput?.text.toString().trim(),
+                    passwordInput?.text.toString(),
+                    name?.text.toString().trim(),
+                    role?.text.toString().trim()
+                )
+            }
 
         }
 
     }
 
-    private fun registerUser(
-        email: String,
-        password: String,
-        rePassword: String,
-        name: String,
-        role: String
-    ) {
+    private fun verifyRegisterUserInputs(
+        email: String, password: String, rePassword: String, name: String, role: String
+    ): Boolean {
+
         val emailInputLayout =
             view?.findViewById<TextInputLayout>(R.id.register_user_emailTextInputLayout)
         val passwordInputLayout =
@@ -83,79 +84,61 @@ class RegisterUserFragment : Fragment() {
         if (email.isEmpty()) {
 
             emailInputLayout?.error = "Email is empty"
-            return
+            return false
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInputLayout?.error = "Not valid mail"
-            return
+            return false
         }
 
         if (password.isEmpty()) {
             passwordInputLayout?.error = "Password is empty"
-            return
+            return false
 
         }
 
         if (password.length < 5) {
             passwordInputLayout?.error = "Password need to be at least 6 character long"
-            return
+            return false
 
         }
 
         if (rePassword != password) {
             rePasswordInputLayout?.error = "Passwords dose not match"
-            return
+            return false
 
         }
 
         if (name.isEmpty()) {
             nameInputLayout?.error = "Name is empty"
-            return
+            return false
 
         }
 
         if (role.isEmpty()) {
             roleInputLayout?.error = "Role is empty"
-            return
+            return false
 
         }
+        return true
+    }
 
+    private fun createUser(email: String, password: String, name: String, role: String) {
 
-        val progressBar = view?.findViewById<ProgressBar>(R.id.register_user_progressBar)
-        progressBar?.visibility = View.VISIBLE
+        val userRepository = UserRepository()
+        userRepository.createUser(email, password, name, role) { result ->
+            progressBar?.visibility = View.GONE
+            when (result) {
 
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { createUser ->
-            if (createUser.isSuccessful) {
-
-                auth.currentUser?.let { currentUser ->
-                    val user = hashMapOf(
-                        "name" to name,
-                        "role" to role
-                    )
-
-                    db.collection("users").document(currentUser.uid.toString())
-                        .set(user)
-                        .addOnCompleteListener { addedUserToDatabase ->
-
-                            if (addedUserToDatabase.isSuccessful) {
-                                (context as MainActivity).makeToast("User was registered!")
-                                progressBar?.visibility = View.GONE
-
-                                //redirect user to profile
-
-                            } else {
-                                (context as MainActivity).makeToast("Failed to register.")
-                                progressBar?.visibility = View.GONE
-
-                            }
-                        }
+                "successful" -> {
+                    (context as MainActivity).makeToast("User was created successfully!")
+                    userRepository.userLogout()
+                    //redirect
                 }
-            } else {
-                progressBar?.visibility = View.GONE
-                (context as MainActivity).makeToast("Failed to connect to Firebase.")
-            }
+                "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
 
+            }
         }
 
     }
