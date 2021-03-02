@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_MAIN_ACTIVITY = "MainActivity"
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
         const val TOPIC_NEWS = "/topics/news"
+        const val TAG_REGISTER_USER = "TAG_FRAGMENT_REGISTER_USER"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,14 +50,15 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
-                .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
-                .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
-                .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
-                .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
-                .commitNow()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
+                    .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
+                    .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
+                    .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
+                    .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
+                    .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                    .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                    .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
 
@@ -183,6 +185,10 @@ class MainActivity : AppCompatActivity() {
             show(supportFragmentManager.findFragmentByTag(fragment_tag)!!)
             commit()
         }
+    }
+
+    public fun makeToast(text: String) {
+        Toast.makeText(this, text,Toast.LENGTH_LONG).show()
     }
 
 }
