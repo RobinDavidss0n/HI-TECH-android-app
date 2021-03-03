@@ -2,10 +2,7 @@ package se.ju.student.hitech
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -14,8 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
@@ -50,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager
+
                     .beginTransaction()
                     .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
                     .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
@@ -59,6 +56,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                     .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
                     .commitNow()
+
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
 
@@ -186,6 +184,7 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
     }
+
 
     public fun makeToast(text: String) {
         Toast.makeText(this, text,Toast.LENGTH_LONG).show()

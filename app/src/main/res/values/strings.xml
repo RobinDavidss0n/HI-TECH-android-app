@@ -15,6 +15,8 @@
     <string name="cancel">Cancel</string>
     <string name="report_problem_subject_email">Report problem HI TECH Android application</string>
     <string name="choose_email_client">Choose email client..</string>
+    <string name="order_now">PLACE AN ORDER</string>
+    <string name="about_hi_shop">The HI SHOP is a small store where you can buy everything you need for epic adventures in your overall and the student culture in Jönköping. We have overalls, patches, glue, pencils, towels for the CAPS event and much more.</string>
     <string name="admin_login_loginButton">Login</string>
     <string name="admin_login_passwordInputHint">Password</string>
     <string name="admin_login_emailInputHint">Email</string>
