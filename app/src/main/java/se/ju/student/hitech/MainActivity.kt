@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
                     .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
                     .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                    .add(R.id.fragment_container, test(), "test")
                     .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
@@ -58,7 +59,8 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.nav_news -> changeToFragment(TAG_FRAGMENT_NEWS)
                 R.id.nav_events -> changeToFragment(TAG_FRAGMENT_EVENTS)
-                R.id.nav_shop -> changeToFragment(TAG_FRAGMENT_SHOP)
+               // R.id.nav_shop -> changeToFragment(TAG_FRAGMENT_SHOP)
+                R.id.nav_shop -> changeToFragment("test")
                 R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT)
             }
             true

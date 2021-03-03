@@ -39,10 +39,10 @@ class ShopFragment : Fragment() {
             shopImages.postValue(fetchedImages)
         }
 
-        val adapter = ShopGridAdapter(shopImages)
+       // val adapter = ShopGridAdapter(shopImages)
         val gridLayout = GridLayoutManager(context, 2)
         recyclerView?.layoutManager = gridLayout
-        recyclerView?.adapter = adapter
+     //   recyclerView?.adapter = adapter
 
 
     /*    var recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView_shopItems)

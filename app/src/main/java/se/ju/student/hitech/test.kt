@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import se.ju.student.hitech.databinding.FragmentNewsBinding
 import se.ju.student.hitech.databinding.FragmentShopBinding
+import se.ju.student.hitech.databinding.GridItemViewBinding
 import kotlin.concurrent.thread
 
 class test : Fragment() {
@@ -52,7 +54,7 @@ class test : Fragment() {
                 binding.recyclerViewShopItems.post {
 
                     binding.recyclerViewShopItems.apply {
-                        layoutManager = LinearLayoutManager(context)
+                        layoutManager = GridLayoutManager(context, 2)
                         adapter = ShopAdapter(it)
                     }
 
@@ -94,13 +96,13 @@ class test : Fragment() {
 
     }
 
-    class ShopViewHolder(val binding: ) : RecyclerView.ViewHolder(binding.root)
+    class ShopViewHolder(val binding: GridItemViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     class ShopAdapter(private val shopItems: List<ShopItem>) :
         RecyclerView.Adapter<ShopViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ShopViewHolder(
-            CardNewsBinding.inflate(
+            GridItemViewBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -108,7 +110,7 @@ class test : Fragment() {
         )
 
         override fun onBindViewHolder(holder: ShopViewHolder, position: Int) {
-            Picasso.get().load(shopItems[position].imageUrl).into(holder.shopImage)
+            Picasso.get().load(shopItems[position].imageUrl).into(holder.binding.imageViewShop)
         }
 
         override fun getItemCount() = shopItems.size
