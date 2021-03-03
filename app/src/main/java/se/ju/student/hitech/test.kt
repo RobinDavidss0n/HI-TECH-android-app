@@ -26,7 +26,7 @@ import kotlin.concurrent.thread
 class test : Fragment() {
 
     lateinit var binding: FragmentNewsBinding
-    val viewModel: NewsViewModel by viewModels()
+    val viewModel: ShopViewModel by viewModels()
 
     companion object {
         fun newInstance() = test()
