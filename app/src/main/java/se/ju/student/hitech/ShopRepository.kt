@@ -2,6 +2,7 @@ package se.ju.student.hitech
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 
 var shopRepository = ShopRepository()
@@ -9,9 +10,24 @@ var shopRepository = ShopRepository()
 class ShopRepository {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var shopItems: List<ShopItem> = ArrayList()
+    private var shopItems = mutableListOf<ShopItem>()
 
-    fun loadShopImages(): List<ShopItem> {
+    fun loadShopImages(
+        images: MutableLiveData<List<ShopItem>>,
+        callback: (List<ShopItem>, MutableLiveData<List<ShopItem>>) -> Unit
+    ) {
+
+        db.collection("images").get().addOnSuccessListener { result ->
+            shopItems = result.toObjects(ShopItem::class.java)
+            callback(shopItems, images)
+
+        }.addOnFailureListener {
+            Log.d(TAG, "Error getting documents: ", it)
+        }
+
+    }
+
+ /*   fun loadShopImages(): List<ShopItem> {
         db.collection("images").get().addOnSuccessListener { result ->
             shopItems = result.toObjects(ShopItem::class.java)
 
@@ -19,5 +35,5 @@ class ShopRepository {
             Log.d(TAG, "Error getting images: ", it)
         }
         return shopItems
-    }
+    }   */
 }

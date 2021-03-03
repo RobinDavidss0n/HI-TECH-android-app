@@ -61,11 +61,11 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </ScrollView>
 
     <ProgressBar
         android:layout_width="wrap_content"
+        android:id="@+id/progressbar_shop"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="invisible" />

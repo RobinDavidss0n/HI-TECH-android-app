@@ -9,22 +9,21 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
-//class ShopGridAdapter(val shopItems: List<ShopItem>) :
-class ShopGridAdapter(val shopItems: Array<String>) :
+class ShopGridAdapter(private val shopItems: List<ShopItem>) :
     RecyclerView.Adapter<ShopGridAdapter.ViewHolder>() {
 
-        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-            val shopImage : ImageView = itemView.findViewById(R.id.imageView_shop)
-        }
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val shopImage: ImageView = itemView.findViewById(R.id.imageView_shop)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.grid_item_view, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.grid_item_view, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-       // Picasso.get().load(shopItems[position].imageUrl).into(holder.shopImage)
-        Picasso.get().load(shopItems[position]).into(holder.shopImage)
+        Picasso.get().load(shopItems[position].imageUrl).into(holder.shopImage)
     }
 
     override fun getItemCount(): Int {
