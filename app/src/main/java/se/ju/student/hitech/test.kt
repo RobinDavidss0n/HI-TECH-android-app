@@ -19,13 +19,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
+import se.ju.student.hitech.databinding.FragmentShopBinding
 import kotlin.concurrent.thread
 
 class test : Fragment() {
 
-    lateinit var binding: FragmentNewsBinding
+    lateinit var binding: FragmentShopBinding
     val viewModel: ShopViewModel by viewModels()
 
     companion object {
@@ -36,7 +36,7 @@ class test : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = FragmentNewsBinding.inflate(layoutInflater, container, false).run {
+    ) = FragmentShopBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
 
@@ -49,19 +49,19 @@ class test : Fragment() {
 
             if (it != null) {
 
-                binding.rvRecyclerView.post {
+                binding.recyclerViewShopItems.post {
 
-                    binding.rvRecyclerView.apply {
+                    binding.recyclerViewShopItems.apply {
                         layoutManager = LinearLayoutManager(context)
                         adapter = ShopAdapter(it)
                     }
 
-                    view?.findViewById<Button>(R.id.button_order)?.setOnClickListener {
+                    view.findViewById<Button>(R.id.button_order)?.setOnClickListener {
                         // open HI SHOP google form
                         openNewTabWindow("https://forms.gle/Mh4ALSQLNcTivKtj8", this)
                     }
 
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressbarShop.visibility = View.GONE
                 }
 
             }
@@ -94,7 +94,7 @@ class test : Fragment() {
 
     }
 
-    class ShopViewHolder(val binding: CardNewsBinding) : RecyclerView.ViewHolder(binding.root)
+    class ShopViewHolder(val binding: ) : RecyclerView.ViewHolder(binding.root)
 
     class ShopAdapter(private val shopItems: List<ShopItem>) :
         RecyclerView.Adapter<ShopViewHolder>() {

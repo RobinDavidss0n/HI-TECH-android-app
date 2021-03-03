@@ -51,9 +51,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_shopItems"
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -64,10 +64,9 @@
     </ScrollView>
 
     <ProgressBar
-        android:layout_width="wrap_content"
         android:id="@+id/progressbar_shop"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="invisible" />
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>
