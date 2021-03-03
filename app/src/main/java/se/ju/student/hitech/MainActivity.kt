@@ -24,17 +24,19 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_ADMIN_LOGIN = "TAG_FRAGMENT_ADMIN_LOGIN"
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
         const val TAG_FRAGMENT_CREATE_NEWS_POST = "TAG_FRAGMENT_CREATE_NEWS_POST"
+        // const val TAG_FRAGMENT_NOVELTY = "TAG_FRAGMENT_NOVELTY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_HITECH)
         setContentView(R.layout.activity_main)
+
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.drawable.ic_hitech_logo_20)
         supportActionBar?.setDisplayUseLogoEnabled(true)
-        //supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("yellow")))
+
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -45,13 +47,10 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
                 .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
                 .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
-                .add(
-                    R.id.fragment_container,
-                    CreateNewsPostFragment(),
-                    TAG_FRAGMENT_CREATE_NEWS_POST
-                )
+                .add(R.id.fragment_container, CreateNewsPostFragment(), TAG_FRAGMENT_CREATE_NEWS_POST)
                 .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
+
         }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)

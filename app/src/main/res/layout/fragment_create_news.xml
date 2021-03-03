@@ -7,7 +7,7 @@
     android:layout_margin="20dp">
 
     <TextView
-        android:id="@+id/tv_news_title2"
+        android:id="@+id/newsTitleNoImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/avenir_next_bold"
@@ -23,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_news_title2">
+        app:layout_constraintTop_toBottomOf="@+id/newsTitleNoImage">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

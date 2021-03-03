@@ -31,6 +31,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures{
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -51,6 +54,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:22.1.0'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.activity:activity-ktx:1.1.0'
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

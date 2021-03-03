@@ -4,7 +4,9 @@ import android.content.ContentValues
 import android.util.Log
 import android.widget.Adapter
 import android.widget.BaseExpandableListAdapter
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.collections.List as List
 
 var newsRepository = NewsRepository()
 
@@ -12,8 +14,8 @@ var newsRepository = NewsRepository()
 class NewsRepository{
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var newsList: List<Novelty> = ArrayList()
-    private var newsListAdapter: NewsRecyclerAdapter = NewsRecyclerAdapter(newsList)
+    private var newsList = mutableListOf<Novelty>()
+
 
     fun addNovelty(title: String, content: String){
 
@@ -21,12 +23,14 @@ class NewsRepository{
 
         novelty["title"] = title
         novelty["content"] = content
-        novelty["post_type"] = NewsRecyclerAdapter.POST_TYPE_NO_IMAGE // no image post
-
+        novelty["id"] = when {
+            newsList.count() == 0 -> 1
+            else -> newsList.last().id+1
+        }
         db.collection("news")
             .add(novelty)
             .addOnSuccessListener { documentReference ->
-                novelty["id"]= documentReference.id
+                NewsFragment.NewsAdapter(newsList).notifyItemInserted(newsList.size)
                 Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
@@ -35,17 +39,24 @@ class NewsRepository{
     }
 
 
-    fun loadNewsData():NewsRecyclerAdapter {
+    fun loadNewsData(news:MutableLiveData<List<Novelty>>,callback:(List<Novelty>,MutableLiveData<List<Novelty>>)->Unit){
 
         db.collection("news").get().addOnSuccessListener { result ->
+
             newsList = result.toObjects(Novelty::class.java)
-            newsListAdapter.news = newsList
-            newsListAdapter.notifyDataSetChanged()
+            callback(newsList,news)
 
         }.addOnFailureListener {
             Log.d(ContentValues.TAG, "Error getting documents: ", it)
         }
-        return newsListAdapter
+
     }
 
+    fun getNoveltyById(id: Int):Novelty{
+        return newsList[id]
+    }
+
+
 }
+
+

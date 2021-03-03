@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.Math.log
 
-
+/*
 class NewsRecyclerAdapter(var news: List<Novelty>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -77,7 +77,7 @@ class NewsRecyclerAdapter(var news: List<Novelty>) :
     }
 }
 
-
+*/
 /*
 class NewsRecyclerAdapter(private var newsTitles: List<String>, private var newsImages: List<Int>) :
     RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder>() {
