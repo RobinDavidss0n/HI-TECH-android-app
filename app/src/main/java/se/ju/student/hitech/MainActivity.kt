@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +13,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,7 +29,10 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_CONTACT = "TAG_FRAGMENT_CONTACT"
         const val TAG_FRAGMENT_ADMIN_LOGIN = "TAG_FRAGMENT_ADMIN_LOGIN"
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
+        const val TAG_MAIN_ACTIVITY = "MainActivity"
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
+        const val TOPIC_NEWS = "/topics/news"
+        const val TAG_REGISTER_USER = "TAG_FRAGMENT_REGISTER_USER"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,16 +46,22 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
-                .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
-                .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
-                .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
-                .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
-                .commitNow()
+
+                    .beginTransaction()
+                    .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
+                    .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
+                    .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
+                    .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
+                    .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
+                    .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                    .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                    .commitNow()
+
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
+
+        // subscribe all users to news notifications
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NEWS)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
@@ -59,6 +75,30 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+
+    fun createNotification(title: String, message: String, topic: String) {
+        PushNotification(
+            NotificationData(title, message),
+            topic
+        ).also {
+            sendNotification(it)
+        }
+    }
+
+    private fun sendNotification(notification: PushNotification) =
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitInstance.api.postNotification(notification)
+
+                if (response.isSuccessful) {
+                    Log.d(TAG_MAIN_ACTIVITY, "SUCCESSFUL")
+                } else {
+                    Log.e(TAG_MAIN_ACTIVITY, response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                Log.e(TAG_MAIN_ACTIVITY, e.toString())
+            }
+        }
 
     private fun BottomNavigationView.uncheckAllItems() {
         menu.setGroupCheckable(0, true, false)
@@ -134,7 +174,6 @@ class MainActivity : AppCompatActivity() {
 
 
     fun changeToFragment(fragment_tag: String) {
-
         with(supportFragmentManager.beginTransaction()) {
 
             for (fragment in supportFragmentManager.fragments) {
@@ -145,4 +184,10 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
     }
+
+
+    public fun makeToast(text: String) {
+        Toast.makeText(this, text,Toast.LENGTH_LONG).show()
+    }
+
 }
