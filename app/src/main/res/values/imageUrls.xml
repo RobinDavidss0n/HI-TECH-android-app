@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="images">
+
+        <item>https://picsum.photos/id/237/200/300</item>
+        <item>https://picsum.photos/seed/picsum/200/300</item>
+        <item>https://picsum.photos/200/300?grayscale</item>
+    </string-array>
+
+</resources>

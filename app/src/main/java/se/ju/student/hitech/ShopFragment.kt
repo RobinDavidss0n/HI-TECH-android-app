@@ -7,18 +7,47 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.GridLayout
+import android.widget.GridView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class ShopFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_shop, container, false)
+
+    private var shopImages: List<ShopItem> = ArrayList()
+    //  private var shopGridAdapter: ShopGridAdapter(shopImages)
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.fragment_shop, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         view?.findViewById<Button>(R.id.button_order)?.setOnClickListener {
+            // open HI SHOP google form
             openNewTabWindow("https://forms.gle/Mh4ALSQLNcTivKtj8", this)
         }
+
+   /*     var recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView_shopItems)
+        shopImages = shopRepository.loadShopImages()
+        val adapter = ShopGridAdapter(shopImages)
+        val gridLayout = GridLayoutManager(context, 2)
+        recyclerView?.layoutManager = gridLayout
+        recyclerView?.adapter = adapter */
+
+
+        var recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView_shopItems)
+        val images : Array<String> = resources.getStringArray(R.array.images)
+        val adapter = ShopGridAdapter(images)
+        val gridLayout = GridLayoutManager(context, 2)
+        recyclerView?.layoutManager = gridLayout
+        recyclerView?.adapter = adapter
+
     }
 
     private fun openNewTabWindow(urls: String, context: ShopFragment) {

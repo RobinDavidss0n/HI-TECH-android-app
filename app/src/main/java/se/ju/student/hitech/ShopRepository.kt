@@ -4,6 +4,8 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 
+var shopRepository = ShopRepository()
+
 class ShopRepository {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -18,5 +20,4 @@ class ShopRepository {
         }
         return shopItems
     }
-
 }
