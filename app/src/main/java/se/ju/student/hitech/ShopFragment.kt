@@ -8,49 +8,61 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import se.ju.student.hitech.databinding.FragmentShopBinding
+import se.ju.student.hitech.databinding.GridItemViewBinding
 
 class ShopFragment : Fragment() {
 
-    val shopImages = MutableLiveData<List<ShopItem>>()
-    //  private var shopGridAdapter: ShopGridAdapter(shopImages)
+    lateinit var binding: FragmentShopBinding
+    private val viewModel: ShopViewModel by viewModels()
+
+    companion object {
+        fun newInstance() = ShopFragment()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_shop, container, false)
+    ) = FragmentShopBinding.inflate(layoutInflater, container, false).run {
+        binding = this
+        root
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    }
 
-        view?.findViewById<Button>(R.id.button_order)?.setOnClickListener {
-            // open HI SHOP google form
-            openNewTabWindow("https://forms.gle/Mh4ALSQLNcTivKtj8", this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.shopItems.observe(viewLifecycleOwner) {
+
+            if (it != null) {
+
+                binding.recyclerViewShopItems.post {
+
+                    binding.recyclerViewShopItems.apply {
+                        layoutManager = GridLayoutManager(context, 2)
+                        adapter = ShopAdapter(it)
+                    }
+
+                    view.findViewById<Button>(R.id.button_order)?.setOnClickListener {
+                        // open HI SHOP google form
+                        openNewTabWindow("https://forms.gle/Mh4ALSQLNcTivKtj8", this)
+                    }
+
+                    binding.progressbarShop.visibility = View.GONE
+                }
+
+            }
         }
-
-        var recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView_shopItems)
-      //  shopImages = shopRepository.loadShopImages()
-
-        shopRepository.loadShopImages(shopImages) { fetchedImages, shopImages ->
-            shopImages.postValue(fetchedImages)
-        }
-
-       // val adapter = ShopGridAdapter(shopImages)
-        val gridLayout = GridLayoutManager(context, 2)
-        recyclerView?.layoutManager = gridLayout
-     //   recyclerView?.adapter = adapter
-
-
-    /*    var recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView_shopItems)
-        val images : Array<String> = resources.getStringArray(R.array.images)
-        val adapter = ShopGridAdapter(images)
-        val gridLayout = GridLayoutManager(context, 2)
-        recyclerView?.layoutManager = gridLayout
-        recyclerView?.adapter = adapter */
 
     }
 
@@ -61,5 +73,41 @@ class ShopFragment : Fragment() {
         b.putBoolean("new_window", true)
         intents.putExtras(b)
         context.startActivity(intents)
+    }
+
+    class ShopViewModel : ViewModel() {
+
+        val shopItems = MutableLiveData<List<ShopItem>>()
+
+        init {
+            viewModelScope.launch(Dispatchers.IO) {
+
+                shopRepository.loadShopImages(shopItems) { fetchedImages, shopItems ->
+                    shopItems.postValue(fetchedImages)
+                }
+
+            }
+        }
+
+    }
+
+    class ShopViewHolder(val binding: GridItemViewBinding) : RecyclerView.ViewHolder(binding.root)
+
+    class ShopAdapter(private val shopItems: List<ShopItem>) :
+        RecyclerView.Adapter<ShopViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ShopViewHolder(
+            GridItemViewBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+
+        override fun onBindViewHolder(holder: ShopViewHolder, position: Int) {
+            Picasso.get().load(shopItems[position].imageUrl).into(holder.binding.imageViewShop)
+        }
+
+        override fun getItemCount() = shopItems.size
     }
 }

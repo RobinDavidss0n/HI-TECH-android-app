@@ -26,14 +26,4 @@ class ShopRepository {
         }
 
     }
-
- /*   fun loadShopImages(): List<ShopItem> {
-        db.collection("images").get().addOnSuccessListener { result ->
-            shopItems = result.toObjects(ShopItem::class.java)
-
-        }.addOnFailureListener {
-            Log.d(TAG, "Error getting images: ", it)
-        }
-        return shopItems
-    }   */
 }
