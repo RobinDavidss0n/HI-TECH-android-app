@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
-import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 
 
 class CreateNewsPostFragment : Fragment() {
@@ -45,10 +44,13 @@ class CreateNewsPostFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 createNoveltyButton.isEnabled = count > 0
+
             }
 
             override fun afterTextChanged(s: Editable?) {
                 createNoveltyButton.isEnabled = title.length() > 0 && content.length() > 0
+
+
             }
 
         })
@@ -59,13 +61,10 @@ class CreateNewsPostFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 createNoveltyButton.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 createNoveltyButton.isEnabled = content.length() > 0 && title.length() > 0
-
-
             }
 
         })
@@ -81,19 +80,19 @@ class CreateNewsPostFragment : Fragment() {
 
         createNoveltyButton.setOnClickListener {
             newsRepository.addNovelty(title.text.toString(), content.text.toString())
-            if (checked) {
-                // send notification
-                if (title.toString() != "" && notificationContent.toString() != "") {
-                    (context as MainActivity).createNotification(
-                        title.toString(),
-                        notificationContent.toString(),
-                        TOPIC_NEWS
-                    )
-                    checked = false
-                } else{
-                    (context as MainActivity).makeToast("Fields can't be empty!")
-                }
-            }
+            /*          if (checked) {
+               // send notification
+               if (title.toString() != "" && notificationContent.toString() != "") {
+                   (context as MainActivity).createNotification(
+                       title.toString(),
+                       notificationContent.toString(),
+                       TOPIC_NEWS
+                   )
+                   checked = false
+               }
+               // else toast error message - fields can't be empty
+           }   */
+
 
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }

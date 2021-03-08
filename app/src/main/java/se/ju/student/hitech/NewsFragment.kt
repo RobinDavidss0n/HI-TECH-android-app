@@ -121,7 +121,8 @@ class NewsFragment : Fragment() {
             val novelty = news[position]
             holder.binding.newsTitleNoImage.text = novelty.title
             holder.binding.cardNews.setOnClickListener {
-                it.context.startActivity(
+
+                holder.binding.cardNews.context.startActivity(
                     Intent(
                         holder.binding.cardNews.context,
                         ViewNoveltyActivity::class.java
@@ -156,7 +157,7 @@ class NewsFragment : Fragment() {
                                     }.show()
                             }
                             R.id.menu_edit -> {
-                                newsRepository.updateNovelty()
+                                //newsRepository.updateNovelty()
                             }
                         }
                         true

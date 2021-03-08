@@ -13,6 +13,7 @@ import kotlin.collections.List as List
 
 var newsRepository = NewsRepository()
 
+
 class NewsRepository{
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -33,6 +34,7 @@ class NewsRepository{
         db.collection("news").document(novelty["id"].toString()).set(novelty).addOnSuccessListener {
             updateNewsList()
         }
+
     }
 
 
@@ -47,6 +49,7 @@ class NewsRepository{
         }.addOnFailureListener {
             Log.d(ContentValues.TAG, "Error getting documents: ", it)
         }
+
     }
 
     fun deleteNovelty(id: Int){
@@ -68,24 +71,21 @@ class NewsRepository{
         }
     }
 
-    fun updateNovelty(){
-        // TODO
-    }
-
     private fun sortNewsList(){
         newsList.sortBy{ novelty ->
             novelty.id
         }
     }
 
+    fun updateNovelty(){
+        // TODO
+    }
+
     fun getNoveltyById(id: Int):Novelty{
         return newsList[id]
-     /*   var novelty = Novelty()
-        db.collection("news").document(id.toString()).get().addOnSuccessListener {
-            novelty = it.toObject(Novelty::class.java)!!
-        }
-        return novelty  */
     }
+
+
 }
 
 
