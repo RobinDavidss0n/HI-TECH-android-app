@@ -169,7 +169,7 @@ class UserPageFragment : Fragment() {
 
         AlertDialog.Builder(context as MainActivity)
             .setTitle("Reset password")
-            .setMessage("Do you want a reset link to your sent to your email?")
+            .setMessage("Do you want a reset link sent to your email?")
             .setPositiveButton(
                 "Yes"
 
@@ -201,7 +201,7 @@ class UserPageFragment : Fragment() {
     private fun deleteAccount(){
         AlertDialog.Builder(context as MainActivity)
             .setTitle("Delete account")
-            .setMessage("Do you really want to delete your account? You can not undo this.")
+            .setMessage("Do you really want to delete your account? This action can not be undone.")
             .setPositiveButton(
                 "Yes"
 

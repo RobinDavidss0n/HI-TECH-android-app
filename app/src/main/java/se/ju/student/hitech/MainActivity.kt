@@ -48,16 +48,16 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
 
-                    .beginTransaction()
-                    .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
-                    .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
-                    .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
-                    .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
-                    .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                    .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
-                    .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
-                    .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
-                    .commitNow()
+                .beginTransaction()
+                .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
+                .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
+                .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
+                .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
+                .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
+                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
+                .commitNow()
 
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
@@ -121,7 +121,11 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.nav_login -> {
                 bottomNav.uncheckAllItems()
-                changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
+                if (userRepository.checkIfLoggedIn()) {
+                    changeToFragment(TAG_USER_PAGE)
+                } else {
+                    changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
+                }
                 return true
             }
             R.id.nav_about -> {
@@ -189,7 +193,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun makeToast(text: String) {
-        Toast.makeText(this, text,Toast.LENGTH_LONG).show()
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
 
