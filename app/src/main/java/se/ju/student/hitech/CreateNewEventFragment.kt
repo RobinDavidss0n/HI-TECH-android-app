@@ -130,7 +130,13 @@ class CreateNewEventFragment : Fragment() {
             val location = binding.etLocation.text
             val information = binding.etInformation.text
 
-            eventRepository.addEvent(title.toString(), date.toString(), time.toString(), location.toString(), information.toString())
+            eventRepository.addEvent(
+                title.toString(),
+                date.toString(),
+                time.toString(),
+                location.toString(),
+                information.toString()
+            )
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
         }
 

@@ -1,5 +1,6 @@
 package se.ju.student.hitech
 
+import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
@@ -9,12 +10,14 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -57,6 +60,12 @@ class EventsFragment : Fragment() {
                     binding.rvEvents.apply {
                         layoutManager = LinearLayoutManager(context)
                         adapter = EventAdapter(it)
+                        addItemDecoration(
+                            DividerItemDecoration(
+                                context,
+                                (layoutManager as LinearLayoutManager).orientation
+                            )
+                        )
                         registerForContextMenu(this)
                     }
 
@@ -67,6 +76,7 @@ class EventsFragment : Fragment() {
 
                 binding.swipeRefreshEvents.setOnRefreshListener {
                     eventRepository.updateEventList()
+
                     if (userRepository.checkIfLoggedIn()) {
                         loggedIn = true
                         binding.fabCreateEvent.visibility = VISIBLE
@@ -75,10 +85,9 @@ class EventsFragment : Fragment() {
                         loggedIn = false
                     }
                     binding.swipeRefreshEvents.isRefreshing = false
-
-                    binding.pbEvent.visibility = GONE
                 }
 
+                binding.pbEvent.visibility = GONE
             }
         }
     }
@@ -98,7 +107,7 @@ class EventsFragment : Fragment() {
 
     class EventViewHolder(val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class EventAdapter(val events: List<Event>) : RecyclerView.Adapter<EventViewHolder>() {
+    class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<EventViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = EventViewHolder(
             ItemEventBinding.inflate(
@@ -107,7 +116,6 @@ class EventsFragment : Fragment() {
                 false
             )
         )
-
 
         override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
             val event = events[position]
@@ -127,8 +135,20 @@ class EventsFragment : Fragment() {
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_delete -> {
-                                eventRepository.deleteEvent(id)
-                                Log.d(TAG, "position: $position")
+                                AlertDialog.Builder(holder.itemView.context)
+                                    .setTitle("Delete event")
+                                    .setMessage("Do you really want to delete this event?")
+                                    .setPositiveButton(
+                                        "YES"
+                                    ) { dialog, whichButton ->
+                                        // delete event
+                                        eventRepository.deleteEvent(id)
+                                    }.setNegativeButton(
+                                        "NO"
+                                    ) { dialog, whichButton ->
+                                        // Do not delete
+                                    }.show()
+
                             }
                             R.id.menu_edit -> {
                                 eventRepository.updateEvent()
@@ -145,6 +165,7 @@ class EventsFragment : Fragment() {
         }
 
         override fun getItemCount() = events.size
+
     }
 
 }

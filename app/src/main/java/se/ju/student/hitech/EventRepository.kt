@@ -1,5 +1,6 @@
 package se.ju.student.hitech
 
+import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.util.Log
@@ -73,7 +74,6 @@ class EventRepository {
     fun deleteEvent(id: Int) {
         db.collection("events").document(id.toString()).delete()
     }
-
 
     fun updateEvent() {
         //TODO
