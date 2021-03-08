@@ -1,33 +1,22 @@
 package se.ju.student.hitech
 
 import android.app.AlertDialog
-import android.content.Intent
-import android.net.Uri
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        const val TAG_FRAGMENT_CREATE_NEW_EVENT = "TAG_FRAGMENT_NEW_EVENT"
         const val TAG_FRAGMENT_SHOP = "TAG_FRAGMENT_SHOP"
         const val TAG_FRAGMENT_EVENTS = "TAG_FRAGMENT_EVENTS"
         const val TAG_FRAGMENT_NEWS = "TAG_FRAGMENT_NEWS"
@@ -36,11 +25,6 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
         const val TAG_FRAGMENT_CREATE_NEWS_POST = "TAG_FRAGMENT_CREATE_NEWS_POST"
         // const val TAG_FRAGMENT_NOVELTY = "TAG_FRAGMENT_NOVELTY"
-        const val TAG_MAIN_ACTIVITY = "MainActivity"
-        const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
-        const val TOPIC_NEWS = "/topics/news"
-        const val TAG_REGISTER_USER = "TAG_FRAGMENT_REGISTER_USER"
-        const val TAG_USER_PAGE = "TAG_FRAGMENT_USER_PAGE"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,26 +37,21 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setLogo(R.drawable.ic_hitech_logo_20)
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
+
         if (savedInstanceState == null) {
             supportFragmentManager
-
-                    .beginTransaction()
-                    .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
-                    .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
-                    .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
-                    .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
-                    .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                    .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
-                    .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
-                    .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
-                    .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
-                    .commitNow()
+                .beginTransaction()
+                .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
+                .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
+                .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
+                .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
+                .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
+                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                .add(R.id.fragment_container, CreateNewsPostFragment(), TAG_FRAGMENT_CREATE_NEWS_POST)
+                .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
 
         }
-
-        // subscribe all users to news notifications
-        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NEWS)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
@@ -86,30 +65,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-
-    fun createNotification(title: String, message: String, topic: String) {
-        PushNotification(
-            NotificationData(title, message),
-            topic
-        ).also {
-            sendNotification(it)
-        }
-    }
-
-    private fun sendNotification(notification: PushNotification) =
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = RetrofitInstance.api.postNotification(notification)
-
-                if (response.isSuccessful) {
-                    Log.d(TAG_MAIN_ACTIVITY, "SUCCESSFUL")
-                } else {
-                    Log.e(TAG_MAIN_ACTIVITY, response.errorBody().toString())
-                }
-            } catch (e: Exception) {
-                Log.e(TAG_MAIN_ACTIVITY, e.toString())
-            }
-        }
 
     private fun BottomNavigationView.uncheckAllItems() {
         menu.setGroupCheckable(0, true, false)
@@ -129,20 +84,19 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         return when (item.itemId) {
             R.id.nav_login -> {
+                // Toast.makeText(applicationContext, "click on Log in", Toast.LENGTH_LONG).show()
                 bottomNav.uncheckAllItems()
-                if (userRepository.checkIfLoggedIn()) {
-                    changeToFragment(TAG_USER_PAGE)
-                } else {
-                    changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
-                }
+                changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
                 return true
             }
             R.id.nav_about -> {
+                // Toast.makeText(applicationContext, "click on About", Toast.LENGTH_LONG).show()
                 bottomNav.uncheckAllItems()
                 changeToFragment(TAG_FRAGMENT_ABOUT)
                 return true
             }
             R.id.nav_problem -> {
+                //  Toast.makeText(applicationContext, "click on Problem", Toast.LENGTH_LONG).show()
                 showReportProblemAlert()
                 return true
             }
@@ -150,10 +104,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showReportProblemAlert() {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report_problem, null)
-
         AlertDialog.Builder(this)
             .setTitle("Report issue")
             .setMessage("What is the problem?")
@@ -168,25 +119,8 @@ class MainActivity : AppCompatActivity() {
             }.show()
     }
 
-
-    private fun sendEmail(message: Editable?) {
-        val subject = "Report problem HI TECH Android application"
-
-        // email intent to HI TECH IT Manager
-        val emailIntent =
-            Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", TAG_ADMIN_EMAIL, null))
-
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-        emailIntent.putExtra(Intent.EXTRA_TEXT, message.toString())
-        try {
-            (Intent.createChooser(emailIntent, "Choose email client.."))
-            startActivity(emailIntent)
-        } catch (e: Exception) {
-            Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
-        }
-    }
-
     fun changeToFragment(fragment_tag: String) {
+
         with(supportFragmentManager.beginTransaction()) {
 
             for (fragment in supportFragmentManager.fragments) {
@@ -194,14 +128,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             show(supportFragmentManager.findFragmentByTag(fragment_tag)!!)
+
             commit()
         }
     }
-
-
-    fun makeToast(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-    }
-
 
 }
