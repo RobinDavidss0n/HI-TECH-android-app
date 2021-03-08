@@ -1,7 +1,9 @@
 package se.ju.student.hitech
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -114,6 +116,8 @@ class EventsFragment : Fragment() {
             holder.binding.tvTitle.text = event.title
             holder.binding.tvInformation.text = event.information
 
+            val id = event.id
+
             if (userRepository.checkIfLoggedIn()) {
                 holder.binding.icMenu.setOnClickListener {
                     val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
@@ -122,7 +126,8 @@ class EventsFragment : Fragment() {
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_delete -> {
-                                eventRepository.deleteEvent(position)
+                                eventRepository.deleteEvent(id)
+                                Log.d(TAG, "position: $position")
                             }
                             R.id.menu_edit -> {
                                 eventRepository.updateEvent()

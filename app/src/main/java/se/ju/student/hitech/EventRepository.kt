@@ -8,39 +8,35 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 var eventRepository = EventRepository()
 
-class EventRepository{
+class EventRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var eventList = mutableListOf<Event>()
     var events = MutableLiveData<List<Event>>()
 
     fun addEvent(title: String, date: String, time: String, location: String, information: String) {
-        val event = HashMap<String, Any>()
 
-        event["title"] = title
-        event["date"] = date
-        event["time"] = time
-        event["location"] = location
-        event["information"] = information
-        event["id"] = when {
+        val id = when {
             eventList.count() == 0 -> 1
-            else -> eventList.last().id + 1
+            else -> eventList.first().id + 1
         }
-        db.collection("events")
-            .add(event)
-            .addOnSuccessListener { documentReference ->
-                EventsFragment.EventAdapter(eventList).notifyItemInserted(eventList.size)
-                Log.d(
-                    ContentValues.TAG,
-                    "DocumentSnapshot written with ID: ${documentReference.id}"
-                )
-            }
-            .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error adding document", e)
-            }
+
+        val event = hashMapOf(
+            "title" to title,
+            "date" to date,
+            "time" to time,
+            "location" to location,
+            "information" to information,
+            "id" to id
+        )
+
+        db.collection("events").document(id.toString()).set(event)
     }
 
-    fun loadEventData(events:MutableLiveData<List<Event>>,callback:(List<Event>,MutableLiveData<List<Event>>)->Unit){
+    fun loadEventData(
+        events: MutableLiveData<List<Event>>,
+        callback: (List<Event>, MutableLiveData<List<Event>>) -> Unit
+    ) {
 
         db.collection("events").get().addOnSuccessListener { result ->
 
@@ -54,7 +50,7 @@ class EventRepository{
 
     }
 
-    fun updateEventList(){
+    fun updateEventList() {
         db.collection("events").get().addOnSuccessListener { result ->
 
             eventList = result.toObjects(Event::class.java)
@@ -68,23 +64,22 @@ class EventRepository{
         }
     }
 
-    private fun sortEventList(){
-        eventList.sortByDescending{ event ->
+    private fun sortEventList() {
+        eventList.sortByDescending { event ->
             event.id
         }
     }
 
-    fun deleteEvent(id: Int){
-        db.collection("events").document().delete().addOnSuccessListener {
-
-        }
+    fun deleteEvent(id: Int) {
+        db.collection("events").document(id.toString()).delete()
     }
 
-    fun updateEvent(){
+
+    fun updateEvent() {
         //TODO
     }
 
-    fun getEventById(id: Int):Event{
+    fun getEventById(id: Int): Event {
         return eventList[id]
     }
 
