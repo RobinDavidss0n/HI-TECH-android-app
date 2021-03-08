@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
         const val TOPIC_NEWS = "/topics/news"
         const val TAG_REGISTER_USER = "TAG_FRAGMENT_REGISTER_USER"
+        const val TAG_USER_PAGE = "TAG_FRAGMENT_USER_PAGE"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
                     .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                     .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                    .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
                     .commitNow()
 
             changeToFragment(TAG_FRAGMENT_NEWS)

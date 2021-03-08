@@ -9,11 +9,6 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AdminLoginFragment : Fragment() {
 
@@ -35,10 +30,11 @@ class AdminLoginFragment : Fragment() {
         val passwordInput =
             view?.findViewById<TextInputEditText>(R.id.admin_login_passwordTextInputEditText)
         val loginButton = view?.findViewById<Button>(R.id.admin_login_loginButton)
-        val logoutButton = view?.findViewById<Button>(R.id.logout)
+
         progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)!!
 
         loginButton?.setOnClickListener {
+            UserRepository().userLogout()
             if (verifyLoginInputs(
                     emailInput?.text.toString().trim(),
                     passwordInput?.text.toString()
@@ -50,20 +46,39 @@ class AdminLoginFragment : Fragment() {
 
         }
 
-        logoutButton?.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
-            userLogout()
-
-
-        }
-
         val register = view?.findViewById<TextView>(R.id.admin_login_register)
 
         register?.setOnClickListener {
             (context as MainActivity).changeToFragment(MainActivity.TAG_REGISTER_USER)
         }
 
+        val forgotPassword = view?.findViewById<TextView>(R.id.admin_login_forgotPassword)
 
+        forgotPassword?.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            resetPassword(emailInput?.text.toString().trim())
+
+        }
+
+
+    }
+
+    private fun resetPassword(email: String){
+        val userRepository = UserRepository()
+        if (email.isEmpty()){
+            progressBar.visibility = View.GONE
+            (context as MainActivity).makeToast("Write your email in the email field and press on 'Forgot password?' again.")
+        }else{
+            userRepository.sendPasswordReset(email) { result ->
+                progressBar.visibility = View.GONE
+                when (result) {
+                    "successful" -> (context as MainActivity).makeToast("Check your email!")
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                }
+
+            }
+
+        }
     }
 
     private fun verifyLoginInputs(email: String, password: String): Boolean {
@@ -108,8 +123,10 @@ class AdminLoginFragment : Fragment() {
                 progressBar.visibility = View.GONE
                 when (result) {
 
-                    "successful" -> (context as MainActivity).makeToast("Login successful!")
-                    //redirect
+                    "successful" ->{
+                        (context as MainActivity).makeToast("Login successful!")
+                        (context as MainActivity).changeToFragment(MainActivity.TAG_USER_PAGE)
+                    }
                     "invalidEmail" -> (context as MainActivity).makeToast("No user is tied to this email, pleas use a correct email.")
                     "invalidPassword" -> (context as MainActivity).makeToast("Wrong password, try again.")
                     "emailNotVerified" -> (context as MainActivity).makeToast("Check your email to verify your account.")
@@ -120,19 +137,5 @@ class AdminLoginFragment : Fragment() {
 
 
         }
-    }
-
-    private fun userLogout() {
-
-        val userRepository = UserRepository()
-        val progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)
-
-        userRepository.userLogout()
-
-
-        progressBar?.visibility = View.GONE
-        (context as MainActivity).makeToast("User logged out!")
-        //redirect
-
     }
 }

@@ -7,7 +7,7 @@
     android:layout_margin="20dp">
 
     <ProgressBar
-        android:id="@+id/admin_login_progressBar"
+        android:id="@+id/user_page_progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,72 +21,86 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/admin_login_emailTextInputLayout"
+        android:id="@+id/user_page_nameTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/admin_login_passwordTextInputLayout">
+        app:layout_constraintBottom_toTopOf="@+id/user_page_roleTextInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/admin_login_emailTextInputEditText"
+            android:id="@+id/user_page_nameTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/admin_login_emailInputHint"
+            android:hint="@string/register_user_name"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/admin_login_passwordTextInputLayout"
+        android:id="@+id/user_page_roleTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:passwordToggleEnabled="true"
         tools:layout_editor_absoluteX="-16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/admin_login_passwordTextInputEditText"
+            android:id="@+id/user_page_roleTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/admin_login_passwordInputHint"
-            android:inputType="textPassword" />
+            android:hint="@string/register_user_role" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/admin_login_loginButton"
+        android:id="@+id/user_page_logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#FDD609"
         android:fontFamily="@font/avenir_next_bold"
         android:shadowColor="#FFFFFF"
-        android:text="@string/admin_login_loginButton"
+        android:text="@string/User_page_logout"
         android:textColor="#000000"
         android:textColorHighlight="#615555"
         android:textColorHint="#716666"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/admin_login_passwordTextInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/user_page_roleTextInputLayout" />
 
     <TextView
-        android:id="@+id/admin_login_register"
+        android:id="@+id/user_page_resetPasswordText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="@string/admin_login_registerText"
+        android:text="@string/user_page_resetPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/admin_login_loginButton" />
+        app:layout_constraintTop_toBottomOf="@+id/user_page_updateButton" />
 
-    <TextView
-        android:id="@+id/admin_login_forgotPassword"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/user_page_emailTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/user_page_nameTextInputLayout"
+        tools:layout_editor_absoluteX="182dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_page_emailTextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/admin_login_emailInputHint" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/user_page_updateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="@string/admin_login_forgotPasswordText"
+        android:layout_marginTop="25dp"
+        android:text="@string/user_page_update"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/admin_login_register" />
+        app:layout_constraintTop_toBottomOf="@+id/user_page_logoutButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
