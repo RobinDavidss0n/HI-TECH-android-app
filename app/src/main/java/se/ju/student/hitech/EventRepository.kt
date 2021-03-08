@@ -30,8 +30,9 @@ class EventRepository {
             "information" to information,
             "id" to id
         )
-
+        
         db.collection("events").document(id.toString()).set(event)
+        updateEventList()
     }
 
     fun loadEventData(
@@ -73,6 +74,7 @@ class EventRepository {
 
     fun deleteEvent(id: Int) {
         db.collection("events").document(id.toString()).delete()
+        updateEventList()
     }
 
     fun updateEvent() {
@@ -82,6 +84,4 @@ class EventRepository {
     fun getEventById(id: Int): Event {
         return eventList[id]
     }
-
-
 }
