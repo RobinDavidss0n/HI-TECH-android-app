@@ -59,5 +59,15 @@
         android:id="@+id/tv_information"
         android:text="information"/>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ic_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_more"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
