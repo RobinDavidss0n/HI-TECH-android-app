@@ -31,7 +31,8 @@ class EventsFragment : Fragment() {
     private val viewModel: EventsViewModel by viewModels()
 
     companion object {
-        fun newInstance() = ShopFragment()
+        fun newInstance() = EventsFragment()
+        var loggedIn: Boolean = false
     }
 
     override fun onCreateView(
@@ -59,25 +60,26 @@ class EventsFragment : Fragment() {
                         registerForContextMenu(this)
                     }
 
+                }
+                binding.fabCreateEvent.setOnClickListener {
+                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
+                }
 
-                    binding.swipeRefreshEvents.setOnRefreshListener {
-                        eventRepository.updateEventList()
-                        binding.swipeRefreshEvents.isRefreshing = false
+                binding.swipeRefreshEvents.setOnRefreshListener {
+                    eventRepository.updateEventList()
+                    if (userRepository.checkIfLoggedIn()) {
+                        loggedIn = true
+                        binding.fabCreateEvent.visibility = VISIBLE
+                    } else {
+                        binding.fabCreateEvent.visibility = GONE
+                        loggedIn = false
                     }
-                    binding.fabCreateEvent.setOnClickListener {
-                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
-                    }
+                    binding.swipeRefreshEvents.isRefreshing = false
 
-                    binding.pbEvent.visibility = View.GONE
+                    binding.pbEvent.visibility = GONE
                 }
 
             }
-        }
-
-        if (userRepository.checkIfLoggedIn()) {
-            binding.fabCreateEvent.visibility = VISIBLE
-        } else {
-            binding.fabCreateEvent.visibility = GONE
         }
     }
 
@@ -92,7 +94,6 @@ class EventsFragment : Fragment() {
                 }
             }
         }
-
     }
 
     class EventViewHolder(val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root)
@@ -118,7 +119,7 @@ class EventsFragment : Fragment() {
 
             val id = event.id
 
-            if (userRepository.checkIfLoggedIn()) {
+            if (loggedIn) {
                 holder.binding.icMenu.setOnClickListener {
                     val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
                     popupMenu.inflate(R.menu.recyclerview_menu)
