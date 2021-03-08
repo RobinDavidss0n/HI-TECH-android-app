@@ -5,7 +5,10 @@ import android.view.View
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.UserDataReader
 import kotlin.math.sign
+
+var userRepository = UserRepository()
 
 class UserRepository {
 
