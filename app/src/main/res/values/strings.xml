@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">My App</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">HI TECH</string>
     <string name="news">NEWS</string>
     <string name="events">EVENTS</string>
     <string name="shop">HI SHOP</string>
@@ -16,4 +14,29 @@
     <string name="title">Title</string>
     <string name="content">Content</string>
     <string name="notification_description">Notification description</string>
+    <string name="about_us">ABOUT US</string>
+    <string name="about_content">HI TECH is the student association for all those who study at Jönköping School of Engineering. The association has been working to promote the interests of students for more than thirty years. This includes arranging joint activities, parties, pub nights and kick-off; many of the fun events that contribute to a more enjoyable social life for students. HI TECH also works to promote student influence and educational scrutiny at, and in conjunction with, Jönköping School of Engineering.</string>
+    <string name="about_content_more">HI TECH is a lot more than just board meetings. It is an association in which more than 150 people are involved in some form, such as via committees, projects and events. HI TECH is an association that is full of opportunities to improve the quality of student life at the School of Engineering, day by day.</string>
+    <string name="visit_our_website">Visit our website</string>
+    <string name="send">Send</string>
+    <string name="cancel">Cancel</string>
+    <string name="report_problem_subject_email">Report problem HI TECH Android application</string>
+    <string name="choose_email_client">Choose email client..</string>
+    <string name="order_now">PLACE AN ORDER</string>
+    <string name="about_hi_shop">The HI SHOP is a small store where you can buy everything you need for epic adventures in your overall and the student culture in Jönköping. We have overalls, patches, glue, pencils, towels for the CAPS event and much more.</string>
+    <string name="admin_login_loginButton">Login</string>
+    <string name="admin_login_passwordInputHint">Password</string>
+    <string name="admin_login_emailInputHint">Email</string>
+    <string name="admin_login_registerText">Register</string>
+    <string name="admin_login_forgotPasswordText">Forgot password?</string>
+    <string name="register_user_repeatPassword">Repeat Password</string>
+    <string name="register_user_name">Name</string>
+    <string name="register_user_role">Role</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="User_page_logout">Logout</string>
+    <string name="user_page_resetPassword">Reset password</string>
+    <string name="user_page_updateUserInfo">Update user info</string>
+    <string name="user_page_update">Update</string>
+    <string name="user_page_deleteAccount">Delete Account</string>
 </resources>

@@ -1,11 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp">
 
     <TextView
+        android:id="@+id/textview_about"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:fontFamily="@font/avenir_next_bold"
+        android:text="@string/about_us"
+        android:textColor="@color/yellow"
+        android:textSize="30sp" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:text="About"
-        />
+        android:layout_below="@id/textview_about">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textview_about_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/about_content"
+                android:textColor="@color/yellow"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:id="@+id/textview_about_content_more"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:text="@string/about_content_more"
+                android:textColor="@color/yellow"
+                android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textview_about_content" />
+
+            <Button
+                android:id="@+id/button_visit_website"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@color/yellow"
+                android:padding="10dp"
+                android:text="@string/visit_our_website"
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textview_about_content_more" />
+
+            <ImageButton
+                android:background="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_linkedin"
+                android:padding="20dp"
+                android:layout_marginTop="30dp"
+                android:id="@+id/imagebutton_linkedin"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/imagebutton_facebook"
+                app:layout_constraintTop_toBottomOf="@id/button_visit_website"/>
+
+            <ImageButton
+                android:background="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/ic_facebook"
+                android:id="@+id/imagebutton_facebook"
+                app:layout_constraintLeft_toRightOf="@id/imagebutton_linkedin"
+                android:padding="20dp"
+                app:layout_constraintRight_toLeftOf="@id/imagebutton_instagram"
+                app:layout_constraintTop_toBottomOf="@id/button_visit_website" />
+
+            <ImageButton
+                android:background="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_instagram"
+                android:layout_marginTop="30dp"
+                app:layout_constraintLeft_toRightOf="@id/imagebutton_facebook"
+                android:padding="20dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:id="@+id/imagebutton_instagram"
+                app:layout_constraintTop_toBottomOf="@id/button_visit_website"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </RelativeLayout>

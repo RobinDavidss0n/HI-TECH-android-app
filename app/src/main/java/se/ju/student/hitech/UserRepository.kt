@@ -44,7 +44,6 @@ class UserRepository {
                 e.contains("password is invalid") -> "invalidPassword"
                 else -> "internalError"
             }
-
             callback(result)
         }
     }
@@ -102,6 +101,7 @@ class UserRepository {
                 val user = result.toObject(User::class.java)
                 if (user != null){
                     callbackOnSuccessful(user, auth.currentUser?.email.toString())
+
                 }else{
                     callbackOnFailure("notFound")
                 }
