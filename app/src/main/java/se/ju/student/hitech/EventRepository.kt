@@ -8,25 +8,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 var eventRepository = EventRepository()
 
-class EventRepository {
+class EventRepository{
 
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var eventList = mutableListOf<Event>()
-
-    fun loadEvents(
-        events: MutableLiveData<List<Event>>,
-        callback: (List<Event>, MutableLiveData<List<Event>>) -> Unit
-    ) {
-
-        db.collection("events").get().addOnSuccessListener { result ->
-            eventList = result.toObjects(Event::class.java)
-            callback(eventList, events)
-
-        }.addOnFailureListener {
-            Log.d(TAG, "Error getting documents: ", it)
-        }
-
-    }
+    var events = MutableLiveData<List<Event>>()
 
     fun addEvent(title: String, date: String, time: String, location: String, information: String) {
         val event = HashMap<String, Any>()
@@ -53,4 +39,44 @@ class EventRepository {
                 Log.w(ContentValues.TAG, "Error adding document", e)
             }
     }
+
+    fun loadEventData(events:MutableLiveData<List<Event>>,callback:(List<Event>,MutableLiveData<List<Event>>)->Unit){
+
+        db.collection("events").get().addOnSuccessListener { result ->
+
+            eventList = result.toObjects(Event::class.java)
+            sortEventList()
+            callback(eventList, events)
+
+        }.addOnFailureListener {
+            Log.d(ContentValues.TAG, "Error getting documents: ", it)
+        }
+
+    }
+
+    fun updateEventList(){
+        db.collection("events").get().addOnSuccessListener { result ->
+
+            eventList = result.toObjects(Event::class.java)
+            sortEventList()
+            events.value = eventList
+
+            EventsFragment.EventAdapter(eventList).notifyDataSetChanged()
+
+        }.addOnFailureListener {
+            Log.d(ContentValues.TAG, "Error getting documents: ", it)
+        }
+    }
+
+    private fun sortEventList(){
+        eventList.sortBy{ event ->
+            event.id
+        }
+    }
+
+    fun getEventById(id: Int):Event{
+        return eventList[id]
+    }
+
+
 }

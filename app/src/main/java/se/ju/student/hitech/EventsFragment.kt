@@ -54,20 +54,24 @@ class EventsFragment : Fragment() {
                     binding.rvEvents.apply {
                         layoutManager = LinearLayoutManager(context)
                         adapter = EventAdapter(it)
-
+                        registerForContextMenu(this)
                     }
 
                     binding.fabCreateEvent.setOnClickListener {
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
                     }
 
-                    binding.progressBarEvent.visibility = View.GONE
+                    binding.pbEvent.visibility = View.GONE
                 }
 
             }
         }
 
-
+        if (userRepository.checkIfLoggedIn()) {
+            binding.fabCreateEvent.visibility = VISIBLE
+        } else {
+            binding.fabCreateEvent.visibility = GONE
+        }
     }
 
     class EventsViewModel : ViewModel() {
@@ -77,7 +81,7 @@ class EventsFragment : Fragment() {
         init {
             viewModelScope.launch(Dispatchers.IO) {
 
-                eventRepository.loadEvents(events) { fetchedEvents, events ->
+                eventRepository.loadEventData(events) { fetchedEvents, events ->
                     events.postValue(fetchedEvents)
                 }
             }
@@ -97,6 +101,7 @@ class EventsFragment : Fragment() {
             )
         )
 
+
         override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
             val event = events[position]
             holder.binding.tvDate.text = event.date
@@ -104,9 +109,30 @@ class EventsFragment : Fragment() {
             holder.binding.tvTime.text = event.time
             holder.binding.tvTitle.text = event.title
             holder.binding.tvInformation.text = event.information
-            holder.binding.icMenu.setOnClickListener{
-              //  val popupMenu = PopupMenu(parent.context, holder.binding.icMenu)
+
+            if (userRepository.checkIfLoggedIn()) {
+                holder.binding.icMenu.setOnClickListener {
+                    val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
+                    popupMenu.inflate(R.menu.recyclerview_menu)
+
+                    popupMenu.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.menu_delete -> {
+                              //  eventRepository.deleteEvent()
+                            }
+                            R.id.menu_edit -> {
+
+                            }
+                        }
+                        true
+                    }
+                    popupMenu.show()
+
+                }
+            } else {
+                holder.binding.icMenu.visibility = GONE
             }
+
 
         }
 

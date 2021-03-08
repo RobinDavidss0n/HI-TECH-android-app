@@ -8,6 +8,5 @@ data class Event(
     val location: String = "",
     val date: String = "",
     val time: String = "",
-    val information : String = "",
-    val timestamp: Timestamp? = null
+    val information : String = ""
 )
