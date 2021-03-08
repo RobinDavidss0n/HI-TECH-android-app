@@ -21,7 +21,15 @@
     <string name="admin_login_passwordInputHint">Password</string>
     <string name="admin_login_emailInputHint">Email</string>
     <string name="admin_login_registerText">Register</string>
+    <string name="admin_login_forgotPasswordText">Forgot password?</string>
     <string name="register_user_repeatPassword">Repeat Password</string>
     <string name="register_user_name">Name</string>
     <string name="register_user_role">Role</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="User_page_logout">Logout</string>
+    <string name="user_page_resetPassword">Reset password</string>
+    <string name="user_page_updateUserInfo">Update user info</string>
+    <string name="user_page_update">Update</string>
+    <string name="user_page_deleteAccount">Delete Account</string>
 </resources>
