@@ -8,25 +8,19 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.PopupMenu
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS_POST
 import se.ju.student.hitech.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
-import kotlin.concurrent.thread
 
 class NewsFragment : Fragment() {
 
@@ -137,7 +131,7 @@ class NewsFragment : Fragment() {
             if (loggedIn) {
                 holder.binding.icMenu.setOnClickListener {
                     val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
-                    popupMenu.inflate(R.menu.recyclerview_menu)
+                    popupMenu.inflate(R.menu.recyclerview_menu_news)
 
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
@@ -157,7 +151,7 @@ class NewsFragment : Fragment() {
                                     }.show()
                             }
                             R.id.menu_edit -> {
-                                //newsRepository.updateNovelty()
+                                newsRepository.updateNovelty()
                             }
                         }
                         true
