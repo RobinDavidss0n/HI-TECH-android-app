@@ -10,4 +10,5 @@
         android:title="Delete"
         android:id="@+id/menu_delete"
         app:showAsAction="never"/>
+
 </menu>
