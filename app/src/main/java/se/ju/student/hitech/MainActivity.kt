@@ -23,6 +23,7 @@ import java.lang.Exception
 class MainActivity : AppCompatActivity() {
 
     companion object {
+        const val TAG_FRAGMENT_CREATE_NEW_EVENT = "TAG_FRAGMENT_NEW_EVENT"
         const val TAG_FRAGMENT_SHOP = "TAG_FRAGMENT_SHOP"
         const val TAG_FRAGMENT_EVENTS = "TAG_FRAGMENT_EVENTS"
         const val TAG_FRAGMENT_NEWS = "TAG_FRAGMENT_NEWS"
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
                     .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                     .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                    .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
                     .commitNow()
 
             changeToFragment(TAG_FRAGMENT_NEWS)

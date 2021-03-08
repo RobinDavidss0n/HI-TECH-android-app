@@ -53,7 +53,7 @@ class ShopFragment : Fragment() {
                         adapter = ShopAdapter(it)
                     }
 
-                    view.findViewById<Button>(R.id.button_order)?.setOnClickListener {
+                    binding.buttonOrder.setOnClickListener {
                         // open HI SHOP google form
                         openNewTabWindow("https://forms.gle/Mh4ALSQLNcTivKtj8", this)
                     }

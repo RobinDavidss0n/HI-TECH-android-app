@@ -11,11 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEW_EVENT
 import se.ju.student.hitech.databinding.FragmentEventsBinding
 import se.ju.student.hitech.databinding.FragmentShopBinding
+import se.ju.student.hitech.databinding.ItemEventBinding
 
 class EventsFragment : Fragment() {
 
@@ -39,33 +43,72 @@ class EventsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val floatingActionButton = view?.findViewById<FloatingActionButton>(R.id.fab_create_event)
-        val progressBar = view?.findViewById<FloatingActionButton>(R.id.progressBar_event)
+        viewModel.events.observe(viewLifecycleOwner) {
 
-        if (userRepository.checkIfLoggedIn()) {
-            floatingActionButton?.visibility = VISIBLE
-        } else{
-            floatingActionButton?.visibility = GONE
-        }
+            if (it != null) {
 
+                binding.rvEvents.post {
 
+                    binding.rvEvents.apply {
+                        layoutManager = LinearLayoutManager(context)
+                        adapter = EventAdapter(it)
+                    }
 
-    }
+                    binding.fabCreateEvent.setOnClickListener {
+                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
+                    }
 
-}
+                    binding.progressBarEvent.visibility = View.GONE
+                }
 
-class EventsViewModel : ViewModel() {
-
-    val events = MutableLiveData<List<Event>>()
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-
-            shopRepository.loadShopImages(shopItems) { fetchedImages, shopItems ->
-                shopItems.postValue(fetchedImages)
             }
+        }
+
+
+    }
+
+    class EventsViewModel : ViewModel() {
+
+        val events = MutableLiveData<List<Event>>()
+
+        init {
+            viewModelScope.launch(Dispatchers.IO) {
+
+                eventRepository.loadEvents(events) { fetchedEvents, events ->
+                    events.postValue(fetchedEvents)
+                }
+            }
+        }
+
+    }
+
+    class EventViewHolder(val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root)
+
+    class EventAdapter(val events: List<Event>) : RecyclerView.Adapter<EventViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = EventViewHolder(
+            ItemEventBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+
+        override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+            val event = events[position]
+            holder.binding.tvDate.text = event.date
+            holder.binding.tvLocation.text = event.location
+            holder.binding.tvTime.text = event.time
+            holder.binding.tvTitle.text = event.title
+            holder.binding.tvInformation.text = event.information
 
         }
+
+        override fun getItemCount() = events.size
+
     }
 
 }
+
+
+

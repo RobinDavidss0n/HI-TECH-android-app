@@ -1,5 +1,6 @@
 package se.ju.student.hitech
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -25,5 +26,31 @@ class EventRepository {
             Log.d(TAG, "Error getting documents: ", it)
         }
 
+    }
+
+    fun addEvent(title: String, date: String, time: String, location: String, information: String) {
+        val event = HashMap<String, Any>()
+
+        event["title"] = title
+        event["date"] = date
+        event["time"] = time
+        event["location"] = location
+        event["information"] = information
+        event["id"] = when {
+            eventList.count() == 0 -> 1
+            else -> eventList.last().id + 1
+        }
+        db.collection("events")
+            .add(event)
+            .addOnSuccessListener { documentReference ->
+                EventsFragment.EventAdapter(eventList).notifyItemInserted(eventList.size)
+                Log.d(
+                    ContentValues.TAG,
+                    "DocumentSnapshot written with ID: ${documentReference.id}"
+                )
+            }
+            .addOnFailureListener { e ->
+                Log.w(ContentValues.TAG, "Error adding document", e)
+            }
     }
 }
