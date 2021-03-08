@@ -53,6 +53,8 @@ class NewsFragment : Fragment() {
 
                 binding.rvRecyclerView.apply {
                     layoutManager = LinearLayoutManager(context)
+                    (layoutManager as LinearLayoutManager).setReverseLayout(true)
+                    (layoutManager as LinearLayoutManager).setStackFromEnd(true)
                     adapter = NewsAdapter(it)
                 }
 
@@ -70,7 +72,7 @@ class NewsFragment : Fragment() {
 
     class NewsViewModel : ViewModel(){
 
-        val news = MutableLiveData<List<Novelty>>()
+        var news = MutableLiveData<List<Novelty>>()
 
         init {
             viewModelScope.launch(Dispatchers.IO) {
