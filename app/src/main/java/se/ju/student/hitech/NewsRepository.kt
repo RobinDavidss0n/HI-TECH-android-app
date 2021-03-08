@@ -4,8 +4,10 @@ import android.content.ContentValues
 import android.util.Log
 import android.widget.Adapter
 import android.widget.BaseExpandableListAdapter
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.collections.List as List
 
@@ -16,7 +18,7 @@ class NewsRepository{
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var newsList = mutableListOf<Novelty>()
-
+    var news = MutableLiveData<List<Novelty>>()
 
     fun addNovelty(title: String, content: String){
 
@@ -59,7 +61,9 @@ class NewsRepository{
         db.collection("news").get().addOnSuccessListener { result ->
 
             newsList = result.toObjects(Novelty::class.java)
-            NewsFragment.NewsViewModel().news.postValue(newsList)
+            sortNewsList()
+            news.value = newsList
+
             NewsFragment.NewsAdapter(newsList).notifyDataSetChanged()
 
         }.addOnFailureListener {

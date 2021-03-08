@@ -96,6 +96,7 @@ class CreateNewsPostFragment : Fragment() {
                // else toast error message - fields can't be empty
            }   */
 
+
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
 

@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS_POST
@@ -57,11 +58,14 @@ class NewsFragment : Fragment() {
                     (layoutManager as LinearLayoutManager).setStackFromEnd(true)
                     adapter = NewsAdapter(it)
                 }
-
+                    val refreshNews = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshNews)
+                    refreshNews.setOnRefreshListener{
+                        newsRepository.updateNewsList()
+                        refreshNews.isRefreshing = false
+                    }
                 view.findViewById<Button>(R.id.btn_news_newPost)?.setOnClickListener() {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
                 }
-
                 binding.progressBar.visibility = View.GONE
             }
 
@@ -72,7 +76,7 @@ class NewsFragment : Fragment() {
 
     class NewsViewModel : ViewModel(){
 
-        var news = MutableLiveData<List<Novelty>>()
+        var news = newsRepository.news
 
         init {
             viewModelScope.launch(Dispatchers.IO) {
