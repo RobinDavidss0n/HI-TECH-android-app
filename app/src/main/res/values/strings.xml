@@ -7,6 +7,13 @@
     <string name="problem">Report problem</string>
     <string name="login">Admin log in</string>
     <string name="about">About HI TECH</string>
+    <string name="new_post">NEW POST</string>
+    <string name="create_notification">Create notification</string>
+    <string name="create_post">CREATE POST</string>
+    <string name="go_back">GO BACK</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="notification_description">Notification description</string>
     <string name="about_us">ABOUT US</string>
     <string name="about_content">HI TECH is the student association for all those who study at Jönköping School of Engineering. The association has been working to promote the interests of students for more than thirty years. This includes arranging joint activities, parties, pub nights and kick-off; many of the fun events that contribute to a more enjoyable social life for students. HI TECH also works to promote student influence and educational scrutiny at, and in conjunction with, Jönköping School of Engineering.</string>
     <string name="about_content_more">HI TECH is a lot more than just board meetings. It is an association in which more than 150 people are involved in some form, such as via committees, projects and events. HI TECH is an association that is full of opportunities to improve the quality of student life at the School of Engineering, day by day.</string>

@@ -11,6 +11,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_CONTACT = "TAG_FRAGMENT_CONTACT"
         const val TAG_FRAGMENT_ADMIN_LOGIN = "TAG_FRAGMENT_ADMIN_LOGIN"
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
+        const val TAG_FRAGMENT_CREATE_NEWS_POST = "TAG_FRAGMENT_CREATE_NEWS_POST"
+        // const val TAG_FRAGMENT_NOVELTY = "TAG_FRAGMENT_NOVELTY"
         const val TAG_MAIN_ACTIVITY = "MainActivity"
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
         const val TOPIC_NEWS = "/topics/news"
@@ -41,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_HITECH)
         setContentView(R.layout.activity_main)
+
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.drawable.ic_hitech_logo_20)
@@ -61,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
                     .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
+
         }
 
         // subscribe all users to news notifications
@@ -147,20 +155,19 @@ class MainActivity : AppCompatActivity() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report_problem, null)
 
         AlertDialog.Builder(this)
-            .setTitle(R.string.problem)
-            .setView(dialogView)
+            .setTitle("Report issue")
+            .setMessage("What is the problem?")
             .setPositiveButton(
-                R.string.send
+                "Send"
             ) { dialog, whichButton ->
-                // Send email from users input
-                val mail = dialogView.findViewById<EditText>(R.id.edittext_problem).text
-                sendEmail(mail)
+                // Send information in textbox
             }.setNegativeButton(
-                R.string.cancel
+                "Go back"
             ) { dialog, whichButton ->
                 // Do nothing
             }.show()
     }
+
 
     private fun sendEmail(message: Editable?) {
         val subject = "Report problem HI TECH Android application"
@@ -178,7 +185,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
         }
     }
-
 
     fun changeToFragment(fragment_tag: String) {
         with(supportFragmentManager.beginTransaction()) {
