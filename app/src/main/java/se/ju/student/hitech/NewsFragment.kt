@@ -1,11 +1,15 @@
 package se.ju.student.hitech
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.PopupMenu
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,13 +35,14 @@ class NewsFragment : Fragment() {
 
     companion object {
         fun newInstance() = NewsFragment()
+        var loggedIn: Boolean = false
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = FragmentNewsBinding.inflate(layoutInflater,container,false).run {
+    ) = FragmentNewsBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
 
@@ -46,35 +51,44 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.news.observe(viewLifecycleOwner){
+        if (userRepository.checkIfLoggedIn()) {
+            loggedIn = true
+            binding.fabCreateNewPost.visibility = VISIBLE
+        } else {
+            binding.fabCreateNewPost.visibility = GONE
+            loggedIn = false
+        }
 
-            if (it != null){
+        viewModel.news.observe(viewLifecycleOwner) {
 
-                binding.rvRecyclerView.post{
+            if (it != null) {
 
-                binding.rvRecyclerView.apply {
-                    layoutManager = LinearLayoutManager(context)
-                    (layoutManager as LinearLayoutManager).setReverseLayout(true)
-                    (layoutManager as LinearLayoutManager).setStackFromEnd(true)
-                    adapter = NewsAdapter(it)
-                }
-                    val refreshNews = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshNews)
-                    refreshNews.setOnRefreshListener{
-                        newsRepository.updateNewsList()
-                        refreshNews.isRefreshing = false
+                binding.rvRecyclerView.post {
+
+                    binding.rvRecyclerView.apply {
+                        layoutManager = LinearLayoutManager(context)
+                        (layoutManager as LinearLayoutManager).reverseLayout = true
+                        (layoutManager as LinearLayoutManager).stackFromEnd = true
+                        adapter = NewsAdapter(it)
+
+                        registerForContextMenu(this)
                     }
-                view.findViewById<Button>(R.id.btn_news_newPost)?.setOnClickListener() {
-                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
+                    binding.swipeRefreshNews.setOnRefreshListener {
+                        newsRepository.updateNewsList()
+                        binding.swipeRefreshNews.isRefreshing = false
+                    }
+                    binding.fabCreateNewPost.setOnClickListener {
+                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
+                    }
+                    binding.progressBar.visibility = View.GONE
                 }
-                binding.progressBar.visibility = View.GONE
-            }
 
             }
         }
 
     }
 
-    class NewsViewModel : ViewModel(){
+    class NewsViewModel : ViewModel() {
 
         var news = newsRepository.news
 
@@ -92,7 +106,7 @@ class NewsFragment : Fragment() {
 
     class NewsViewHolder(val binding: CardNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class NewsAdapter(val news : List<Novelty>) : RecyclerView.Adapter<NewsViewHolder>(){
+    class NewsAdapter(val news: List<Novelty>) : RecyclerView.Adapter<NewsViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NewsViewHolder(
             CardNewsBinding.inflate(
@@ -104,8 +118,8 @@ class NewsFragment : Fragment() {
 
         override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
 
-           val novelty = news[position]
-            holder.binding.newsTitleNoImage.text= novelty.title
+            val novelty = news[position]
+            holder.binding.newsTitleNoImage.text = novelty.title
             holder.binding.cardNews.setOnClickListener {
 
                 holder.binding.cardNews.context.startActivity(
@@ -113,19 +127,50 @@ class NewsFragment : Fragment() {
                         holder.binding.cardNews.context,
                         ViewNoveltyActivity::class.java
                     ).apply {
-                        putExtra(ViewNoveltyActivity.EXTRA_NOVELTY_ID,novelty.id)
+                        putExtra(EXTRA_NOVELTY_ID, novelty.id)
                     }
                 )
-                //(holder.binding.newsTitleNoImage.context as MainActivity).changeToFragment(TAG_FRAGMENT_NOVELTY)
             }
 
+            val id = novelty.id
+
+            if (loggedIn) {
+                holder.binding.icMenu.setOnClickListener {
+                    val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
+                    popupMenu.inflate(R.menu.recyclerview_menu)
+
+                    popupMenu.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.menu_delete -> {
+                                AlertDialog.Builder(holder.itemView.context)
+                                    .setTitle("Delete post")
+                                    .setMessage("Do you really want to delete this post?")
+                                    .setPositiveButton(
+                                        "YES"
+                                    ) { dialog, whichButton ->
+                                        // delete event
+                                        newsRepository.deleteNovelty(id)
+                                    }.setNegativeButton(
+                                        "NO"
+                                    ) { dialog, whichButton ->
+                                        // Do not delete
+                                    }.show()
+                            }
+                            R.id.menu_edit -> {
+                                //newsRepository.updateNovelty()
+                            }
+                        }
+                        true
+                    }
+                    popupMenu.show()
+
+                }
+            } else {
+                holder.binding.icMenu.visibility = GONE
+            }
         }
-
         override fun getItemCount() = news.size
-
     }
-
-
 }
 
 

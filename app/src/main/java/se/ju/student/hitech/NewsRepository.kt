@@ -13,7 +13,6 @@ import kotlin.collections.List as List
 
 var newsRepository = NewsRepository()
 
-
 class NewsRepository{
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -30,16 +29,10 @@ class NewsRepository{
             newsList.count() == 0 -> 1
             else -> newsList.last().id+1
         }
-        db.collection("news")
-            .add(novelty)
-            .addOnSuccessListener { documentReference ->
-                updateNewsList()
-                Log.d(ContentValues.TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error adding document", e)
-            }
 
+        db.collection("news").document(novelty["id"].toString()).set(novelty).addOnSuccessListener {
+            updateNewsList()
+        }
     }
 
 
@@ -54,7 +47,11 @@ class NewsRepository{
         }.addOnFailureListener {
             Log.d(ContentValues.TAG, "Error getting documents: ", it)
         }
+    }
 
+    fun deleteNovelty(id: Int){
+        db.collection("news").document(id.toString()).delete()
+        updateNewsList()
     }
 
     fun updateNewsList(){
@@ -71,7 +68,11 @@ class NewsRepository{
         }
     }
 
-    fun sortNewsList(){
+    fun updateNovelty(){
+        // TODO
+    }
+
+    private fun sortNewsList(){
         newsList.sortBy{ novelty ->
             novelty.id
         }
@@ -80,8 +81,6 @@ class NewsRepository{
     fun getNoveltyById(id: Int):Novelty{
         return newsList[id]
     }
-
-
 }
 
 
