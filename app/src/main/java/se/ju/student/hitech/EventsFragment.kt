@@ -51,6 +51,14 @@ class EventsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        if (userRepository.checkIfLoggedIn()) {
+            loggedIn = true
+            binding.fabCreateEvent.visibility = VISIBLE
+        } else {
+            binding.fabCreateEvent.visibility = GONE
+            loggedIn = false
+        }
+
         viewModel.events.observe(viewLifecycleOwner) {
 
             if (it != null) {
