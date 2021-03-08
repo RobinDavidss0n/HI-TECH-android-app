@@ -1,5 +1,6 @@
 package se.ju.student.hitech
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -64,21 +65,39 @@ class AdminLoginFragment : Fragment() {
     }
 
     private fun resetPassword(email: String){
-        val userRepository = UserRepository()
+
         if (email.isEmpty()){
             progressBar.visibility = View.GONE
             (context as MainActivity).makeToast("Write your email in the email field and press on 'Forgot password?' again.")
-        }else{
-            userRepository.sendPasswordReset(email) { result ->
-                progressBar.visibility = View.GONE
-                when (result) {
-                    "successful" -> (context as MainActivity).makeToast("Check your email!")
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            progressBar.visibility = View.GONE
+            (context as MainActivity).makeToast("Not a valid e-mail.")
+        } else{
+            AlertDialog.Builder(context as MainActivity)
+                .setTitle("Reset password")
+                .setMessage("Do you want a reset link to your sent to your email?")
+                .setPositiveButton(
+                    "Yes"
+
+                ) { _, _ ->
+                    val userRepository = UserRepository()
+                    userRepository.sendPasswordReset(email) { result ->
+                        progressBar.visibility = View.GONE
+                        when (result) {
+                            "successful" -> (context as MainActivity).makeToast("A reset link was sent to $email!")
+                            "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                        }
+                    }
                 }
-
-            }
-
+                .setNegativeButton(
+                    "NO"
+                ) { _, _ ->
+                    progressBar.visibility = View.GONE
+                    //Don't delete
+                }
+                .show()
         }
+
     }
 
     private fun verifyLoginInputs(email: String, password: String): Boolean {

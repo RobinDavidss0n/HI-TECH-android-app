@@ -31,4 +31,5 @@
     <string name="user_page_resetPassword">Reset password</string>
     <string name="user_page_updateUserInfo">Update user info</string>
     <string name="user_page_update">Update</string>
+    <string name="user_page_deleteAccount">Delete Account</string>
 </resources>

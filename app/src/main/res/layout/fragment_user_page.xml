@@ -55,7 +55,7 @@
         android:id="@+id/user_page_logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:backgroundTint="#FDD609"
         android:fontFamily="@font/avenir_next_bold"
         android:shadowColor="#FFFFFF"
@@ -97,10 +97,20 @@
         android:id="@+id/user_page_updateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:text="@string/user_page_update"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_page_logoutButton" />
+
+    <TextView
+        android:id="@+id/user_page_deleteAccountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/user_page_deleteAccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_page_resetPasswordText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
