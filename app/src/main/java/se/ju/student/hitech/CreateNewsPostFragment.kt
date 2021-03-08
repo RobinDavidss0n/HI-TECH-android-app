@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
+import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 
 
 class CreateNewsPostFragment : Fragment() {
@@ -93,7 +94,6 @@ class CreateNewsPostFragment : Fragment() {
                     (context as MainActivity).makeToast("Fields can't be empty!")
                 }
             }
-
 
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }

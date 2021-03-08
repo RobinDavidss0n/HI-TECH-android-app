@@ -31,7 +31,7 @@ class ViewNoveltyFragment : Fragment() {
         arguments?.let {
             if (it.containsKey(ARG_NOVELTY_ID)){
                 val noveltyId = requireArguments().getInt(ARG_NOVELTY_ID)
-                novelty = newsRepository.getNoveltyById(noveltyId-1)
+                novelty = newsRepository.getNoveltyById(noveltyId)
             }
         }
     }

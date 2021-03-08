@@ -80,6 +80,11 @@ class NewsRepository{
 
     fun getNoveltyById(id: Int):Novelty{
         return newsList[id]
+     /*   var novelty = Novelty()
+        db.collection("news").document(id.toString()).get().addOnSuccessListener {
+            novelty = it.toObject(Novelty::class.java)!!
+        }
+        return novelty  */
     }
 }
 
