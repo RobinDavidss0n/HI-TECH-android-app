@@ -8,6 +8,8 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.math.sign
 
+val userRepository = UserRepository()
+
 class UserRepository {
 
     private val auth = FirebaseAuth.getInstance()
