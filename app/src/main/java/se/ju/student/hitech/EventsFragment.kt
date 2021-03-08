@@ -57,6 +57,11 @@ class EventsFragment : Fragment() {
                         registerForContextMenu(this)
                     }
 
+
+                    binding.swipeRefreshEvents.setOnRefreshListener {
+                        eventRepository.updateEventList()
+                        binding.swipeRefreshEvents.isRefreshing = false
+                    }
                     binding.fabCreateEvent.setOnClickListener {
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
                     }
@@ -75,8 +80,7 @@ class EventsFragment : Fragment() {
     }
 
     class EventsViewModel : ViewModel() {
-
-        val events = MutableLiveData<List<Event>>()
+        var events = eventRepository.events
 
         init {
             viewModelScope.launch(Dispatchers.IO) {
@@ -118,10 +122,10 @@ class EventsFragment : Fragment() {
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_delete -> {
-                              //  eventRepository.deleteEvent()
+                                eventRepository.deleteEvent(position)
                             }
                             R.id.menu_edit -> {
-
+                                eventRepository.updateEvent()
                             }
                         }
                         true
@@ -132,12 +136,9 @@ class EventsFragment : Fragment() {
             } else {
                 holder.binding.icMenu.visibility = GONE
             }
-
-
         }
 
         override fun getItemCount() = events.size
-
     }
 
 }

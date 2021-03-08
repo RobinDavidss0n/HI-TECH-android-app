@@ -69,9 +69,19 @@ class EventRepository{
     }
 
     private fun sortEventList(){
-        eventList.sortBy{ event ->
+        eventList.sortByDescending{ event ->
             event.id
         }
+    }
+
+    fun deleteEvent(id: Int){
+        db.collection("events").document().delete().addOnSuccessListener {
+
+        }
+    }
+
+    fun updateEvent(){
+        //TODO
     }
 
     fun getEventById(id: Int):Event{
