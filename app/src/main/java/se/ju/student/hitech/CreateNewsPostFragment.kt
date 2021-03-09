@@ -81,7 +81,7 @@ class CreateNewsPostFragment : Fragment() {
         createNoveltyButton.setOnClickListener {
             newsRepository.addNovelty(title.text.toString(), content.text.toString())
 
-            if (checked) {
+          /*  if (checked) {
                 // send notification
                 if (title.toString() != "" && notificationContent.toString() != "") {
                     (context as MainActivity).createNotification(
@@ -93,7 +93,7 @@ class CreateNewsPostFragment : Fragment() {
                 }
                 // else toast error message - fields can't be empty
             }
-
+*/
 
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
