@@ -67,7 +67,8 @@
         app:backgroundTint="@color/yellow"
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="TODO" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

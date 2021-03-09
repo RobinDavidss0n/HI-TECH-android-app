@@ -53,12 +53,13 @@ class NewsFragment : Fragment() {
             binding.fabCreateNewPost.visibility = GONE
             loggedIn = false
         }
+        binding.fabCreateNewPost.visibility = VISIBLE // ta bort sen
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-     /*   if (userRepository.checkIfLoggedIn()) {
+        /*   if (userRepository.checkIfLoggedIn()) {
             loggedIn = true
             binding.fabCreateNewPost.visibility = VISIBLE
         } else {
@@ -76,14 +77,10 @@ class NewsFragment : Fragment() {
 
                         // flytta ut layout manager
                         layoutManager = LinearLayoutManager(context)
-                     //   (layoutManager as LinearLayoutManager).reverseLayout = true
-                     //   (layoutManager as LinearLayoutManager).stackFromEnd = true
                         adapter = NewsAdapter(it)
                         adapter?.notifyDataSetChanged()
-
-                        registerForContextMenu(this)
+                        //registerForContextMenu(this)
                     }
-
                     binding.progressBar.visibility = View.GONE
                 }
 
@@ -91,7 +88,7 @@ class NewsFragment : Fragment() {
         }
 
         binding.swipeRefreshNews.setOnRefreshListener {
-            //  newsRepository.updateNewsList()
+            newsRepository.loadNewsData()
             binding.swipeRefreshNews.isRefreshing = false
         }
         binding.fabCreateNewPost.setOnClickListener {
@@ -104,19 +101,24 @@ class NewsFragment : Fragment() {
 
         // mutable live data
         var news = MutableLiveData<List<Novelty>>()
-       // var news = newsRepository.news
+        // var news = newsRepository.news
 
         init {
-       //     viewModelScope.launch(Dispatchers.IO) {
+                newsRepository.loadNewsData()
+                val fetchedNews = newsRepository.getAllNews()
+                news.postValue(fetchedNews)
+                NewsAdapter(fetchedNews).notifyDataSetChanged()
 
-                newsRepository.loadNewsData(news) { fetchedNews, news ->
-                    news.postValue(fetchedNews)
-                }
 
-       //     }
+            //viewModelScope.launch(Dispatchers.IO) {
+            //    newsRepository.loadNewsData(news) { fetchedNews, news ->
+            //        news.postValue(fetchedNews)
+            //    }
+
+
         }
-
     }
+
 
     class NewsViewHolder(val binding: CardNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -145,47 +147,48 @@ class NewsFragment : Fragment() {
                     }
                 )
             }
-
+/*
             val id = novelty.id
 
-            if (loggedIn) {
-                holder.binding.icMenu.setOnClickListener {
-                    val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
-                    popupMenu.inflate(R.menu.recyclerview_menu_news)
+            // if (loggedIn) {
+            holder.binding.icMenu.setOnClickListener {
+                val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
+                popupMenu.inflate(R.menu.recyclerview_menu_news)
 
-                    popupMenu.setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.menu_delete -> {
-                                AlertDialog.Builder(holder.itemView.context)
-                                    .setTitle("Delete post")
-                                    .setMessage("Do you really want to delete this post?")
-                                    .setPositiveButton(
-                                        "YES"
-                                    ) { dialog, whichButton ->
-                                        // delete event
-                                        newsRepository.deleteNovelty(id)
-                                    }.setNegativeButton(
-                                        "NO"
-                                    ) { dialog, whichButton ->
-                                        // Do not delete
-                                    }.show()
-                            }
-                            R.id.menu_edit -> {
-                                newsRepository.updateNovelty()
-                            }
+                popupMenu.setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.menu_delete -> {
+                            AlertDialog.Builder(holder.itemView.context)
+                                .setTitle("Delete post")
+                                .setMessage("Do you really want to delete this post?")
+                                .setPositiveButton(
+                                    "YES"
+                                ) { dialog, whichButton ->
+                                    // delete event
+                                    newsRepository.deleteNovelty(id)
+                                }.setNegativeButton(
+                                    "NO"
+                                ) { dialog, whichButton ->
+                                    // Do not delete
+                                }.show()
                         }
-                        true
+                        R.id.menu_edit -> {
+                            newsRepository.updateNovelty()
+                        }
                     }
-                    popupMenu.show()
-
+                    true
                 }
-            } else {
-                holder.binding.icMenu.visibility = GONE
+                popupMenu.show()
+
             }
+            // } else {
+            //     holder.binding.icMenu.visibility = GONE
+            //  }
+            */
         }
+
         override fun getItemCount() = news.size
     }
 }
-
 
 
