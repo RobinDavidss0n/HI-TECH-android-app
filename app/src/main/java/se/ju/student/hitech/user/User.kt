@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.user
 
 data class User(
     val name: String? = null,

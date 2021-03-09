@@ -1,22 +1,20 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.news
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.firebase.firestore.FirebaseFirestore
+import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
-
+import se.ju.student.hitech.R
+import se.ju.student.hitech.news.newsRepository
 
 class CreateNewsPostFragment : Fragment() {
 
@@ -50,8 +48,6 @@ class CreateNewsPostFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 createNoveltyButton.isEnabled = title.length() > 0 && content.length() > 0
-
-
             }
 
         })
@@ -95,7 +91,6 @@ class CreateNewsPostFragment : Fragment() {
                     (context as MainActivity).makeToast("Fields can't be empty")
                 }
             }
-
 
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }

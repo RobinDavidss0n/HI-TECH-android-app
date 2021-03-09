@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.shop
 
 data class ShopItem(
     val item: String? = null,

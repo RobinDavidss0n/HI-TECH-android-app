@@ -1,13 +1,14 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.news
 
 import android.os.Bundle
-import android.provider.Settings.Global.getInt
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import java.lang.Integer.parseInt
+import se.ju.student.hitech.R
+import se.ju.student.hitech.news.Novelty
+import se.ju.student.hitech.news.newsRepository
 
 private const val ARG_NOVELTY_ID = "NOVELTY_ID"
 

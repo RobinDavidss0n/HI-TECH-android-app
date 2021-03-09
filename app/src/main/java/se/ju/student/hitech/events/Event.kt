@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.events
 
 import com.google.firebase.Timestamp
 

@@ -1,7 +1,9 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.news
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import se.ju.student.hitech.R
+import se.ju.student.hitech.news.ViewNoveltyFragment
 
 class ViewNoveltyActivity : AppCompatActivity() {
 
@@ -20,7 +22,6 @@ class ViewNoveltyActivity : AppCompatActivity() {
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
         val noveltyId = intent.getIntExtra(EXTRA_NOVELTY_ID,0)
-
 
         if (savedInstanceState == null) {
             supportFragmentManager

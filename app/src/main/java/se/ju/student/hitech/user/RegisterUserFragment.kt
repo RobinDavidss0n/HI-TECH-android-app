@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.user
 
 import android.os.Bundle
 import android.util.Patterns
@@ -10,8 +10,8 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.R
 
 class RegisterUserFragment : Fragment() {
 

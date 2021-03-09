@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.news
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -13,15 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import se.ju.student.hitech.*
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS_POST
-import se.ju.student.hitech.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
+import se.ju.student.hitech.news.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
+import se.ju.student.hitech.user.userRepository
 
 class NewsFragment : Fragment() {
 
@@ -55,6 +54,14 @@ class NewsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (userRepository.checkIfLoggedIn()) {
+            loggedIn = true
+            binding.fabCreateNewPost.visibility = VISIBLE
+        } else {
+            binding.fabCreateNewPost.visibility = GONE
+            loggedIn = false
+        }
 
         binding.rvRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -157,6 +164,7 @@ class NewsFragment : Fragment() {
                 holder.binding.icMenu.visibility = GONE
             }
         }
+
         override fun getItemCount() = news.size
     }
 }

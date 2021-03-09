@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.notifications
 
 class Constants {
     companion object{

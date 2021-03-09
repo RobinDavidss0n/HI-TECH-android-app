@@ -14,10 +14,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import se.ju.student.hitech.events.CreateNewEventFragment
+import se.ju.student.hitech.events.EventsFragment
+import se.ju.student.hitech.news.CreateNewsPostFragment
+import se.ju.student.hitech.news.NewsFragment
+import se.ju.student.hitech.notifications.NotificationData
+import se.ju.student.hitech.notifications.PushNotification
+import se.ju.student.hitech.notifications.RetrofitInstance
+import se.ju.student.hitech.shop.ShopFragment
+import se.ju.student.hitech.user.RegisterUserFragment
+import se.ju.student.hitech.user.UserPageFragment
+import se.ju.student.hitech.user.userRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -49,7 +59,6 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager
-
                     .beginTransaction()
                     .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
                     .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)

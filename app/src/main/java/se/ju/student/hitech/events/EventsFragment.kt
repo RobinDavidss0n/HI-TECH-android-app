@@ -1,32 +1,26 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.events
 
 import android.app.AlertDialog
-import android.content.ContentValues.TAG
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEW_EVENT
+import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
-import se.ju.student.hitech.databinding.FragmentShopBinding
 import se.ju.student.hitech.databinding.ItemEventBinding
+import se.ju.student.hitech.events.eventRepository
+import se.ju.student.hitech.user.userRepository
 
 class EventsFragment : Fragment() {
 

@@ -1,11 +1,9 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.events
 
-import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import se.ju.student.hitech.events.Event
 
 var eventRepository = EventRepository()
 
@@ -46,13 +44,12 @@ class EventRepository {
                     val events = it.toObject(Event::class.java)
                     if (events != null) {
                         if (!eventList.contains(events)) {
-                            eventList.add(events!!)
+                            eventList.add(events)
                         }
                     }
                 }
             }
         }
-        sortEventList()
     }
 
     private fun sortEventList() {
