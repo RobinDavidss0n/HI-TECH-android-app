@@ -11,17 +11,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlin.concurrent.thread
 import kotlin.collections.List as List
 
 var newsRepository = NewsRepository()
 
-
 class NewsRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var newsList = mutableListOf<Novelty>()
-    //  var news = MutableLiveData<List<Novelty>>()
 
     fun addNovelty(title: String, content: String) {
 
@@ -31,7 +30,7 @@ class NewsRepository {
         novelty["content"] = content
         novelty["id"] = when {
             newsList.count() == 0 -> 1
-            else -> newsList.first().id + 1
+            else -> newsList.last().id + 1
         }
 
         db.collection("news").document(novelty["id"].toString()).set(novelty)
@@ -41,8 +40,13 @@ class NewsRepository {
         return newsList
     }
 
+    private fun clearList() {
+        newsList.clear()
+    }
+
     fun loadNewsData() {
-        db.collection("news").addSnapshotListener { snapshot, e ->
+        clearList()
+        db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
 
             if (e != null) {
                 Log.w(TAG, "Failed to load news", e)
@@ -53,38 +57,21 @@ class NewsRepository {
                 documents.forEach {
                     val novelty = it.toObject(Novelty::class.java)
                     if (novelty != null) {
-                        if(!newsList.contains(novelty)){
+                        if (!newsList.contains(novelty)) {
                             newsList.add(novelty!!)
                         }
                     }
                 }
-                sortNewsList()
             }
         }
     }
 
     fun deleteNovelty(id: Int) {
         db.collection("news").document(id.toString()).delete()
-       // loadNewsData()
     }
-
-    /*
-    fun loadNewsData(){
-        db.collection("news").addSnapshotListener{result,e ->
-            sortNewsList()
-
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e)
-                return@addSnapshotListener
-            }
-            newsList = result!!.toObjects(Novelty::class.java)
-        }
-
-    }
-     */
 
     private fun sortNewsList() {
-        newsList.sortByDescending { novelty ->
+        newsList.sortBy { novelty ->
             novelty.id
         }
     }

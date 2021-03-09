@@ -26,7 +26,7 @@ import se.ju.student.hitech.databinding.FragmentNewsBinding
 class NewsFragment : Fragment() {
 
     lateinit var binding: FragmentNewsBinding
-    val viewModel: NewsViewModel by viewModels()
+    private val viewModel: NewsViewModel by viewModels()
 
     companion object {
         fun newInstance() = NewsFragment()
@@ -40,12 +40,10 @@ class NewsFragment : Fragment() {
     ) = FragmentNewsBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
-
     }
 
     override fun onStart() {
         super.onStart()
-        // lyssnare firebase???
         if (userRepository.checkIfLoggedIn()) {
             loggedIn = true
             binding.fabCreateNewPost.visibility = VISIBLE
@@ -53,36 +51,24 @@ class NewsFragment : Fragment() {
             binding.fabCreateNewPost.visibility = GONE
             loggedIn = false
         }
-        binding.fabCreateNewPost.visibility = VISIBLE // ta bort sen
     }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*   if (userRepository.checkIfLoggedIn()) {
-            loggedIn = true
-            binding.fabCreateNewPost.visibility = VISIBLE
-        } else {
-            binding.fabCreateNewPost.visibility = GONE
-            loggedIn = false
-        }   */
-
         binding.rvRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-           // registerForContextMenu(this)
+            registerForContextMenu(this)
         }
 
         viewModel.news.observe(viewLifecycleOwner) {
 
             if (it != null) {
-               binding.rvRecyclerView.post {
-
+                binding.rvRecyclerView.post {
                     binding.rvRecyclerView.apply {
                         adapter = NewsAdapter(it)
                     }
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = GONE
                 }
             }
         }
@@ -92,19 +78,19 @@ class NewsFragment : Fragment() {
             binding.rvRecyclerView.adapter?.notifyDataSetChanged()
             binding.swipeRefreshNews.isRefreshing = false
         }
+
         binding.fabCreateNewPost.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
         }
-
     }
 
     class NewsViewModel : ViewModel() {
         var news = MutableLiveData<List<Novelty>>()
 
         init {
-                newsRepository.loadNewsData()
-                val fetchedNews = newsRepository.getAllNews()
-                news.postValue(fetchedNews)
+            newsRepository.loadNewsData()
+            val fetchedNews = newsRepository.getAllNews()
+            news.postValue(fetchedNews)
         }
     }
 
@@ -121,10 +107,10 @@ class NewsFragment : Fragment() {
             )
         )
 
-
         override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-
             val novelty = news[position]
+            val id = novelty.id
+
             holder.binding.newsTitleNoImage.text = novelty.title
             holder.binding.cardNews.setOnClickListener {
 
@@ -133,52 +119,45 @@ class NewsFragment : Fragment() {
                         holder.binding.cardNews.context,
                         ViewNoveltyActivity::class.java
                     ).apply {
-                        putExtra(EXTRA_NOVELTY_ID, novelty.id)
+                        putExtra(EXTRA_NOVELTY_ID, id)
                     }
                 )
             }
 
-            //notifyDataSetChanged()
-/*
-            val id = novelty.id
+            if (loggedIn) {
+                holder.binding.icMenu.setOnClickListener {
+                    val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
+                    popupMenu.inflate(R.menu.recyclerview_menu_news)
 
-            // if (loggedIn) {
-            holder.binding.icMenu.setOnClickListener {
-                val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
-                popupMenu.inflate(R.menu.recyclerview_menu_news)
-
-                popupMenu.setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.menu_delete -> {
-                            AlertDialog.Builder(holder.itemView.context)
-                                .setTitle("Delete post")
-                                .setMessage("Do you really want to delete this post?")
-                                .setPositiveButton(
-                                    "YES"
-                                ) { dialog, whichButton ->
-                                    // delete event
-                                    newsRepository.deleteNovelty(id)
-                                }.setNegativeButton(
-                                    "NO"
-                                ) { dialog, whichButton ->
-                                    // Do not delete
-                                }.show()
+                    popupMenu.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.menu_delete -> {
+                                AlertDialog.Builder(holder.itemView.context)
+                                    .setTitle("Delete post")
+                                    .setMessage("Do you really want to delete this post?")
+                                    .setPositiveButton(
+                                        "YES"
+                                    ) { dialog, whichButton ->
+                                        // delete event
+                                        newsRepository.deleteNovelty(id)
+                                    }.setNegativeButton(
+                                        "NO"
+                                    ) { dialog, whichButton ->
+                                        // Do not delete
+                                    }.show()
+                            }
+                            R.id.menu_edit -> {
+                                newsRepository.updateNovelty()
+                            }
                         }
-                        R.id.menu_edit -> {
-                            newsRepository.updateNovelty()
-                        }
+                        true
                     }
-                    true
+                    popupMenu.show()
                 }
-                popupMenu.show()
-
+            } else {
+                holder.binding.icMenu.visibility = GONE
             }
-            // } else {
-            //     holder.binding.icMenu.visibility = GONE
-            //  }
-            */
         }
-
         override fun getItemCount() = news.size
     }
 }

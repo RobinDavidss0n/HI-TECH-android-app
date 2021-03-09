@@ -16,7 +16,7 @@ class UserRepository {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
-    fun getUserID(): String {
+    private fun getUserID(): String {
         return auth.currentUser?.uid.toString()
     }
 
@@ -27,9 +27,9 @@ class UserRepository {
         return false
     }
 
-    fun addListener(){
+    fun addListener() {
         auth.addAuthStateListener {
-
+            // add listener for logged in?
         }
     }
 
@@ -86,7 +86,7 @@ class UserRepository {
                     .set(user)
                     .addOnSuccessListener {
                         callback("successful")
-                    }.addOnFailureListener{ error ->
+                    }.addOnFailureListener { error ->
                         Log.d("Insert user into database error", error.toString())
                         callback("internalError")
 
@@ -95,23 +95,24 @@ class UserRepository {
             }.addOnFailureListener { error ->
                 Log.d("Create user error", error.toString())
                 callback("internalError")
-
             }
-
     }
 
-    fun getCurrentUserInfo(callbackOnSuccessful: (User, String) -> Unit, callbackOnFailure: (String) -> Unit){
+    fun getCurrentUserInfo(
+        callbackOnSuccessful: (User, String) -> Unit,
+        callbackOnFailure: (String) -> Unit
+    ) {
 
         db.collection("users").document(getUserID())
             .get()
             .addOnSuccessListener { result ->
                 val user = result.toObject(User::class.java)
-                if (user != null){
+                if (user != null) {
                     callbackOnSuccessful(user, auth.currentUser?.email.toString())
-                }else{
+                } else {
                     callbackOnFailure("notFound")
                 }
-            }.addOnFailureListener{ error ->
+            }.addOnFailureListener { error ->
                 Log.d("Get user info database error", error.toString())
                 callbackOnFailure("internalError")
 
@@ -119,8 +120,12 @@ class UserRepository {
     }
 
 
-
-    fun updateCurrentUserInfo(newEmail: String, newName: String, newRole: String, callback: (String) -> Unit){
+    fun updateCurrentUserInfo(
+        newEmail: String,
+        newName: String,
+        newRole: String,
+        callback: (String) -> Unit
+    ) {
 
         db.collection("users").document(getUserID())
             .update("name", newName, "role", newRole)
@@ -128,39 +133,38 @@ class UserRepository {
                 auth.currentUser!!.updateEmail(newEmail)
                     .addOnSuccessListener {
                         callback("successful")
-                    }.addOnFailureListener{error ->
+                    }.addOnFailureListener { error ->
                         Log.d("Update user email error", error.toString())
                         callback("internalError")
                     }
-            }.addOnFailureListener{ error ->
+            }.addOnFailureListener { error ->
                 Log.d("Update user info database error", error.toString())
                 callback("internalError")
 
             }
     }
 
-    fun updateCurrentUserPassword(newPassword: String, callback: (String) -> Unit){
+    fun updateCurrentUserPassword(newPassword: String, callback: (String) -> Unit) {
         auth.currentUser!!.updatePassword(newPassword)
             .addOnSuccessListener {
                 callback("successful")
-            }.addOnFailureListener{error ->
+            }.addOnFailureListener { error ->
                 Log.d("Update user email error", error.toString())
                 callback("internalError")
             }
     }
 
-    fun sendPasswordReset(email: String, callback: (String) -> Unit){
-        auth.sendPasswordResetEmail(email).
-        addOnSuccessListener {
+    fun sendPasswordReset(email: String, callback: (String) -> Unit) {
+        auth.sendPasswordResetEmail(email).addOnSuccessListener {
             callback("successful")
-        }.addOnFailureListener{ error ->
+        }.addOnFailureListener { error ->
             Log.d("Send password reset error", error.toString())
             callback("internalError")
         }
 
     }
 
-    fun deleteCurrentUser(callback: (String) -> Unit){
+    fun deleteCurrentUser(callback: (String) -> Unit) {
         val userID = getUserID()
 
         auth.currentUser!!.delete()
@@ -169,16 +173,14 @@ class UserRepository {
                     .delete()
                     .addOnSuccessListener {
                         callback("successful")
-                    }.addOnFailureListener{ error ->
+                    }.addOnFailureListener { error ->
                         Log.d("Delete user info database error", error.toString())
                         callback("internalError")
                     }
-            }.addOnFailureListener{error ->
+            }.addOnFailureListener { error ->
                 Log.d("Delete user error", error.toString())
                 callback("internalError")
             }
     }
-
-
 
 }

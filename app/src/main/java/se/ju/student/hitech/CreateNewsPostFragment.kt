@@ -81,18 +81,18 @@ class CreateNewsPostFragment : Fragment() {
         createNoveltyButton.setOnClickListener {
             newsRepository.addNovelty(title.text.toString(), content.text.toString())
 
-            /*          if (checked) {
-               // send notification
-               if (title.toString() != "" && notificationContent.toString() != "") {
-                   (context as MainActivity).createNotification(
-                       title.toString(),
-                       notificationContent.toString(),
-                       TOPIC_NEWS
-                   )
-                   checked = false
-               }
-               // else toast error message - fields can't be empty
-           }   */
+           /* if (checked) {
+                // send notification
+                if (title.toString() != "" && notificationContent.toString() != "") {
+                    (context as MainActivity).createNotification(
+                        title.toString(),
+                        notificationContent.toString(),
+                        TOPIC_NEWS
+                    )
+                    checked = false
+                }
+                // else toast error message - fields can't be empty
+            }   */
 
 
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
