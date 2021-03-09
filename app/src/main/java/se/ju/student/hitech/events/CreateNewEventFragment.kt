@@ -1,16 +1,14 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.events
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.databinding.FragmentCreateEventBinding
-import se.ju.student.hitech.databinding.FragmentEventsBinding
 
 class CreateNewEventFragment : Fragment() {
 

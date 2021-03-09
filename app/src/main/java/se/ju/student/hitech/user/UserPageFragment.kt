@@ -1,7 +1,6 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.user
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -13,6 +12,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.R
 
 class UserPageFragment : Fragment() {
 
