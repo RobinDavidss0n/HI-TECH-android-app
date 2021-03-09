@@ -18,7 +18,7 @@ class NewsRepository{
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var newsList = mutableListOf<Novelty>()
-    var news = MutableLiveData<List<Novelty>>()
+  //  var news = MutableLiveData<List<Novelty>>()
 
     fun addNovelty(title: String, content: String){
 
@@ -32,15 +32,15 @@ class NewsRepository{
         }
 
         db.collection("news").document(novelty["id"].toString()).set(novelty).addOnSuccessListener {
-            updateNewsList()
+          //  updateNewsList()
         }
-
     }
 
 
     fun loadNewsData(news:MutableLiveData<List<Novelty>>,callback:(List<Novelty>,MutableLiveData<List<Novelty>>)->Unit){
 
         db.collection("news").get().addOnSuccessListener { result ->
+            // addSnapshotlistener
 
             newsList = result.toObjects(Novelty::class.java)
             sortNewsList()
@@ -49,15 +49,18 @@ class NewsRepository{
         }.addOnFailureListener {
             Log.d(ContentValues.TAG, "Error getting documents: ", it)
         }
+    }
+
+    fun load(news:MutableLiveData<List<Novelty>>,callback:(List<Novelty>,MutableLiveData<List<Novelty>>)->Unit){
 
     }
 
     fun deleteNovelty(id: Int){
         db.collection("news").document(id.toString()).delete()
-        updateNewsList()
+       // updateNewsList()
     }
 
-    fun updateNewsList(){
+  /*  fun updateNewsList(){
         db.collection("news").get().addOnSuccessListener { result ->
 
             newsList = result.toObjects(Novelty::class.java)
@@ -69,7 +72,7 @@ class NewsRepository{
         }.addOnFailureListener {
             Log.d(ContentValues.TAG, "Error getting documents: ", it)
         }
-    }
+    }   */
 
     private fun sortNewsList(){
         newsList.sortBy{ novelty ->
@@ -82,7 +85,7 @@ class NewsRepository{
     }
 
     fun getNoveltyById(id: Int): Novelty? {
-        
+
         for(novelty in newsList){
             if(novelty.id == id){
                 return novelty

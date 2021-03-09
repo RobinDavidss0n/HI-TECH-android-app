@@ -27,6 +27,12 @@ class UserRepository {
         return false
     }
 
+    fun addListener(){
+        auth.addAuthStateListener {
+
+        }
+    }
+
     fun userLogin(email: String, password: String, callback: (String) -> Unit) {
         var result: String
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {

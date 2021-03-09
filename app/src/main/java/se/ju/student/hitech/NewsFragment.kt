@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,9 +43,9 @@ class NewsFragment : Fragment() {
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onStart() {
+        super.onStart()
+        // lyssnare firebase???
         if (userRepository.checkIfLoggedIn()) {
             loggedIn = true
             binding.fabCreateNewPost.visibility = VISIBLE
@@ -52,6 +53,18 @@ class NewsFragment : Fragment() {
             binding.fabCreateNewPost.visibility = GONE
             loggedIn = false
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+     /*   if (userRepository.checkIfLoggedIn()) {
+            loggedIn = true
+            binding.fabCreateNewPost.visibility = VISIBLE
+        } else {
+            binding.fabCreateNewPost.visibility = GONE
+            loggedIn = false
+        }   */
 
         viewModel.news.observe(viewLifecycleOwner) {
 
@@ -60,40 +73,47 @@ class NewsFragment : Fragment() {
                 binding.rvRecyclerView.post {
 
                     binding.rvRecyclerView.apply {
+
+                        // flytta ut layout manager
                         layoutManager = LinearLayoutManager(context)
-                        (layoutManager as LinearLayoutManager).reverseLayout = true
-                        (layoutManager as LinearLayoutManager).stackFromEnd = true
+                     //   (layoutManager as LinearLayoutManager).reverseLayout = true
+                     //   (layoutManager as LinearLayoutManager).stackFromEnd = true
                         adapter = NewsAdapter(it)
+                        adapter?.notifyDataSetChanged()
 
                         registerForContextMenu(this)
                     }
-                    binding.swipeRefreshNews.setOnRefreshListener {
-                        newsRepository.updateNewsList()
-                        binding.swipeRefreshNews.isRefreshing = false
-                    }
-                    binding.fabCreateNewPost.setOnClickListener {
-                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
-                    }
+
                     binding.progressBar.visibility = View.GONE
                 }
 
             }
         }
 
+        binding.swipeRefreshNews.setOnRefreshListener {
+            //  newsRepository.updateNewsList()
+            binding.swipeRefreshNews.isRefreshing = false
+        }
+        binding.fabCreateNewPost.setOnClickListener {
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
+        }
+
     }
 
     class NewsViewModel : ViewModel() {
 
-        var news = newsRepository.news
+        // mutable live data
+        var news = MutableLiveData<List<Novelty>>()
+       // var news = newsRepository.news
 
         init {
-            viewModelScope.launch(Dispatchers.IO) {
+       //     viewModelScope.launch(Dispatchers.IO) {
 
                 newsRepository.loadNewsData(news) { fetchedNews, news ->
                     news.postValue(fetchedNews)
                 }
 
-            }
+       //     }
         }
 
     }
