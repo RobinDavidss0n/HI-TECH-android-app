@@ -34,27 +34,8 @@ class NewsRepository {
             else -> newsList.first().id + 1
         }
 
-        db.collection("news").document(novelty["id"].toString()).set(novelty).addOnSuccessListener {
-            //  updateNewsList()
-            loadNewsData()
-        }
+        db.collection("news").document(novelty["id"].toString()).set(novelty)
     }
-
-/*
-    fun loadNewsData(news:MutableLiveData<List<Novelty>>,callback:(List<Novelty>,MutableLiveData<List<Novelty>>)->Unit){
-
-        db.collection("news").get().addOnSuccessListener { result ->
-            // addSnapshotlistener
-
-            newsList = result.toObjects(Novelty::class.java)
-            sortNewsList()
-            callback(newsList,news)
-
-        }.addOnFailureListener {
-            Log.d(ContentValues.TAG, "Error getting documents: ", it)
-        }
-    }
-    */
 
     fun getAllNews(): List<Novelty> {
         return newsList
@@ -75,19 +56,16 @@ class NewsRepository {
                         if(!newsList.contains(novelty)){
                             newsList.add(novelty!!)
                         }
-
                     }
-
                 }
+                sortNewsList()
             }
-
         }
-
     }
 
     fun deleteNovelty(id: Int) {
         db.collection("news").document(id.toString()).delete()
-        // updateNewsList()
+       // loadNewsData()
     }
 
     /*
@@ -124,8 +102,6 @@ class NewsRepository {
         }
         return null
     }
-
-
 }
 
 

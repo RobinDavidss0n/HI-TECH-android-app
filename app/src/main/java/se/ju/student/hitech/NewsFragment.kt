@@ -56,6 +56,8 @@ class NewsFragment : Fragment() {
         binding.fabCreateNewPost.visibility = VISIBLE // ta bort sen
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -67,28 +69,27 @@ class NewsFragment : Fragment() {
             loggedIn = false
         }   */
 
+        binding.rvRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+           // registerForContextMenu(this)
+        }
+
         viewModel.news.observe(viewLifecycleOwner) {
 
             if (it != null) {
-
-                binding.rvRecyclerView.post {
+               binding.rvRecyclerView.post {
 
                     binding.rvRecyclerView.apply {
-
-                        // flytta ut layout manager
-                        layoutManager = LinearLayoutManager(context)
                         adapter = NewsAdapter(it)
-                        adapter?.notifyDataSetChanged()
-                        //registerForContextMenu(this)
                     }
                     binding.progressBar.visibility = View.GONE
                 }
-
             }
         }
 
         binding.swipeRefreshNews.setOnRefreshListener {
             newsRepository.loadNewsData()
+            binding.rvRecyclerView.adapter?.notifyDataSetChanged()
             binding.swipeRefreshNews.isRefreshing = false
         }
         binding.fabCreateNewPost.setOnClickListener {
@@ -98,24 +99,12 @@ class NewsFragment : Fragment() {
     }
 
     class NewsViewModel : ViewModel() {
-
-        // mutable live data
         var news = MutableLiveData<List<Novelty>>()
-        // var news = newsRepository.news
 
         init {
                 newsRepository.loadNewsData()
                 val fetchedNews = newsRepository.getAllNews()
                 news.postValue(fetchedNews)
-                NewsAdapter(fetchedNews).notifyDataSetChanged()
-
-
-            //viewModelScope.launch(Dispatchers.IO) {
-            //    newsRepository.loadNewsData(news) { fetchedNews, news ->
-            //        news.postValue(fetchedNews)
-            //    }
-
-
         }
     }
 
@@ -132,6 +121,7 @@ class NewsFragment : Fragment() {
             )
         )
 
+
         override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
 
             val novelty = news[position]
@@ -147,6 +137,8 @@ class NewsFragment : Fragment() {
                     }
                 )
             }
+
+            //notifyDataSetChanged()
 /*
             val id = novelty.id
 

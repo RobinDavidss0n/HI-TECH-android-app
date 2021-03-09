@@ -80,6 +80,7 @@ class CreateNewsPostFragment : Fragment() {
 
         createNoveltyButton.setOnClickListener {
             newsRepository.addNovelty(title.text.toString(), content.text.toString())
+
             /*          if (checked) {
                // send notification
                if (title.toString() != "" && notificationContent.toString() != "") {
