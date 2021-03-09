@@ -81,8 +81,14 @@ class NewsRepository{
         // TODO
     }
 
-    fun getNoveltyById(id: Int):Novelty{
-        return newsList[id]
+    fun getNoveltyById(id: Int): Novelty? {
+        
+        for(novelty in newsList){
+            if(novelty.id == id){
+                return novelty
+            }
+        }
+        return null
     }
 
 
