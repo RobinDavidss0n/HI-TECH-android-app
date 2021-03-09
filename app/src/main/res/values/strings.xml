@@ -32,4 +32,11 @@
     <string name="user_page_updateUserInfo">Update user info</string>
     <string name="user_page_update">Update</string>
     <string name="user_page_deleteAccount">Delete Account</string>
+    <string name="new_post">NEW POST</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="notification_description">Notification description</string>
+    <string name="create_notification">Create notification</string>
+    <string name="create_post">CREATE POST</string>
+    <string name="go_back">GO BACK</string>
 </resources>

@@ -45,18 +45,31 @@ class EventsFragment : Fragment() {
     ) = FragmentEventsBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
-
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    override fun onStart() {
+        super.onStart()
         if (userRepository.checkIfLoggedIn()) {
             loggedIn = true
             binding.fabCreateEvent.visibility = VISIBLE
         } else {
             binding.fabCreateEvent.visibility = GONE
             loggedIn = false
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        binding.rvEvents.apply {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(
+                DividerItemDecoration(
+                    context,
+                    (layoutManager as LinearLayoutManager).orientation
+                )
+            )
+            registerForContextMenu(this)
         }
 
         viewModel.events.observe(viewLifecycleOwner) {
@@ -66,32 +79,16 @@ class EventsFragment : Fragment() {
                 binding.rvEvents.post {
 
                     binding.rvEvents.apply {
-                        layoutManager = LinearLayoutManager(context)
                         adapter = EventAdapter(it)
-                        addItemDecoration(
-                            DividerItemDecoration(
-                                context,
-                                (layoutManager as LinearLayoutManager).orientation
-                            )
-                        )
-                        registerForContextMenu(this)
+                        adapter?.notifyDataSetChanged()
                     }
-
                 }
                 binding.fabCreateEvent.setOnClickListener {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
                 }
 
                 binding.swipeRefreshEvents.setOnRefreshListener {
-                    eventRepository.updateEventList()
 
-                    if (userRepository.checkIfLoggedIn()) {
-                        loggedIn = true
-                        binding.fabCreateEvent.visibility = VISIBLE
-                    } else {
-                        binding.fabCreateEvent.visibility = GONE
-                        loggedIn = false
-                    }
                     binding.swipeRefreshEvents.isRefreshing = false
                 }
 
@@ -101,15 +98,12 @@ class EventsFragment : Fragment() {
     }
 
     class EventsViewModel : ViewModel() {
-        var events = eventRepository.events
+        var events = MutableLiveData<List<Event>>()
 
         init {
-            viewModelScope.launch(Dispatchers.IO) {
-
-                eventRepository.loadEventData(events) { fetchedEvents, events ->
-                    events.postValue(fetchedEvents)
-                }
-            }
+            eventRepository.loadEventData()
+            val fetchedEvents = eventRepository.getAllEvents()
+            events.postValue(fetchedEvents)
         }
     }
 
@@ -173,7 +167,6 @@ class EventsFragment : Fragment() {
         }
 
         override fun getItemCount() = events.size
-
     }
 
 }

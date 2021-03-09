@@ -13,7 +13,6 @@ class EventRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var eventList = mutableListOf<Event>()
-    var events = MutableLiveData<List<Event>>()
 
     fun addEvent(title: String, date: String, time: String, location: String, information: String) {
 
@@ -32,38 +31,28 @@ class EventRepository {
         )
         
         db.collection("events").document(id.toString()).set(event)
-        updateEventList()
     }
 
-    fun loadEventData(
-        events: MutableLiveData<List<Event>>,
-        callback: (List<Event>, MutableLiveData<List<Event>>) -> Unit
-    ) {
+    fun loadEventData() {
+        db.collection("events").orderBy("id").addSnapshotListener { snapshot, e ->
 
-        db.collection("events").get().addOnSuccessListener { result ->
-
-            eventList = result.toObjects(Event::class.java)
-            sortEventList()
-            callback(eventList, events)
-
-        }.addOnFailureListener {
-            Log.d(ContentValues.TAG, "Error getting documents: ", it)
+            if (e != null) {
+                Log.w(TAG, "Failed to load news", e)
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                val documents = snapshot.documents
+                documents.forEach {
+                    val events = it.toObject(Event::class.java)
+                    if (events != null) {
+                        if (!eventList.contains(events)) {
+                            eventList.add(events!!)
+                        }
+                    }
+                }
+            }
         }
-
-    }
-
-    fun updateEventList() {
-        db.collection("events").get().addOnSuccessListener { result ->
-
-            eventList = result.toObjects(Event::class.java)
-            sortEventList()
-            events.value = eventList
-
-            EventsFragment.EventAdapter(eventList).notifyDataSetChanged()
-
-        }.addOnFailureListener {
-            Log.d(ContentValues.TAG, "Error getting documents: ", it)
-        }
+        sortEventList()
     }
 
     private fun sortEventList() {
@@ -72,16 +61,24 @@ class EventRepository {
         }
     }
 
+    fun getAllEvents(): List<Event> {
+        return eventList
+    }
+
     fun deleteEvent(id: Int) {
         db.collection("events").document(id.toString()).delete()
-        updateEventList()
     }
 
     fun updateEvent() {
         //TODO
     }
 
-    fun getEventById(id: Int): Event {
-        return eventList[id]
+    fun getEventById(id: Int): Event? {
+        for (event in eventList) {
+            if (event.id == id) {
+                return event
+            }
+        }
+        return null
     }
 }
