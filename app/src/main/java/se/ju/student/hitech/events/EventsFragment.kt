@@ -95,7 +95,7 @@ class EventsFragment : Fragment() {
         var events = MutableLiveData<List<Event>>()
 
         init {
-            eventRepository.loadEventData()
+            eventRepository.loadChangesInEventsData()
             val fetchedEvents = eventRepository.getAllEvents()
             events.postValue(fetchedEvents)
         }

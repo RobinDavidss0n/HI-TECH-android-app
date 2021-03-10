@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import se.ju.student.hitech.events.Event
 import se.ju.student.hitech.news.Novelty
 import kotlin.collections.List as List
 
@@ -16,8 +17,8 @@ class NewsRepository {
 
     fun addNovelty(title: String, content: String) {
 
-        val novelty = HashMap<String, Any>()
         sortNewsList()
+        val novelty = HashMap<String, Any>()
         novelty["title"] = title
         novelty["content"] = content
         novelty["id"] = when {
@@ -46,27 +47,6 @@ class NewsRepository {
                         DocumentChange.Type.ADDED -> added(novelty)
                         DocumentChange.Type.MODIFIED -> modified(novelty)
                         DocumentChange.Type.REMOVED -> removed(novelty)
-                    }
-                }
-            }
-        }
-    }
-
-    fun loadNewsData() {
-        db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
-
-            if (e != null) {
-                Log.w(TAG, "Failed to load news", e)
-                return@addSnapshotListener
-            }
-            if (snapshot != null) {
-                val documents = snapshot.documents
-                documents.forEach {
-                    val novelty = it.toObject(Novelty::class.java)
-                    if (novelty != null) {
-                        if (!newsList.contains(novelty)) {
-                            newsList.add(novelty)
-                        }
                     }
                 }
             }

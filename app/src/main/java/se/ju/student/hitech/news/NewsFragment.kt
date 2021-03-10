@@ -55,14 +55,6 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (userRepository.checkIfLoggedIn()) {
-            loggedIn = true
-            binding.fabCreateNewPost.visibility = VISIBLE
-        } else {
-            binding.fabCreateNewPost.visibility = GONE
-            loggedIn = false
-        }
-
         binding.rvRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             registerForContextMenu(this)
@@ -94,7 +86,6 @@ class NewsFragment : Fragment() {
         var news = MutableLiveData<List<Novelty>>()
 
         init {
-            newsRepository.loadNewsData()
             newsRepository.loadChangesInNewsData()
             val fetchedNews = newsRepository.getAllNews()
             news.postValue(fetchedNews)
