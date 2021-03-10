@@ -2,6 +2,7 @@ package se.ju.student.hitech.news
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.news.Novelty
 import kotlin.collections.List as List
@@ -31,6 +32,26 @@ class NewsRepository {
         return newsList
     }
 
+    fun loadChangesInNewsData() {
+        db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
+
+            if (e != null) {
+                Log.w(TAG, "Failed to load news", e)
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                for (dc in snapshot!!.documentChanges) {
+                    val novelty = dc.document.toObject(Novelty::class.java)
+                    when (dc.type) {
+                        DocumentChange.Type.ADDED -> added(novelty)
+                        DocumentChange.Type.MODIFIED -> modified(novelty)
+                        DocumentChange.Type.REMOVED -> removed(novelty)
+                    }
+                }
+            }
+        }
+    }
+
     fun loadNewsData() {
         db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
 
@@ -49,6 +70,23 @@ class NewsRepository {
                     }
                 }
             }
+        }
+    }
+
+    private fun added(novelty: Novelty) {
+        if (!newsList.contains(novelty)) {
+            newsList.add(novelty)
+        }
+    }
+
+    private fun modified(novelty: Novelty) {
+        // remove old
+        // add new
+    }
+
+    private fun removed(novelty: Novelty) {
+        if (newsList.contains(novelty)) {
+            newsList.remove(novelty)
         }
     }
 

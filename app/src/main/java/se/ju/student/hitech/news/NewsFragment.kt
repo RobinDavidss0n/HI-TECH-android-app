@@ -95,6 +95,7 @@ class NewsFragment : Fragment() {
 
         init {
             newsRepository.loadNewsData()
+            newsRepository.loadChangesInNewsData()
             val fetchedNews = newsRepository.getAllNews()
             news.postValue(fetchedNews)
         }
