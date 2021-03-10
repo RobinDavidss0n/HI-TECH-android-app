@@ -10,7 +10,6 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import se.ju.student.hitech.user.UserRepository
 
 class AdminLoginFragment : Fragment() {
 

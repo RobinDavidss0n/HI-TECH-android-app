@@ -1,9 +1,13 @@
-package se.ju.student.hitech.user
+package se.ju.student.hitech
 
 import android.util.Log
+import android.view.View
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import se.ju.student.hitech.user.User
+import com.google.firebase.firestore.UserDataReader
+import kotlin.math.sign
 
 var userRepository = UserRepository()
 

@@ -1,26 +1,32 @@
-package se.ju.student.hitech.events
+package se.ju.student.hitech
 
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import se.ju.student.hitech.MainActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEW_EVENT
-import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
+import se.ju.student.hitech.databinding.FragmentShopBinding
 import se.ju.student.hitech.databinding.ItemEventBinding
-import se.ju.student.hitech.events.eventRepository
-import se.ju.student.hitech.user.userRepository
 
 class EventsFragment : Fragment() {
 
@@ -39,31 +45,18 @@ class EventsFragment : Fragment() {
     ) = FragmentEventsBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
+
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
         if (userRepository.checkIfLoggedIn()) {
             loggedIn = true
             binding.fabCreateEvent.visibility = VISIBLE
         } else {
             binding.fabCreateEvent.visibility = GONE
             loggedIn = false
-        }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        binding.rvEvents.apply {
-            layoutManager = LinearLayoutManager(context)
-            addItemDecoration(
-                DividerItemDecoration(
-                    context,
-                    (layoutManager as LinearLayoutManager).orientation
-                )
-            )
-            registerForContextMenu(this)
         }
 
         viewModel.events.observe(viewLifecycleOwner) {
@@ -73,16 +66,32 @@ class EventsFragment : Fragment() {
                 binding.rvEvents.post {
 
                     binding.rvEvents.apply {
+                        layoutManager = LinearLayoutManager(context)
                         adapter = EventAdapter(it)
-                        adapter?.notifyDataSetChanged()
+                        addItemDecoration(
+                            DividerItemDecoration(
+                                context,
+                                (layoutManager as LinearLayoutManager).orientation
+                            )
+                        )
+                        registerForContextMenu(this)
                     }
+
                 }
                 binding.fabCreateEvent.setOnClickListener {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
                 }
 
                 binding.swipeRefreshEvents.setOnRefreshListener {
+                    eventRepository.updateEventList()
 
+                    if (userRepository.checkIfLoggedIn()) {
+                        loggedIn = true
+                        binding.fabCreateEvent.visibility = VISIBLE
+                    } else {
+                        binding.fabCreateEvent.visibility = GONE
+                        loggedIn = false
+                    }
                     binding.swipeRefreshEvents.isRefreshing = false
                 }
 
@@ -92,12 +101,15 @@ class EventsFragment : Fragment() {
     }
 
     class EventsViewModel : ViewModel() {
-        var events = MutableLiveData<List<Event>>()
+        var events = eventRepository.events
 
         init {
-            eventRepository.loadEventData()
-            val fetchedEvents = eventRepository.getAllEvents()
-            events.postValue(fetchedEvents)
+            viewModelScope.launch(Dispatchers.IO) {
+
+                eventRepository.loadEventData(events) { fetchedEvents, events ->
+                    events.postValue(fetchedEvents)
+                }
+            }
         }
     }
 
@@ -161,6 +173,7 @@ class EventsFragment : Fragment() {
         }
 
         override fun getItemCount() = events.size
+
     }
 
 }

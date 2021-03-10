@@ -1,8 +1,8 @@
-package se.ju.student.hitech.notifications
+package se.ju.student.hitech
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import se.ju.student.hitech.notifications.Constants.Companion.BASE_URL
+import se.ju.student.hitech.Constants.Companion.BASE_URL
 
 class RetrofitInstance{
     companion object{

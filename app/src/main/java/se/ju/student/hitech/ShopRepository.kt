@@ -1,10 +1,9 @@
-package se.ju.student.hitech.shop
+package se.ju.student.hitech
 
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
-import se.ju.student.hitech.shop.ShopItem
 
 var shopRepository = ShopRepository()
 

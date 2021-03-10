@@ -14,20 +14,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import se.ju.student.hitech.events.CreateNewEventFragment
-import se.ju.student.hitech.events.EventsFragment
-import se.ju.student.hitech.news.CreateNewsPostFragment
-import se.ju.student.hitech.news.NewsFragment
-import se.ju.student.hitech.notifications.NotificationData
-import se.ju.student.hitech.notifications.PushNotification
-import se.ju.student.hitech.notifications.RetrofitInstance
-import se.ju.student.hitech.shop.ShopFragment
-import se.ju.student.hitech.user.RegisterUserFragment
-import se.ju.student.hitech.user.UserPageFragment
-import se.ju.student.hitech.user.userRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         const val TAG_MAIN_ACTIVITY = "MainActivity"
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
         const val TOPIC_NEWS = "/topics/news"
-        const val TAG_FRAGMENT_CREATE_NEWS_POST = "TAG_FRAGMENT_CREATE_NEWS_POST"
         const val TAG_REGISTER_USER = "TAG_FRAGMENT_REGISTER_USER"
         const val TAG_USER_PAGE = "TAG_FRAGMENT_USER_PAGE"
     }
@@ -59,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager
+
                     .beginTransaction()
                     .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
                     .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
@@ -68,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                     .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
                     .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
-                    .add(R.id.fragment_container, CreateNewsPostFragment(), TAG_FRAGMENT_CREATE_NEWS_POST)
                     .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
                     .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
