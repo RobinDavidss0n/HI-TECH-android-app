@@ -19,9 +19,9 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
-        <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"
         <activity android:name=".news.ViewNoveltyActivity"></activity>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
