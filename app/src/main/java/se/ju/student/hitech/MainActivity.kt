@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_EVENTS = "TAG_FRAGMENT_EVENTS"
         const val TAG_FRAGMENT_NEWS = "TAG_FRAGMENT_NEWS"
         const val TAG_FRAGMENT_CONTACT_CASE = "TAG_FRAGMENT_CONTACT_CASE"
+        const val TAG_FRAGMENT_CONTACT_ADMIN_VIEW = "TAG_FRAGMENT_CONTACT_ADMIN_VIEW"
         const val TAG_FRAGMENT_CONTACT = "TAG_FRAGMENT_CONTACT"
         const val TAG_FRAGMENT_ADMIN_LOGIN = "TAG_FRAGMENT_ADMIN_LOGIN"
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                     .beginTransaction()
                     .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
                     .add(R.id.fragment_container, ContactCaseFragment(), TAG_FRAGMENT_CONTACT_CASE)
+                    .add(R.id.fragment_container, ActiveChatsFragmentAdmin(), TAG_FRAGMENT_CONTACT_ADMIN_VIEW)
                     .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
                     .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
                     .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
@@ -71,11 +72,18 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNav.setOnNavigationItemSelectedListener {
+            var contactTag =""
+            if (userRepository.checkIfLoggedIn()){
+                contactTag = TAG_FRAGMENT_CONTACT_ADMIN_VIEW
+            }else{
+                contactTag = TAG_FRAGMENT_CONTACT_CASE
+            }
             when (it.itemId) {
                 R.id.nav_news -> changeToFragment(TAG_FRAGMENT_NEWS)
                 R.id.nav_events -> changeToFragment(TAG_FRAGMENT_EVENTS)
                 R.id.nav_shop -> changeToFragment(TAG_FRAGMENT_SHOP)
-                R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT_CASE)
+                R.id.nav_contact -> changeToFragment(contactTag)
+               // R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT_CASE) if logged in
             }
             true
         }
