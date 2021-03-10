@@ -172,6 +172,22 @@ class UserRepository {
                 callback("internalError")
             }
     }
+    fun addChatToUser(chatID: String, callback: (String) -> Unit){
+
+        val chat = hashMapOf(
+            "chatID" to chatID,
+        )
+
+        db.collection("users").document(getUserID()).collection("chats")
+            .add(chat)
+            .addOnSuccessListener {
+                callback("successful")
+            }.addOnFailureListener{ error ->
+                Log.d("Insert user into database error", error.toString())
+                callback("internalError")
+
+            }
+    }
 
 
 
