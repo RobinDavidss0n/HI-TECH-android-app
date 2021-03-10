@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.notifications
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -14,6 +14,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.R
 import kotlin.random.Random
 
 private const val CHANNEL_ID = "notification_channel"
