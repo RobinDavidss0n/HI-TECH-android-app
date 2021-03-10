@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_SHOP = "TAG_FRAGMENT_SHOP"
         const val TAG_FRAGMENT_EVENTS = "TAG_FRAGMENT_EVENTS"
         const val TAG_FRAGMENT_NEWS = "TAG_FRAGMENT_NEWS"
+        const val TAG_FRAGMENT_CONTACT_CASE = "TAG_FRAGMENT_CONTACT_CASE"
         const val TAG_FRAGMENT_CONTACT = "TAG_FRAGMENT_CONTACT"
         const val TAG_FRAGMENT_ADMIN_LOGIN = "TAG_FRAGMENT_ADMIN_LOGIN"
         const val TAG_FRAGMENT_ABOUT = "TAG_FRAGMENT_ABOUT"
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
                     .beginTransaction()
                     .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
+                    .add(R.id.fragment_container, ContactCaseFragment(), TAG_FRAGMENT_CONTACT_CASE)
                     .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
                     .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
                     .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
@@ -73,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_news -> changeToFragment(TAG_FRAGMENT_NEWS)
                 R.id.nav_events -> changeToFragment(TAG_FRAGMENT_EVENTS)
                 R.id.nav_shop -> changeToFragment(TAG_FRAGMENT_SHOP)
-                R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT)
+                R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT_CASE)
             }
             true
         }
