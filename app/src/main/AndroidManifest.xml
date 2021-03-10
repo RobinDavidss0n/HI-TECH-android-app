@@ -20,6 +20,7 @@
             </intent-filter>
         </service>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <activity android:name=".news.ViewNoveltyActivity"></activity>
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan">
@@ -28,6 +29,11 @@
             android:windowSoftInputMode="adjustPan"
             >
 >>>>>>> parent of 7850c67 (Merge branch 'main' into chat_fragment)
+=======
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan"
+        <activity android:name=".news.ViewNoveltyActivity"></activity>
+>>>>>>> parent of 6e8cfdd (Revert "Created a chat view")
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
