@@ -1,12 +1,11 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.chat.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.databinding.FragmentContactCaseBinding
-import se.ju.student.hitech.databinding.FragmentCreateEventBinding
 
 class ContactCaseFragment : Fragment() {
     lateinit var binding: FragmentContactCaseBinding

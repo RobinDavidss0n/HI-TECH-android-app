@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.test
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,7 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.R
+import se.ju.student.hitech.UserRepository
 import se.ju.student.hitech.chat.ChatRepository
+import se.ju.student.hitech.handlers.*
 
 class TestFragment : Fragment() {
 

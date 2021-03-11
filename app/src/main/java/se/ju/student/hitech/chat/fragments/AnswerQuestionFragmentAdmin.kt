@@ -1,10 +1,12 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.chat.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import se.ju.student.hitech.R
+
 class AnswerQuestionFragmentAdmin : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,

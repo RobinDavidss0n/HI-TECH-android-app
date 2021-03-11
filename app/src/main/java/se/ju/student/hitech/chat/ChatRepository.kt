@@ -4,7 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import se.ju.student.hitech.TimeHandler
+import se.ju.student.hitech.handlers.TimeHandler
 
 class ChatRepository {
 

@@ -17,6 +17,10 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import se.ju.student.hitech.chat.fragments.ActiveChatsFragmentAdmin
+import se.ju.student.hitech.chat.fragments.ContactCaseFragment
+import se.ju.student.hitech.chat.fragments.ContactFragment
+import se.ju.student.hitech.test.TestFragment
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -74,11 +78,10 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNav.setOnNavigationItemSelectedListener {
-            var contactTag =""
-            if (userRepository.checkIfLoggedIn()){
-                contactTag = TAG_FRAGMENT_CONTACT_ADMIN_VIEW
+            val contactTag = if (UserRepository().checkIfLoggedIn()){
+                TAG_FRAGMENT_CONTACT_ADMIN_VIEW
             }else{
-                contactTag = TAG_FRAGMENT_CONTACT_CASE
+                TAG_FRAGMENT_CONTACT_CASE
             }
             when (it.itemId) {
                 R.id.nav_news -> changeToFragment(TAG_FRAGMENT_NEWS)

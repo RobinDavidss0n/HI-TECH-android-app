@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.handlers
 
 import java.sql.Time
 import java.sql.Timestamp

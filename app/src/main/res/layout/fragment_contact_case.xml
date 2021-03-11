@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
-    tools:context=".ContactCaseFragment">
+    tools:context=".chat.fragments.ContactCaseFragment">
 
     <TextView
         android:layout_width="match_parent"
