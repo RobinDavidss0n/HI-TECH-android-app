@@ -27,10 +27,36 @@ fun String.convertTimeToTimestamp(): Timestamp? {
 
     return Timestamp.valueOf(
         DateTimeFormatter
-            .ofPattern("yyyy-MM-dd HH:mm:ss.ss")
+            .ofPattern("yyyy-MM-dd HH:mm:ss")
             .withZone(ZoneId.systemDefault())
             .format(java.sql.Date(this.toLong()).toInstant())
     )
+
+}
+
+
+fun String.convertTimeToStringTimeFormat(): String? {
+
+    return DateTimeFormatter
+        .ofPattern("HH:mm:ss")
+        .withZone(ZoneId.systemDefault())
+        .format(java.sql.Date(this.toLong()).toInstant())
+}
+
+fun String.convertTimeToStringHourMinutesFormat(): String? {
+
+    return DateTimeFormatter
+        .ofPattern("HH:mm")
+        .withZone(ZoneId.systemDefault())
+        .format(java.sql.Date(this.toString().toLong()).toInstant())
+}
+
+fun String.convertTimeToStringDateFormat(): String? {
+
+    return DateTimeFormatter
+        .ofPattern("yyyy-MM-dd")
+        .withZone(ZoneId.systemDefault())
+        .format(java.sql.Date(this.toLong()).toInstant())
 }
 
 fun Timestamp.convertToLocalTime(): Timestamp? {

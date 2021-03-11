@@ -28,46 +28,89 @@ class TestFragment : Fragment() {
 
         val testThatShit = view?.findViewById<Button>(R.id.test)
         var msg = 1
+        val chatID = "LeQPZP34Os54X4YkDQnA"
+        val chatRepository = ChatRepository()
+        val userRepository = UserRepository()
+        val androidID = Settings.Secure.getString(
+            context?.contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
 
         testThatShit?.setOnClickListener {
 
-            val chatRepository = ChatRepository()
-            val userRepository = UserRepository()
 
-            val androidID = Settings.Secure.getString(
-                context?.contentResolver,
-                Settings.Secure.ANDROID_ID);
+
 
             // Sm54rp4sGzMxj3g9rHJsGfnQBAk1
 
-            val chatID = "LeQPZP34Os54X4YkDQnA"
+            chatRepository.setNewMessagesListener(chatID) { resultString, dataMap ->
 
-            chatRepository.setChatListener(){activity, chatID ->
-
-                when (activity) {
+                when (resultString) {
                     "newChat" -> {
-                        Log.d("Chat", "New chat")
-                        Log.d("Chat", chatID)
-                        (context as MainActivity).makeToast("New Chat.")
+                        Log.d("Msg", "New msg")
+                        Log.d("Msg", dataMap.toString())
+                        (context as MainActivity).makeToast("New msg.")
                     }
-                    "newMessageOrAdminChange" -> {
-                        (context as MainActivity).makeToast("New message or admin change.")
-                    }
-                    "chatClosed" -> {
-                        (context as MainActivity).makeToast("Chat closed.")
-                    }
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong.")
                 }
 
             }
-/*
+
+            chatRepository.addMessage(
+                msg.toString(),
+                UserRepository().checkIfLoggedIn(), chatID
+            ) { result ->
+                when (result) {
+                    "successful" -> {
+                        msg++
+                        (context as MainActivity).makeToast("Sent msg.")
+                    }
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                }
+            }
+
+
+
+            chatRepository.setNewChatListener() { resultString, dataMap ->
+
+                when (resultString) {
+                    "newChat" -> {
+                        Log.d("Chat", "New chat")
+                        Log.d("Chat", dataMap.toString())
+                        (context as MainActivity).makeToast("New Chat.")
+                    }
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong.")
+                }
+
+            }
+
+            Log.d(
+                "timestamp",
+                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToTimestamp().toString()
+            )
+            Log.d(
+                "time",
+                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToStringTimeFormat()!!
+            )
+            Log.d(
+                "date",
+                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToStringDateFormat()!!
+            )
+            Log.d(
+                "hourMin",
+                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToStringHourMinutesFormat()!!
+            )
+
+
+
             chatRepository.deactivateChat(chatID) { result ->
                 when (result) {
                     "successful" -> {
-                        userRepository.removeChatFromUser(chatID){ result ->
+                        userRepository.removeChatFromUser(chatID) { result ->
                             when (result) {
                                 "successful" -> {
-                                    (context as MainActivity).makeToast("Deactivated chat.")                                }
+                                    (context as MainActivity).makeToast("Deactivated chat.")
+                                }
                                 "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
                             }
 
@@ -79,51 +122,40 @@ class TestFragment : Fragment() {
             }
 
 
-            chatRepository.getAllActiveChats({ data ->
+            chatRepository.getAllActiveChats() {resultString, data ->
 
                 (context as MainActivity).makeToast("Got messages")
-                Log.d("Chat", data["case"].toString())
-                Log.d("Chat", data["lastUpdated"].toString().convertTimeToTimestamp().toString())
-
-            }, { result ->
-                when (result) {
-                    "notFound" -> {
-                        (context as MainActivity).makeToast("Not found.")
-                    }
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
-                }
-            })
-
-            chatRepository.getAllMessagesFromChat(chatID, { data ->
-
-                (context as MainActivity).makeToast("Got messages")
-                Log.d("Chat", data["msgText"].toString())
-                Log.d("Chat", data["timestamp"].toString().convertTimeToTimestamp().toString())
-
-            }, { result ->
-                when (result) {
-                    "notFound" -> {
-                        (context as MainActivity).makeToast("Not found.")
-                    }
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
-                }
-            })
 
 
-            chatRepository.addMessage(msg.toString(),
-                UserRepository().checkIfLoggedIn(), chatID){ result ->
-                when (result) {
+                when (resultString) {
                     "successful" -> {
-                        msg ++
-                        (context as MainActivity).makeToast("Sent msg.")
+                        Log.d("Chat", data["case"].toString())
+                        Log.d("Chat", data["lastUpdated"].toString().convertTimeToTimestamp().toString())
+                    }
+                    "notFound" -> {
+                        (context as MainActivity).makeToast("Not found.")
+                    }
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                }
+            }
+
+            chatRepository.getAllMessagesFromChat(chatID) {resultString, data ->
+
+                when (resultString) {
+                    "successful" -> {
+                        (context as MainActivity).makeToast("Got messages")
+                        Log.d("Chat", data["msgText"].toString())
+                        Log.d("Chat", data["timestamp"].toString().convertTimeToTimestamp().toString())
+                    }
+                    "notFound" -> {
+                        (context as MainActivity).makeToast("Not found.")
                     }
                     "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
                 }
             }
 
 
-
-            userRepository.removeChatFromUser(chatID){ result ->
+            userRepository.removeChatFromUser(chatID) { result ->
                 when (result) {
                     "successful" -> {
                         (context as MainActivity).makeToast("Removed chat from user.")
@@ -133,25 +165,25 @@ class TestFragment : Fragment() {
             }
 
 
-            chatRepository.addAdminToChat(UserRepository().getUserID(), chatID){ result ->
+            chatRepository.addAdminToChat(UserRepository().getUserID(), chatID) { result ->
+                when (result) {
+                    "successful" -> {
+
+                        UserRepository().addChatToUser(chatID) {
                             when (result) {
                                 "successful" -> {
-
-                                    UserRepository().addChatToUser(chatID){
-                                        when (result) {
-                                            "successful" -> {
-                                                (context as MainActivity).makeToast("Added admin.")
-                                            }
-                                            "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
-                                        }
-
-                                    }
+                                    (context as MainActivity).makeToast("Added admin.")
                                 }
                                 "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
                             }
-                        }
 
-            chatRepository.removeAdminFromChat("6NjnPNNQKtoYHVrAsuhS"){ result ->
+                        }
+                    }
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                }
+            }
+
+            chatRepository.removeAdminFromChat("6NjnPNNQKtoYHVrAsuhS") { result ->
                 when (result) {
                     "successful" -> {
                         (context as MainActivity).makeToast("Removed admin.")
@@ -162,21 +194,23 @@ class TestFragment : Fragment() {
 
 
 
-            chatRepository.getChatWithAndroidID(androidID, { data ->
+            chatRepository.getChatWithAndroidID(androidID) { resultString, data ->
 
-                    (context as MainActivity).makeToast("Got chat")
-                    Log.d("Chat", data["case"].toString())
+                when (resultString) {
 
-            }, { result ->
-                when (result) {
+                    "successful" -> {
+                        (context as MainActivity).makeToast("Got chat")
+                        Log.d("Chat", data["case"].toString())
+                    }
+
                     "notFound" -> {
                         (context as MainActivity).makeToast("Not found.")
                     }
                     "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
                 }
-            })
+            }
 
-            */
+
 
 
         }

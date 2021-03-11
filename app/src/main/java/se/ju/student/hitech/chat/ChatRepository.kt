@@ -3,6 +3,7 @@ package se.ju.student.hitech.chat
 import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import se.ju.student.hitech.TimeHandler
 
 class ChatRepository {
@@ -105,8 +106,7 @@ class ChatRepository {
 
     fun getChatWithAndroidID(
         androidID: String,
-        callbackOnSuccessful: (Map<String, Any>) -> Unit,
-        callbackOnFailure: (String) -> Unit
+        callback: (String, Map<String, Any>) -> Unit
     ) {
 
         db.collection("chats")
@@ -114,17 +114,17 @@ class ChatRepository {
             .get()
             .addOnSuccessListener { result ->
                 if (result.isEmpty) {
-                    callbackOnFailure("notFound")
+                    callback("notFound", mapOf())
                 } else {
                     result.forEach { chat ->
-                        callbackOnSuccessful(chat.data)
+                        callback("successful" ,chat.data)
                     }
                 }
 
 
             }.addOnFailureListener { error ->
                 Log.w("Get user info database error", error)
-                callbackOnFailure("internalError")
+                callback("internalError", mapOf())
 
             }
 
@@ -132,8 +132,7 @@ class ChatRepository {
 
     fun getAllMessagesFromChat(
         chatID: String,
-        callbackOnSuccessful: (Map<String, Any>) -> Unit,
-        callbackOnFailure: (String) -> Unit
+        callback: (String, Map<String, Any>) -> Unit
     ) {
 
         db.collection("chats").document(chatID).collection("messages")
@@ -141,112 +140,111 @@ class ChatRepository {
             .get()
             .addOnSuccessListener { result ->
                 if (result.isEmpty) {
-                    callbackOnFailure("notFound")
+                    callback("notFound", mapOf())
                 } else {
                     result.forEach { messages ->
-                        callbackOnSuccessful(messages.data)
+                        callback("successful" ,messages.data)
                     }
                 }
 
 
             }.addOnFailureListener { error ->
                 Log.w("Get messages database error", error)
-                callbackOnFailure("internalError")
+                callback("internalError", mapOf())
 
             }
 
     }
 
     fun getAllActiveChats(
-        callbackOnSuccessful: (Map<String, Any>) -> Unit,
-        callbackOnFailure: (String) -> Unit
+        callback: (String, Map<String, Any>) -> Unit
     ) {
 
         db.collection("chats")
             .whereEqualTo("isActive", true)
-            .orderBy("lastUpdated")
+            .orderBy("lastUpdated", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
                 if (result.isEmpty) {
-                    callbackOnFailure("notFound")
+                    callback("notFound", mapOf())
                 } else {
                     result.forEach { messages ->
-                        callbackOnSuccessful(messages.data)
+                        callback("successful" ,messages.data)
                     }
                 }
 
 
             }.addOnFailureListener { error ->
                 Log.w("Get all active chats database error", error)
-                callbackOnFailure("internalError")
+                callback("internalError", mapOf())
 
             }
 
     }
 
-    fun setChatListener(
-        callback: (String, String) -> Unit,
+    fun setNewChatListener(
+        callback: (String, Map<String, Any>) -> Unit,
     ) {
+        var firstSetup = true
         db.collection("chats")
-            .whereEqualTo("isActive", true)
             .addSnapshotListener { result, error ->
 
                 if (error != null) {
                     Log.w("Messages listener error ", error)
-                    callback("internalError", "")
+                    callback("internalError", mapOf())
                 }
-
-                if (result != null && !result.isEmpty) {
-                    for (chat in result.documentChanges) {
-                        when (chat.type) {
-                            DocumentChange.Type.ADDED -> callback("newChat", chat.document.id)
-                            DocumentChange.Type.MODIFIED -> callback("newMessageOrAdminChange", chat.document.id)
-                            DocumentChange.Type.REMOVED -> callback("chatClosed", "")
-                            else -> Log.d("chatListener", "Current data: null")
+                if (!firstSetup) {
+                    if (result != null && !result.isEmpty) {
+                        for (chat in result.documentChanges) {
+                            when (chat.type) {
+                                DocumentChange.Type.ADDED -> callback("newChat", chat.document.data)
+                                else -> Log.d("chatListener", "Current data: null")
+                            }
                         }
+
+                    } else {
+                        Log.d("newMessagesListener", "Current data: null")
                     }
-
                 } else {
-                    Log.d("newMessagesListener", "Current data: null")
+                    firstSetup = false
                 }
-
 
             }
 
     }
 
 
-/*
-   fun newMessagesListener(chatID: String,
-        callbackOnSuccessful: (Map<String, Any>) -> Unit,
-        callbackOnFailure: (String) -> Unit
+    fun setNewMessagesListener(
+        chatID: String,
+        callback: (String, Map<String, Any>) -> Unit,
     ) {
+        var firstSetup = true
         db.collection("chats").document(chatID).collection("messages")
             .addSnapshotListener { result, error ->
 
                 if (error != null) {
                     Log.w("Messages listener error ", error)
-                    callbackOnFailure("internalError")
+                    callback("internalError", mapOf())
                 }
+                if (!firstSetup) {
+                    if (result != null && !result.isEmpty) {
+                        for (chat in result.documentChanges) {
+                            when (chat.type) {
+                                DocumentChange.Type.ADDED -> callback("newChat", chat.document.data)
+                                else -> Log.d("chatListener", "Current data: null")
+                            }
+                        }
 
-                if (result != null && !result.isEmpty) {
-                    result.forEach { data ->
-                        if (data.metadata.)
-                        callbackOnSuccessful()
+                    } else {
+                        Log.d("newMessagesListener", "Current data: null")
                     }
-
-
                 } else {
-                    Log.d("newMessagesListener", "Current data: null")
+                    firstSetup = false
                 }
 
 
             }
-
     }
-
- */
-
 
 }
 
