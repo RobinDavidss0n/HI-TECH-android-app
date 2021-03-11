@@ -2,14 +2,14 @@ package se.ju.student.hitech
 
 import android.util.Log
 import android.view.View
+import com.google.common.base.Strings
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.UserDataReader
 import kotlin.math.sign
-
-var userRepository = UserRepository()
 
 class UserRepository {
 
@@ -73,7 +73,8 @@ class UserRepository {
 
                 val user = hashMapOf(
                     "name" to name,
-                    "role" to role
+                    "role" to role,
+                    "chats" to arrayListOf<Strings>()
                 )
 
                 db.collection("users").document(registeredUser.user?.uid.toString())
@@ -81,13 +82,13 @@ class UserRepository {
                     .addOnSuccessListener {
                         callback("successful")
                     }.addOnFailureListener{ error ->
-                        Log.d("Insert user into database error", error.toString())
+                        Log.w("Insert user into database error", error)
                         callback("internalError")
 
                     }
 
             }.addOnFailureListener { error ->
-                Log.d("Create user error", error.toString())
+                Log.w("Create user error", error)
                 callback("internalError")
 
             }
@@ -106,7 +107,7 @@ class UserRepository {
                     callbackOnFailure("notFound")
                 }
             }.addOnFailureListener{ error ->
-                Log.d("Get user info database error", error.toString())
+                Log.w("Get user info database error", error)
                 callbackOnFailure("internalError")
 
             }
@@ -123,11 +124,11 @@ class UserRepository {
                     .addOnSuccessListener {
                         callback("successful")
                     }.addOnFailureListener{error ->
-                        Log.d("Update user email error", error.toString())
+                        Log.w("Update user email error", error)
                         callback("internalError")
                     }
             }.addOnFailureListener{ error ->
-                Log.d("Update user info database error", error.toString())
+                Log.w("Update user info database error", error)
                 callback("internalError")
 
             }
@@ -138,7 +139,7 @@ class UserRepository {
             .addOnSuccessListener {
                 callback("successful")
             }.addOnFailureListener{error ->
-                Log.d("Update user email error", error.toString())
+                Log.w("Update user email error", error)
                 callback("internalError")
             }
     }
@@ -148,7 +149,7 @@ class UserRepository {
         addOnSuccessListener {
             callback("successful")
         }.addOnFailureListener{ error ->
-            Log.d("Send password reset error", error.toString())
+            Log.w("Send password reset error", error)
             callback("internalError")
         }
 
@@ -164,15 +165,39 @@ class UserRepository {
                     .addOnSuccessListener {
                         callback("successful")
                     }.addOnFailureListener{ error ->
-                        Log.d("Delete user info database error", error.toString())
+                        Log.w("Delete user info database error", error)
                         callback("internalError")
                     }
             }.addOnFailureListener{error ->
-                Log.d("Delete user error", error.toString())
+                Log.w("Delete user error", error)
                 callback("internalError")
             }
     }
+    fun addChatToUser(chatID: String, callback: (String) -> Unit){
 
+        db.collection("users").document(getUserID())
+            .update("chats", FieldValue.arrayUnion(chatID))
+            .addOnSuccessListener {
+                callback("successful")
+            }.addOnFailureListener{ error ->
+                Log.w("Add chat to user database error", error)
+                callback("internalError")
+
+            }
+    }
+
+    fun removeChatFromUser(chatID: String, callback: (String) -> Unit){
+
+        db.collection("users").document(getUserID())
+            .update("chats", FieldValue.arrayRemove(chatID))
+            .addOnSuccessListener {
+                callback("successful")
+            }.addOnFailureListener{ error ->
+                Log.w("Add chat to user database error", error)
+                callback("internalError")
+
+            }
+    }
 
 
 }

@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         const val TOPIC_NEWS = "/topics/news"
         const val TAG_REGISTER_USER = "TAG_FRAGMENT_REGISTER_USER"
         const val TAG_USER_PAGE = "TAG_FRAGMENT_USER_PAGE"
+        const val TAG_TEST = "TAG_TEST"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
                     .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
                     .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
+                    .add(R.id.fragment_container, TestFragment(), TAG_TEST)
                     .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
@@ -132,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.nav_login -> {
                 bottomNav.uncheckAllItems()
-                if (userRepository.checkIfLoggedIn()) {
+                if (UserRepository().checkIfLoggedIn()) {
                     changeToFragment(TAG_USER_PAGE)
                 } else {
                     changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
@@ -146,6 +148,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.nav_problem -> {
                 showReportProblemAlert()
+                return true
+            }
+            R.id.test -> {
+                changeToFragment(TAG_TEST)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
