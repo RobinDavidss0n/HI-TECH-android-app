@@ -10,6 +10,12 @@ class ChatRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val timeHandler = TimeHandler()
+    private val activeChatsList = mutableListOf<Chat>()
+
+
+    fun getAllActiveChats():List<Chat>{
+        return activeChatsList
+    }
 
     fun createNewChat(localAndroidID: String, case: String, callback: (String) -> Unit) {
 

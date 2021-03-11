@@ -6,4 +6,4 @@ data class Chat (
     val lastUpdated: String? = null,
     val activeAdmin: String? = null,
     val isActive: String? = null
-        )
+)
