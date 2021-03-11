@@ -79,6 +79,7 @@ class EventRepository {
     }
 
     fun getAllEvents(): List<Event> {
+       // sortEventList()
         return eventList
     }
 

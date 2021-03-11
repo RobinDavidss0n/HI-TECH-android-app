@@ -17,7 +17,7 @@ class NewsRepository {
 
     fun addNovelty(title: String, content: String) {
 
-        sortNewsList()
+        sortNewsListDescending()
         val novelty = HashMap<String, Any>()
         novelty["title"] = title
         novelty["content"] = content
@@ -30,6 +30,7 @@ class NewsRepository {
     }
 
     fun getAllNews(): List<Novelty> {
+       // sortNewsList()
         return newsList
     }
 
@@ -51,12 +52,15 @@ class NewsRepository {
                 }
             }
         }
+       // sortNewsList()
     }
 
     private fun added(novelty: Novelty) {
+        //sortNewsList()
         if (!newsList.contains(novelty)) {
             newsList.add(novelty)
         }
+        //sortNewsList()
     }
 
     private fun modified(novelty: Novelty) {
@@ -65,16 +69,25 @@ class NewsRepository {
     }
 
     private fun removed(novelty: Novelty) {
+        //sortNewsList()
         if (newsList.contains(novelty)) {
             newsList.remove(novelty)
         }
+       // sortNewsList()
     }
 
     fun deleteNovelty(id: Int) {
         db.collection("news").document(id.toString()).delete()
+        sortNewsListAscending()
     }
 
-    private fun sortNewsList() {
+    private fun sortNewsListAscending(){
+        newsList.sortBy { novelty ->
+            novelty.id
+        }
+    }
+
+    private fun sortNewsListDescending() {
         newsList.sortByDescending { novelty ->
             novelty.id
         }
