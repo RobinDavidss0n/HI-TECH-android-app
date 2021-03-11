@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.nav_login -> {
                 bottomNav.uncheckAllItems()
-                if (userRepository.checkIfLoggedIn()) {
+                if (UserRepository().checkIfLoggedIn()) {
                     changeToFragment(TAG_USER_PAGE)
                 } else {
                     changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)

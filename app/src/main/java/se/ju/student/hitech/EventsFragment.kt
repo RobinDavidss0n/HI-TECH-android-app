@@ -51,6 +51,8 @@ class EventsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        val userRepository = UserRepository()
+
         if (userRepository.checkIfLoggedIn()) {
             loggedIn = true
             binding.fabCreateEvent.visibility = VISIBLE
