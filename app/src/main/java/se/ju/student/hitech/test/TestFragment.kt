@@ -32,7 +32,7 @@ class TestFragment : Fragment() {
 
         val testThatShit = view?.findViewById<Button>(R.id.test)
         var msg = 1
-        val chatID = "LeQPZP34Os54X4YkDQnA"
+        val chatID = "aSluaQPdcSkBvDNm2her"
         val chatRepository = ChatRepository()
         val userRepository = UserRepository()
         val androidID = Settings.Secure.getString(
@@ -40,12 +40,52 @@ class TestFragment : Fragment() {
             Settings.Secure.ANDROID_ID
         )
 
+        /*
+        chatRepository.createNewChat(androidID, "study") { result ->
+            when (result) {
+                "successful" -> {
+                    (context as MainActivity).makeToast("Chat created.")
+                }
+                "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+            }
+        }*/
+
+
         testThatShit?.setOnClickListener {
 
 
+            /*
+            chatRepository.loadAllActiveChatsAndUpdateIfChanged() { result ->
 
+                when (result) {
+                    "loaded" -> {
 
-            // Sm54rp4sGzMxj3g9rHJsGfnQBAk1
+                        //all data laddat, säkert att sätta in det i viewn
+
+                    }
+
+                    "internalError" -> {
+                        //meddela användaren om att något gick fel med att hämta/uppdatera datan
+                    }
+                }
+            }
+
+            chatRepository.removeCurrentSpecificChatMessagesLoader()
+
+            chatRepository.loadAllMessagesFromSpecificChatAndUpdateIfChanged(chatID) { result ->
+
+                when (result) {
+                    "loaded" -> {
+
+                        //all data laddat, säkert att sätta in det i viewn
+
+                    }
+
+                    "internalError" -> {
+                        //meddela användaren om att något gick fel med att hämta/uppdatera datan
+                    }
+                }
+            }
 
             chatRepository.setNewMessagesListener(chatID) { resultString, dataMap ->
 
@@ -59,6 +99,7 @@ class TestFragment : Fragment() {
                 }
 
             }
+
 
             chatRepository.addMessage(
                 msg.toString(),
@@ -75,7 +116,21 @@ class TestFragment : Fragment() {
 
 
 
-            chatRepository.setNewChatListener() { resultString, dataMap ->
+            chatRepository.setNewMessagesListener(chatID) { resultString, message ->
+
+                when (resultString) {
+                    "newChat" -> {
+                       //skicka notis
+                    }
+                    "internalError" -> {
+                        //Meddela användare om fel
+                    }
+                }
+
+            }
+
+
+            chatRepository.setNewChatListener() { resultString, chat ->
 
                 when (resultString) {
                     "newChat" -> {
@@ -90,19 +145,23 @@ class TestFragment : Fragment() {
 
             Log.d(
                 "timestamp",
-                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToTimestamp().toString()
+                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToTimestamp()
+                    .toString()
             )
             Log.d(
                 "time",
-                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToStringTimeFormat()!!
+                TimeHandler().getLocalZoneTimestamp().time.toString()
+                    .convertTimeToStringTimeFormat()!!
             )
             Log.d(
                 "date",
-                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToStringDateFormat()!!
+                TimeHandler().getLocalZoneTimestamp().time.toString()
+                    .convertTimeToStringDateFormat()!!
             )
             Log.d(
                 "hourMin",
-                TimeHandler().getLocalZoneTimestamp().time.toString().convertTimeToStringHourMinutesFormat()!!
+                TimeHandler().getLocalZoneTimestamp().time.toString()
+                    .convertTimeToStringHourMinutesFormat()!!
             )
 
 
@@ -125,38 +184,6 @@ class TestFragment : Fragment() {
                 }
             }
 
-
-            chatRepository.getAllActiveChats() {resultString, data ->
-
-                (context as MainActivity).makeToast("Got messages")
-
-
-                when (resultString) {
-                    "successful" -> {
-                        Log.d("Chat", data["case"].toString())
-                        Log.d("Chat", data["lastUpdated"].toString().convertTimeToTimestamp().toString())
-                    }
-                    "notFound" -> {
-                        (context as MainActivity).makeToast("Not found.")
-                    }
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
-                }
-            }
-
-            chatRepository.getAllMessagesFromChat(chatID) {resultString, data ->
-
-                when (resultString) {
-                    "successful" -> {
-                        (context as MainActivity).makeToast("Got messages")
-                        Log.d("Chat", data["msgText"].toString())
-                        Log.d("Chat", data["timestamp"].toString().convertTimeToTimestamp().toString())
-                    }
-                    "notFound" -> {
-                        (context as MainActivity).makeToast("Not found.")
-                    }
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
-                }
-            }
 
 
             userRepository.removeChatFromUser(chatID) { result ->
@@ -214,7 +241,7 @@ class TestFragment : Fragment() {
                 }
             }
 
-
+             */
 
 
         }

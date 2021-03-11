@@ -15,7 +15,7 @@ import se.ju.student.hitech.databinding.FragmentActiveChatsAdminBinding
 
 class ActiveChatsFragmentAdmin : Fragment() {
     lateinit var binding: FragmentActiveChatsAdminBinding
-    private val viewModel: ActiveChatsViewModel by viewModels()
+    //private val viewModel: ActiveChatsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +32,7 @@ class ActiveChatsFragmentAdmin : Fragment() {
 
     }
 
-
+/*
     class ActiveChatsViewModel : ViewModel() {
         var chatRepository = ChatRepository()
         var activeChats = MutableLiveData<List<Chat>>()
@@ -57,5 +57,5 @@ class ActiveChatsFragmentAdmin : Fragment() {
 
 
 
-    }
+    }*/
 }

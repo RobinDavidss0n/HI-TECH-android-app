@@ -1,9 +1,12 @@
 package se.ju.student.hitech.chat
 
+import java.sql.Timestamp
+
 data class Chat (
-    val androidIDUser: String? = null,
-    val case: String? = null,
-    val lastUpdated: String? = null,
-    val activeAdmin: String? = null,
-    val isActive: String? = null
+    var androidIDUser: String? = null,
+    var case: String? = null,
+    var lastUpdated: Long? = null,
+    var activeAdmin: String? = null,
+    var isActive: String? = null
 )
+

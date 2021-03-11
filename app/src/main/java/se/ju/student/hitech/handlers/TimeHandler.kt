@@ -12,18 +12,18 @@ import java.util.*
 
 class TimeHandler {
 
-    fun getLocalZoneTimestamp(): Timestamp {
+    fun getLocalZoneTimestampInSeconds(): Long {
         return Timestamp
             .valueOf(
                 DateTimeFormatter
                     .ofPattern("yyyy-MM-dd HH:mm:ss.ss")
                     .withZone(ZoneOffset.UTC)
                     .format(Instant.now())
-            ).convertToLocalTime()!!
+            ).convertToLocalTime()!!.time
     }
 }
 
-fun String.convertTimeToTimestamp(): Timestamp? {
+fun Long.convertTimeToTimestamp(): Timestamp? {
 
     return Timestamp.valueOf(
         DateTimeFormatter
@@ -35,7 +35,7 @@ fun String.convertTimeToTimestamp(): Timestamp? {
 }
 
 
-fun String.convertTimeToStringTimeFormat(): String? {
+fun Long.convertTimeToStringTimeFormat(): String? {
 
     return DateTimeFormatter
         .ofPattern("HH:mm:ss")
@@ -43,7 +43,7 @@ fun String.convertTimeToStringTimeFormat(): String? {
         .format(java.sql.Date(this.toLong()).toInstant())
 }
 
-fun String.convertTimeToStringHourMinutesFormat(): String? {
+fun Long.convertTimeToStringHourMinutesFormat(): String? {
 
     return DateTimeFormatter
         .ofPattern("HH:mm")
@@ -51,7 +51,7 @@ fun String.convertTimeToStringHourMinutesFormat(): String? {
         .format(java.sql.Date(this.toString().toLong()).toInstant())
 }
 
-fun String.convertTimeToStringDateFormat(): String? {
+fun Long.convertTimeToStringDateFormat(): String? {
 
     return DateTimeFormatter
         .ofPattern("yyyy-MM-dd")
