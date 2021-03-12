@@ -1,14 +1,19 @@
 package se.ju.student.hitech.chat.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.UserRepository
+import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.databinding.FragmentContactCaseBinding
 
 class ContactCaseFragment : Fragment() {
     lateinit var binding: FragmentContactCaseBinding
+    private val chatRepository = ChatRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,20 +30,40 @@ class ContactCaseFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding.btnCase1.setOnClickListener {
-            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+            createNewChat("case1")
         }
+
         binding.btnCase2.setOnClickListener {
-            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+            createNewChat("case2")
         }
+
         binding.btnCase3.setOnClickListener {
-            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
-
+            createNewChat("case3")
         }
+
         binding.btnCase4.setOnClickListener {
-            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
-
+            createNewChat("case4")
         }
 
+
+    }
+
+    @SuppressLint("HardwareIds")
+    fun createNewChat(case: String){
+
+        val androidID = Settings.Secure.getString(
+            context?.contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
+
+        chatRepository.createNewChat(androidID, case) { result ->
+            when (result) {
+                "successful" -> {
+                    (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+                }
+                "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+            }
+        }
 
     }
 

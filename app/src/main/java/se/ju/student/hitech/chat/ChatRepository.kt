@@ -10,7 +10,7 @@ class ChatRepository {
     private val timeHandler = TimeHandler()
     private var activeChatsList = mutableListOf<Chat>()
     private var currentChatMessagesList = mutableListOf<Message>()
-    lateinit var currentMessageListener: ListenerRegistration
+    private lateinit var currentMessageListener: ListenerRegistration
 
 
     fun getAllActiveChatsList(): List<Chat> {

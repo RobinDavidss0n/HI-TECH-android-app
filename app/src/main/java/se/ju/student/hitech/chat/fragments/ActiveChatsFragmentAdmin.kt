@@ -32,21 +32,21 @@ class ActiveChatsFragmentAdmin : Fragment() {
 
     }
 
-/*
+
     class ActiveChatsViewModel : ViewModel() {
         var chatRepository = ChatRepository()
         var activeChats = MutableLiveData<List<Chat>>()
 
         init {
-            val fetchedActiveCahts = chatRepository.getAllActiveChats(){result, data->
+            chatRepository.loadAllActiveChatsAndUpdateIfChanged(){result->
 
                 when (result) {
                     "successful" -> {
-                        activeChats.postValue()
+                        activeChats.postValue(chatRepository.getAllActiveChatsList())
 
                     }
                     "internalError" ->{
-
+                        //notify user about error
                     }
                 }
 
@@ -57,5 +57,5 @@ class ActiveChatsFragmentAdmin : Fragment() {
 
 
 
-    }*/
+    }
 }
