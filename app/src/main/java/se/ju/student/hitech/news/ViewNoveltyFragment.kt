@@ -15,7 +15,7 @@ class ViewNoveltyFragment : Fragment() {
 
     companion object {
         private const val ARG_NOVELTY_ID = "NOVELTY_ID"
-        
+
         fun newInstance(noveltyId: Int) =
             ViewNoveltyFragment().apply {
                 arguments = Bundle().apply {
