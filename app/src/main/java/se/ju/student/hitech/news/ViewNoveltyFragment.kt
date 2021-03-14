@@ -9,14 +9,13 @@ import android.widget.TextView
 import se.ju.student.hitech.R
 import se.ju.student.hitech.news.Novelty
 
-private const val ARG_NOVELTY_ID = "NOVELTY_ID"
-
 class ViewNoveltyFragment : Fragment() {
 
     var newsRepository = NewsRepository()
 
     companion object {
-
+        private const val ARG_NOVELTY_ID = "NOVELTY_ID"
+        
         fun newInstance(noveltyId: Int) =
             ViewNoveltyFragment().apply {
                 arguments = Bundle().apply {
