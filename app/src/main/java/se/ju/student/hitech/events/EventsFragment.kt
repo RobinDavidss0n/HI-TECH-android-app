@@ -1,5 +1,6 @@
 package se.ju.student.hitech.events
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEW_EVENT
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
 import se.ju.student.hitech.databinding.ItemEventBinding
@@ -145,10 +148,11 @@ class EventsFragment : Fragment() {
                                     ) { dialog, whichButton ->
                                         // Do not delete
                                     }.show()
-
                             }
                             R.id.menu_edit -> {
-                                eventRepository.updateEvent()
+                               /* (Activity() as MainActivity).changeToFragment(
+                                    TAG_FRAGMENT_UPDATE_EVENT
+                                )   */
                             }
                         }
                         true

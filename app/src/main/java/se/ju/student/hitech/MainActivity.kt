@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import se.ju.student.hitech.events.CreateNewEventFragment
 import se.ju.student.hitech.events.EventsFragment
+import se.ju.student.hitech.events.UpdateEventFragment
 import se.ju.student.hitech.news.CreateNewsPostFragment
 import se.ju.student.hitech.news.NewsFragment
 import se.ju.student.hitech.notifications.NotificationData
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_CREATE_NEWS_POST = "TAG_FRAGMENT_CREATE_NEWS_POST"
         const val TAG_REGISTER_USER = "TAG_FRAGMENT_REGISTER_USER"
         const val TAG_USER_PAGE = "TAG_FRAGMENT_USER_PAGE"
+        const val TAG_FRAGMENT_UPDATE_EVENT = "TAG_FRAGMENT_UPDATE_EVENT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
                     .add(R.id.fragment_container, CreateNewsPostFragment(), TAG_FRAGMENT_CREATE_NEWS_POST)
                     .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
+                    .add(R.id.fragment_container, UpdateEventFragment(), TAG_FRAGMENT_UPDATE_EVENT)
                     .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }

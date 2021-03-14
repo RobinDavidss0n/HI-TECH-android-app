@@ -15,6 +15,22 @@ class EventRepository {
         var eventRepository = EventRepository()
     }
 
+    fun updateEvent(newTitle: String, newDate: String, newTime: String, newLocation: String, newInformation: String, id : Int) {
+
+        sortEventList()
+
+       /* val event = hashMapOf(
+            "title" to title,
+            "date" to date,
+            "time" to time,
+            "location" to location,
+            "information" to information,
+            "id" to id
+        )
+
+        db.collection("events").document(id.toString()).set(event)  */
+    }
+
     fun addEvent(title: String, date: String, time: String, location: String, information: String) {
 
         sortEventList()
@@ -86,10 +102,6 @@ class EventRepository {
 
     fun deleteEvent(id: Int) {
         db.collection("events").document(id.toString()).delete()
-    }
-
-    fun updateEvent() {
-        //TODO
     }
 
     fun getEventById(id: Int): Event? {
