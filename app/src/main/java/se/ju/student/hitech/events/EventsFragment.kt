@@ -19,12 +19,12 @@ import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEW_EVENT
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
 import se.ju.student.hitech.databinding.ItemEventBinding
+import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 import se.ju.student.hitech.user.UserRepository
 
 class EventsFragment : Fragment() {
 
     lateinit var binding: FragmentEventsBinding
-    var eventRepository = EventRepository()
     var userRepository = UserRepository()
     private val viewModel: EventsViewModel by viewModels()
 
@@ -94,7 +94,6 @@ class EventsFragment : Fragment() {
 
     class EventsViewModel : ViewModel() {
         var events = MutableLiveData<List<Event>>()
-        var eventRepository = EventRepository()
 
         init {
             eventRepository.loadChangesInEventsData()
@@ -122,7 +121,6 @@ class EventsFragment : Fragment() {
             holder.binding.tvTime.text = event.time
             holder.binding.tvTitle.text = event.title
             holder.binding.tvInformation.text = event.information
-            var eventRepository = EventRepository()
 
             val id = event.id
 

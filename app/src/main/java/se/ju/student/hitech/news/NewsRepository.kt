@@ -4,8 +4,8 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import se.ju.student.hitech.events.Event
 import se.ju.student.hitech.news.Novelty
+import se.ju.student.hitech.shop.ShopFragment
 import kotlin.collections.List as List
 
 class NewsRepository {
@@ -13,10 +13,14 @@ class NewsRepository {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var newsList = mutableListOf<Novelty>()
 
+    companion object{
+        val newsRepository = NewsRepository()
+    }
+
     fun addNovelty(title: String, content: String) {
 
-        sortNewsListDescending()
         val novelty = HashMap<String, Any>()
+        sortNewsList()
         novelty["title"] = title
         novelty["content"] = content
         novelty["id"] = when {
@@ -28,7 +32,6 @@ class NewsRepository {
     }
 
     fun getAllNews(): List<Novelty> {
-       // sortNewsList()
         return newsList
     }
 
@@ -50,15 +53,33 @@ class NewsRepository {
                 }
             }
         }
-       // sortNewsList()
+    }
+
+    fun loadNewsData() {
+        db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
+
+            if (e != null) {
+                Log.w(TAG, "Failed to load news", e)
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                val documents = snapshot.documents
+                documents.forEach {
+                    val novelty = it.toObject(Novelty::class.java)
+                    if (novelty != null) {
+                        if (!newsList.contains(novelty)) {
+                            newsList.add(novelty)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun added(novelty: Novelty) {
-        //sortNewsList()
         if (!newsList.contains(novelty)) {
             newsList.add(novelty)
         }
-        //sortNewsList()
     }
 
     private fun modified(novelty: Novelty) {
@@ -67,25 +88,16 @@ class NewsRepository {
     }
 
     private fun removed(novelty: Novelty) {
-        //sortNewsList()
         if (newsList.contains(novelty)) {
             newsList.remove(novelty)
         }
-       // sortNewsList()
     }
 
     fun deleteNovelty(id: Int) {
         db.collection("news").document(id.toString()).delete()
-        sortNewsListAscending()
     }
 
-    private fun sortNewsListAscending(){
-        newsList.sortBy { novelty ->
-            novelty.id
-        }
-    }
-
-    private fun sortNewsListDescending() {
+    private fun sortNewsList() {
         newsList.sortByDescending { novelty ->
             novelty.id
         }

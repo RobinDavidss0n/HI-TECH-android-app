@@ -5,12 +5,15 @@ import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.events.Event
-import se.ju.student.hitech.news.Novelty
 
 class EventRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var eventList = mutableListOf<Event>()
+
+    companion object {
+        var eventRepository = EventRepository()
+    }
 
     fun addEvent(title: String, date: String, time: String, location: String, information: String) {
 
@@ -29,7 +32,7 @@ class EventRepository {
             "information" to information,
             "id" to id
         )
-        
+
         db.collection("events").document(id.toString()).set(event)
     }
 
@@ -53,18 +56,18 @@ class EventRepository {
         }
     }
 
-    private fun added(event : Event) {
+    private fun added(event: Event) {
         if (!eventList.contains(event)) {
             eventList.add(event)
         }
     }
 
-    private fun modified(event : Event) {
+    private fun modified(event: Event) {
         // remove old
         // add new
     }
 
-    private fun removed(event : Event) {
+    private fun removed(event: Event) {
         if (eventList.contains(event)) {
             eventList.remove(event)
         }
@@ -77,7 +80,7 @@ class EventRepository {
     }
 
     fun getAllEvents(): List<Event> {
-       // sortEventList()
+        // sortEventList()
         return eventList
     }
 

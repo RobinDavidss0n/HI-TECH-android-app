@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.databinding.FragmentCreateEventBinding
+import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
 class CreateNewEventFragment : Fragment() {
 
     lateinit var binding: FragmentCreateEventBinding
-    var eventRepository = EventRepository()
 
     companion object {
         fun newInstance() = CreateNewEventFragment()

@@ -14,6 +14,7 @@ import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 import se.ju.student.hitech.R
+import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
 class CreateNewsPostFragment : Fragment() {
 
@@ -21,7 +22,6 @@ class CreateNewsPostFragment : Fragment() {
     lateinit var title: EditText
     lateinit var content: EditText
     lateinit var createNoveltyButton: Button
-    var newsRepository = NewsRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
