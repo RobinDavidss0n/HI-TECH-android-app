@@ -5,8 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.user.User
 
-var userRepository = UserRepository()
-
 class UserRepository {
 
     private val auth = FirebaseAuth.getInstance()
@@ -168,7 +166,5 @@ class UserRepository {
                 callback("internalError")
             }
     }
-
-
 
 }

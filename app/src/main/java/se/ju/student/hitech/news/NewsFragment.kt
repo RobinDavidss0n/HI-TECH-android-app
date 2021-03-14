@@ -20,12 +20,13 @@ import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS_POST
 import se.ju.student.hitech.news.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
-import se.ju.student.hitech.user.userRepository
+import se.ju.student.hitech.user.UserRepository
 
 class NewsFragment : Fragment() {
 
     lateinit var binding: FragmentNewsBinding
     private val viewModel: NewsViewModel by viewModels()
+    var userRepository = UserRepository()
 
     companion object {
         fun newInstance() = NewsFragment()
@@ -84,6 +85,7 @@ class NewsFragment : Fragment() {
 
     class NewsViewModel : ViewModel() {
         var news = MutableLiveData<List<Novelty>>()
+        var newsRepository = NewsRepository()
 
         init {
             newsRepository.loadChangesInNewsData()
@@ -108,6 +110,7 @@ class NewsFragment : Fragment() {
         override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
             val novelty = news[position]
             val id = novelty.id
+            var newsRepository = NewsRepository()
 
             holder.binding.newsTitleNoImage.text = novelty.title
             holder.binding.cardNews.setOnClickListener {

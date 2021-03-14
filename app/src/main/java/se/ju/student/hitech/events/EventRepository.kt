@@ -7,8 +7,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.events.Event
 import se.ju.student.hitech.news.Novelty
 
-var eventRepository = EventRepository()
-
 class EventRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()

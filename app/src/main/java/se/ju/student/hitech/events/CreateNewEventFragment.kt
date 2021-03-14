@@ -13,6 +13,7 @@ import se.ju.student.hitech.databinding.FragmentCreateEventBinding
 class CreateNewEventFragment : Fragment() {
 
     lateinit var binding: FragmentCreateEventBinding
+    var eventRepository = EventRepository()
 
     companion object {
         fun newInstance() = CreateNewEventFragment()

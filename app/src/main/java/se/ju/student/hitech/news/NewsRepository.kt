@@ -8,8 +8,6 @@ import se.ju.student.hitech.events.Event
 import se.ju.student.hitech.news.Novelty
 import kotlin.collections.List as List
 
-var newsRepository = NewsRepository()
-
 class NewsRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
