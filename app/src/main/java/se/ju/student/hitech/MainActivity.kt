@@ -27,10 +27,12 @@ import se.ju.student.hitech.notifications.RetrofitInstance
 import se.ju.student.hitech.shop.ShopFragment
 import se.ju.student.hitech.user.RegisterUserFragment
 import se.ju.student.hitech.user.UserPageFragment
-import se.ju.student.hitech.user.userRepository
+import se.ju.student.hitech.user.UserRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
+
+    var userRepository = UserRepository()
 
     companion object {
         const val TAG_FRAGMENT_CREATE_NEW_EVENT = "TAG_FRAGMENT_NEW_EVENT"
@@ -207,6 +209,5 @@ class MainActivity : AppCompatActivity() {
     fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
-
 
 }

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.*
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS_POST
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.news.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
