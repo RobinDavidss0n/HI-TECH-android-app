@@ -16,56 +16,53 @@ import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
-class CreateNewsPostFragment : Fragment() {
+class UpdateNoveltyFragment : Fragment() {
 
     private var checked = false
-    lateinit var title: EditText
-    lateinit var content: EditText
-    lateinit var createNoveltyButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.fragment_create_news, container, false)
+        inflater.inflate(R.layout.fragment_update_novelty, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        title = view?.findViewById(R.id.editTextNewPostTitle)!!
-        content = view?.findViewById(R.id.editTextNewPostContent)!!
-        createNoveltyButton = view?.findViewById(R.id.btn_create_news_create_post)!!
 
         val notificationContent =
-            view?.findViewById<EditText>(R.id.editTextNewPostNotificationContent)?.text
-        val notificationTitle = view?.findViewById<EditText>(R.id.editTextNewPostTitle)?.text
+            view?.findViewById<EditText>(R.id.editTextUpdatePostNotificationContent)
+        val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
+        val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
+        val updateNoveltyButton = view?.findViewById<Button>(R.id.btn_update_post)
 
-        title.addTextChangedListener(object : TextWatcher {
+        title?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                createNoveltyButton.isEnabled = false
+                updateNoveltyButton?.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                createNoveltyButton.isEnabled = count > 0
+                updateNoveltyButton?.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                createNoveltyButton.isEnabled = title.length() > 0 && content.length() > 0
+                updateNoveltyButton?.isEnabled = title.length() > 0 && content?.length()!! > 0
             }
 
         })
-        content.addTextChangedListener(object : TextWatcher {
+
+        content?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                createNoveltyButton.isEnabled = false
+                updateNoveltyButton?.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                createNoveltyButton.isEnabled = count > 0
+                updateNoveltyButton?.isEnabled = count > 0
             }
 
             override fun afterTextChanged(s: Editable?) {
-                createNoveltyButton.isEnabled = content.length() > 0 && title.length() > 0
+                updateNoveltyButton?.isEnabled = content.length() > 0 && title?.length()!! > 0
             }
 
         })
@@ -76,22 +73,30 @@ class CreateNewsPostFragment : Fragment() {
             }
 
         view?.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
-            checked = true;
+            checked = true
+
+            // set to false?
         }
 
-        createNoveltyButton.setOnClickListener {
-            newsRepository.addNovelty(title.text.toString(), content.text.toString())
+        updateNoveltyButton?.setOnClickListener {
+            newsRepository.addNovelty(title!!.text.toString(), content!!.text.toString())
 
             if (checked) {
-                if(createNotification(notificationTitle.toString(), notificationContent.toString())){
+                if (createNotification(
+                        title.text.toString(),
+                        notificationContent.toString()
+                    )
+                ) {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                } else {
+                    (context as MainActivity).makeToast("Failed to create notification")
                 }
-            } else{
+            } else {
                 (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
             }
         }
 
-        view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
+        view?.findViewById<Button>(R.id.btn_update_news_back)?.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
     }

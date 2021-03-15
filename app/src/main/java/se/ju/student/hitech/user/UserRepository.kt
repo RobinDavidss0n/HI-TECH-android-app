@@ -10,6 +10,10 @@ class UserRepository {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
+    companion object{
+        val userRepository = UserRepository()
+    }
+
     fun getUserID(): String {
         return auth.currentUser?.uid.toString()
     }

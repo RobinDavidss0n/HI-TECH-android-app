@@ -15,20 +15,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import se.ju.student.hitech.*
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS_POST
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
-import se.ju.student.hitech.news.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
+import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NOVELTY
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_NOVELTY
+import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
-import se.ju.student.hitech.user.UserRepository
+import se.ju.student.hitech.news.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class NewsFragment : Fragment() {
 
     lateinit var binding: FragmentNewsBinding
     private val viewModel: NewsViewModel by viewModels()
-    var userRepository = UserRepository()
 
     companion object {
         fun newInstance() = NewsFragment()
@@ -81,7 +82,7 @@ class NewsFragment : Fragment() {
         }
 
         binding.fabCreateNewPost.setOnClickListener {
-            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)
         }
     }
 
@@ -135,7 +136,7 @@ class NewsFragment : Fragment() {
                             R.id.menu_delete -> {
                                 AlertDialog.Builder(holder.itemView.context)
                                     .setTitle("Delete post")
-                                    .setMessage("Do you really want to delete this post?"+id)
+                                    .setMessage("Do you really want to delete this post?")
                                     .setPositiveButton(
                                         "YES"
                                     ) { dialog, whichButton ->
@@ -152,7 +153,8 @@ class NewsFragment : Fragment() {
                                     }.show()
                             }
                             R.id.menu_edit -> {
-                                newsRepository.updateNovelty()
+                                (holder.itemView.context as MainActivity).changeToFragment(
+                                    TAG_FRAGMENT_UPDATE_NOVELTY)
                             }
                         }
                         true
