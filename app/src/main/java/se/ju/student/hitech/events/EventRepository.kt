@@ -2,8 +2,10 @@ package se.ju.student.hitech.events
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import se.ju.student.hitech.events.Event
 
 class EventRepository {
@@ -52,8 +54,8 @@ class EventRepository {
         db.collection("events").document(id.toString()).set(event)
     }
 
-    fun loadChangesInEventsData() {
-        db.collection("events").orderBy("id").addSnapshotListener { snapshot, e ->
+    fun loadChangesInEventsData(): ListenerRegistration {
+        return db.collection("events").orderBy("id").addSnapshotListener { snapshot, e ->
 
             if (e != null) {
                 Log.w(TAG, "Failed to load news", e)
@@ -100,8 +102,8 @@ class EventRepository {
         return eventList
     }
 
-    fun deleteEvent(id: Int) {
-        db.collection("events").document(id.toString()).delete()
+    fun deleteEvent(id: Int): Task<Void> {
+        return db.collection("events").document(id.toString()).delete()
     }
 
     fun getEventById(id: Int): Event? {
