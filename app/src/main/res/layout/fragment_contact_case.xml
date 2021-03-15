@@ -25,17 +25,38 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="40dp"
+            >
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Enter a username"
+                android:textColor="@color/white"
+                >
+            </TextView>
+            <EditText
+                android:id="@+id/localUsername"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"></EditText>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnCase1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/item_case_background"
+            android:background="@drawable/button_background_selector"
             android:textColor="@color/black"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/avenir_next_bold"
+            android:enabled="false"
             android:text="Case1" />
 
         <Button
@@ -43,23 +64,25 @@
             android:layout_width="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/item_case_background"
+            android:background="@drawable/button_background_selector"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
             android:textColor="@color/black"
             android:fontFamily="@font/avenir_next_bold"
+            android:enabled="false"
             android:text="Case2" />
 
         <Button
             android:id="@+id/btnCase3"
             android:layout_width="match_parent"
-            android:background="@drawable/item_case_background"
+            android:background="@drawable/button_background_selector"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
             android:textColor="@color/black"
             android:fontFamily="@font/avenir_next_bold"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="Case3" />
 
         <Button
@@ -69,8 +92,9 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/item_case_background"
+            android:background="@drawable/button_background_selector"
             android:fontFamily="@font/avenir_next_bold"
+            android:enabled="false"
             android:text="Case4"
 
             android:textColor="@color/black" />

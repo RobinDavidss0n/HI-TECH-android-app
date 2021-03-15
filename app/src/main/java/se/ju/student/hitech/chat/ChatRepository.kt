@@ -21,7 +21,7 @@ class ChatRepository {
         return currentChatMessagesList
     }
 
-    fun createNewChat(localAndroidID: String, case: String, callback: (String) -> Unit) {
+    fun createNewChat(localAndroidID: String, localUsername:String,case: String, callback: (String) -> Unit) {
 
         val chat = hashMapOf(
             "androidIDUser" to localAndroidID,
@@ -29,7 +29,8 @@ class ChatRepository {
             "lastUpdated" to timeHandler.getLocalZoneTimestampInSeconds(),
             "activeAdmin" to "",
             "isActive" to true,
-            "lastSentMsg" to ""
+            "lastSentMsg" to "",
+            "localUsername" to localUsername
         )
 
         db.collection("chats")
@@ -221,7 +222,7 @@ class ChatRepository {
                 }
 
                 val newActiveChatsList = mutableListOf<Chat>()
-                querySnapshot!!.documents.forEach { doc ->
+                querySnapshot?.documents?.forEach { doc ->
                     val chat = doc.toObject(Chat::class.java)!!
                     newActiveChatsList.add(chat)
                 }

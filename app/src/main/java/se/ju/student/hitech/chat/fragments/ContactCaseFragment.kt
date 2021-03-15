@@ -3,6 +3,8 @@ package se.ju.student.hitech.chat.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -29,7 +31,31 @@ class ContactCaseFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        binding.localUsername.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                binding.btnCase1.isEnabled =
+                    binding.localUsername.length() > 0
+                binding.btnCase2.isEnabled =
+                    binding.localUsername.length() > 0
+                binding.btnCase3.isEnabled =
+                    binding.localUsername.length() > 0
+                binding.btnCase4.isEnabled =
+                    binding.localUsername.length() > 0
+
+            }
+
+        })
+
         binding.btnCase1.setOnClickListener {
+
             createNewChat("case1")
         }
 
@@ -55,8 +81,8 @@ class ContactCaseFragment : Fragment() {
             context?.contentResolver,
             Settings.Secure.ANDROID_ID
         )
-
-        chatRepository.createNewChat(androidID, case) { result ->
+        val localUsername = binding.localUsername.text.toString()
+        chatRepository.createNewChat(androidID,localUsername,case) { result ->
             when (result) {
                 "successful" -> {
                     (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
