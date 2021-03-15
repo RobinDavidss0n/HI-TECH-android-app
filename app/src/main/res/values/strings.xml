@@ -25,7 +25,6 @@
     <string name="register_user_repeatPassword">Repeat Password</string>
     <string name="register_user_name">Name</string>
     <string name="register_user_role">Role</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="User_page_logout">Logout</string>
     <string name="user_page_resetPassword">Reset password</string>
@@ -39,4 +38,14 @@
     <string name="create_notification">Create notification</string>
     <string name="create_post">CREATE POST</string>
     <string name="go_back">GO BACK</string>
+    <string name="emailEmpty">Email is empty</string>
+    <string name="notValidEmail">Not valid mail</string>
+    <string name="passwordEmpty">Password is empty</string>
+    <string name="passwordNotLongEnough">Password need to be at least 6 character long</string>
+    <string name="passwordNotMatch">Passwords dose not match</string>
+    <string name="nameEmpty">Name is empty</string>
+    <string name="roleEmpty">Role is empty</string>
+    <string name="createUserSuccessful">User was created successfully!</string>
+    <string name="internalError">Something went wrong, check your internet connection and try again.</string>
+
 </resources>

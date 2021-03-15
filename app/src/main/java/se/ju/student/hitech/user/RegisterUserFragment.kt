@@ -83,41 +83,41 @@ class RegisterUserFragment : Fragment() {
 
         if (email.isEmpty()) {
 
-            emailInputLayout?.error = "Email is empty"
+            emailInputLayout?.error
             return false
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInputLayout?.error = "Not valid mail"
+            emailInputLayout?.error = getString(R.string.emailEmpty)
             return false
         }
 
         if (password.isEmpty()) {
-            passwordInputLayout?.error = "Password is empty"
+            passwordInputLayout?.error = getString(R.string.passwordEmpty)
             return false
 
         }
 
         if (password.length < 5) {
-            passwordInputLayout?.error = "Password need to be at least 6 character long"
+            passwordInputLayout?.error = getString(R.string.passwordNotLongEnough)
             return false
 
         }
 
         if (rePassword != password) {
-            rePasswordInputLayout?.error = "Passwords dose not match"
+            rePasswordInputLayout?.error = getString(R.string.passwordNotMatch)
             return false
 
         }
 
         if (name.isEmpty()) {
-            nameInputLayout?.error = "Name is empty"
+            nameInputLayout?.error = getString(R.string.nameEmpty)
             return false
 
         }
 
         if (role.isEmpty()) {
-            roleInputLayout?.error = "Role is empty"
+            roleInputLayout?.error = getString(R.string.roleEmpty)
             return false
 
         }
@@ -132,11 +132,11 @@ class RegisterUserFragment : Fragment() {
             when (result) {
 
                 "successful" -> {
-                    (context as MainActivity).makeToast("User was created successfully!")
+                    (context as MainActivity).makeToast(getString(R.string.createUserSuccessful))
                     userRepository.userLogout()
                     //redirect
                 }
-                "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
 
             }
         }
