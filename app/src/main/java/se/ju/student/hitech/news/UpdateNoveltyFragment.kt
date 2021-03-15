@@ -81,8 +81,7 @@ class UpdateNoveltyFragment : Fragment() {
         }
 
         updateNoveltyButton?.setOnClickListener {
-            // novelty id???
-            //newsRepository.updateNovelty(title!!.text.toString(), content!!.text.toString(), noveltyId)
+            newsRepository.updateNovelty(title!!.text.toString(), content!!.text.toString(), noveltyId)
 
             if (checked) {
                 if (createNotification(

@@ -133,16 +133,14 @@ class UpdateEventFragment : Fragment() {
             val location = binding.etLocation.text
             val information = binding.etInformation.text
 
-            //eventId??
-
-          /*  eventRepository.updateEvent(
+            eventRepository.updateEvent(
                 title.toString(),
                 date.toString(),
                 time.toString(),
                 location.toString(),
                 information.toString(),
                 eventId
-            )   */
+            )
 
             // add on success listener
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
