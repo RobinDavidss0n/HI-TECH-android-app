@@ -83,12 +83,12 @@ class RegisterUserFragment : Fragment() {
 
         if (email.isEmpty()) {
 
-            emailInputLayout?.error
+            emailInputLayout?.error = getString(R.string.emailEmpty)
             return false
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInputLayout?.error = getString(R.string.emailEmpty)
+            emailInputLayout?.error = getString(R.string.invalidEmail)
             return false
         }
 

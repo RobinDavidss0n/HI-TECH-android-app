@@ -36,7 +36,7 @@ class UserRepository {
             val e = error.toString()
             Log.d("User login error", e)
             result = when {
-                e.contains("no user record") -> "invalidEmail"
+                e.contains("no user record") -> "emailNotFound"
                 e.contains("password is invalid") -> "invalidPassword"
                 else -> "internalError"
             }

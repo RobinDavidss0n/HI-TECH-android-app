@@ -39,7 +39,7 @@
     <string name="create_post">CREATE POST</string>
     <string name="go_back">GO BACK</string>
     <string name="emailEmpty">Email is empty</string>
-    <string name="notValidEmail">Not valid mail</string>
+    <string name="invalidEmail">Not valid e-mail</string>
     <string name="passwordEmpty">Password is empty</string>
     <string name="passwordNotLongEnough">Password need to be at least 6 character long</string>
     <string name="passwordNotMatch">Passwords dose not match</string>
@@ -47,5 +47,24 @@
     <string name="roleEmpty">Role is empty</string>
     <string name="createUserSuccessful">User was created successfully!</string>
     <string name="internalError">Something went wrong, check your internet connection and try again.</string>
+    <string name="resetPasswordInputError">Write your email here and press *Forgot password?* again.</string>
+    <string name="resetPasswordConfirmation">"Do you want a reset link to be sent to </string>
+    <string name="yes">Yes</string>
+    <string name="no">NO</string>
+    <string name="resetConfirmed">A reset link was sent to </string>
+    <string name="emailNotFound">No user is tied to this email, pleas use a correct email.</string>
+    <string name="invalidPassword">Wrong password, try again.</string>
+    <string name="emailNotVerified">Check your email to verify your account.</string>
+    <string name="loginSuccessful">Login successful!</string>
+    <string name="userLoggedOut">User logged out!</string>
+    <string name="errorAccessData">Error, could not access user data.</string>
+    <string name="UpdateUserInformation">Update user information</string>
+    <string name="updateUserConfirmation">Do you want to update your user information?</string>
+    <string name="updateUserSuccessful">User was updated successfully!</string>
+    <string name="deleteAccount">Delete account</string>
+    <string name="deleteAccountConfirmation">Do you really want to delete your account? This action can not be undone.</string>
+    <string name="accountDeleted">Account deleted.</string>
+
+
 
 </resources>

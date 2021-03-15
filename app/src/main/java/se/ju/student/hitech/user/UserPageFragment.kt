@@ -2,6 +2,7 @@ package se.ju.student.hitech.user
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -63,7 +64,7 @@ class UserPageFragment : Fragment() {
 
         logoutButton?.setOnClickListener{
             UserRepository().userLogout()
-            (context as MainActivity).makeToast("User logged out!")
+            (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
             (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
         }
 
@@ -84,9 +85,9 @@ class UserPageFragment : Fragment() {
             roleInput.setText(user.role)
         }, {
             progressBar.visibility = View.GONE
-            emailInput.setText("Error, could not access user data.")
-            nameInput.setText("Error, could not access user data.")
-            roleInput.setText("Error, could not access user data.")
+            emailInput.setText(getString(R.string.errorAccessData))
+            nameInput.setText(getString(R.string.errorAccessData))
+            roleInput.setText(getString(R.string.errorAccessData))
         })
     }
 
@@ -106,23 +107,23 @@ class UserPageFragment : Fragment() {
 
         if (email.isEmpty()) {
 
-            emailInputLayout?.error = "Email is empty"
+            emailInputLayout?.error = getString(R.string.emailEmpty)
             return false
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInputLayout?.error = "Not valid mail"
+            emailInputLayout?.error = getString(R.string.invalidEmail)
             return false
         }
 
         if (name.isEmpty()) {
-            nameInputLayout?.error = "Name is empty"
+            nameInputLayout?.error = getString(R.string.nameEmpty)
             return false
 
         }
 
         if (role.isEmpty()) {
-            roleInputLayout?.error = "Role is empty"
+            roleInputLayout?.error = getString(R.string.roleEmpty)
             return false
 
         }
@@ -132,10 +133,10 @@ class UserPageFragment : Fragment() {
     private fun updateUser(email: String, name: String, role: String) {
 
         AlertDialog.Builder(context as MainActivity)
-            .setTitle("Update user information")
-            .setMessage("Do you want to update your user information?")
+            .setTitle(getString(R.string.UpdateUserInformation))
+            .setMessage(getString(R.string.updateUserConfirmation))
             .setPositiveButton(
-                "Yes"
+                getString(R.string.yes)
 
             ) { _, _ ->
                 val userRepository = UserRepository()
@@ -146,16 +147,16 @@ class UserPageFragment : Fragment() {
 
                     when (result) {
                         "successful" -> {
-                            (context as MainActivity).makeToast("User was updated successfully!")
+                            (context as MainActivity).makeToast(getString(R.string.updateUserSuccessful))
                             setUserInfoIntoInputFields()
                         }
-                        "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                        "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
 
                     }
                 }
             }
             .setNegativeButton(
-                "NO"
+                getString(R.string.no)
             ) { _, _ ->
                 progressBar.visibility = View.GONE
                 //Don't delete
@@ -168,58 +169,62 @@ class UserPageFragment : Fragment() {
 
     private fun resetPassword(){
 
-        AlertDialog.Builder(context as MainActivity)
-            .setTitle("Reset password")
-            .setMessage("Do you want a reset link sent to your email?")
-            .setPositiveButton(
-                "Yes"
+        val userRepository = UserRepository()
+        userRepository.getCurrentUserInfo({_, email ->
+            AlertDialog.Builder(context as MainActivity)
+                .setTitle(getString(R.string.user_page_resetPassword))
+                .setMessage(getString(R.string.resetPasswordConfirmation)+ " $email?")
+                .setPositiveButton(
+                    getString(R.string.yes)
 
-            ) { _, _ ->
-                val userRepository = UserRepository()
+                ) { _, _ ->
 
-                userRepository.getCurrentUserInfo({_, email ->
                     userRepository.sendPasswordReset(email) { result ->
+                        Log.d("email", email)
                         progressBar.visibility = View.GONE
                         when (result) {
-                            "successful" -> (context as MainActivity).makeToast("Check your email!")
-                            "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                            "successful" -> (context as MainActivity).makeToast(getString(R.string.resetConfirmed)+" $email!")
+                            "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
                         }
 
                     }
-                }, {
-                    (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
-                })
-            }
-            .setNegativeButton(
-                "NO"
-            ) { _, _ ->
-                progressBar.visibility = View.GONE
-                //Don't delete
-            }
-            .show()
+
+                }
+                .setNegativeButton(
+                    getString(R.string.no)
+                ) { _, _ ->
+                    progressBar.visibility = View.GONE
+                    //Don't delete
+                }
+                .show()
+        }, {
+            (context as MainActivity).makeToast(getString(R.string.internalError))
+        })
+
+
     }
 
     private fun deleteAccount(){
         AlertDialog.Builder(context as MainActivity)
-            .setTitle("Delete account")
-            .setMessage("Do you really want to delete your account? This action can not be undone.")
+            .setTitle(getString(R.string.deleteAccount))
+            .setMessage(getString(R.string.deleteAccountConfirmation))
             .setPositiveButton(
-                "Yes"
+                getString(R.string.yes)
 
             ) { _, _ ->
 
                 UserRepository().deleteCurrentUser {result ->
                     progressBar.visibility = View.GONE
                     when (result) {
-                        "successful" -> (context as MainActivity).makeToast("Account deleted.")
-                        "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                        "successful" -> (context as MainActivity).makeToast(getString(R.string.accountDeleted))
+                        "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
                     }
 
                 }
 
             }
             .setNegativeButton(
-                "NO"
+                getString(R.string.no)
             ) { _, _ ->
                 progressBar.visibility = View.GONE
                 //Don't delete
