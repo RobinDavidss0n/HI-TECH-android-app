@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import se.ju.student.hitech.R
+import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 import se.ju.student.hitech.news.Novelty
-import se.ju.student.hitech.news.newsRepository
-
-private const val ARG_NOVELTY_ID = "NOVELTY_ID"
 
 class ViewNoveltyFragment : Fragment() {
 
     companion object {
+        private const val ARG_NOVELTY_ID = "NOVELTY_ID"
 
         fun newInstance(noveltyId: Int) =
             ViewNoveltyFragment().apply {

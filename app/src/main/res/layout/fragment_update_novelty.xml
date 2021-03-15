@@ -7,11 +7,11 @@
     android:layout_margin="20dp">
 
     <TextView
-        android:id="@+id/newsTitleNoImage"
+        android:id="@+id/textViewUpdateNewsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/avenir_next_bold"
-        android:text="@string/new_post"
+        android:text="UPDATE POST"
         android:textColor="@color/yellow"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,14 +23,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newsTitleNoImage">
+        app:layout_constraintTop_toBottomOf="@+id/textViewUpdateNewsTitle">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/editTextNewPostTitle"
+                android:id="@+id/editTextUpdatePostTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -40,37 +40,36 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editTextNewPostContent"
+                android:id="@+id/editTextUpdatePostContent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:hint="@string/content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextNewPostTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePostTitle" />
 
             <EditText
-                android:id="@+id/editTextNewPostNotificationContent"
+                android:id="@+id/editTextUpdatePostNotificationContent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:hint="@string/notification_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextNewPostContent" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePostContent" />
 
             <CheckBox
                 android:id="@+id/checkbox_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:onClick="onCheckBoxClicked"
                 android:text="@string/create_notification"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editTextNewPostNotificationContent" />
+                app:layout_constraintTop_toBottomOf="@id/editTextUpdatePostNotificationContent" />
 
             <Button
-                android:id="@+id/btn_create_news_create_post"
+                android:id="@+id/btn_update_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
@@ -79,14 +78,14 @@
                 android:enabled="false"
                 android:fontFamily="@font/avenir_next_bold"
                 android:padding="10dp"
-                android:text="@string/create_post"
+                android:text="UPDATE POST"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/checkbox_notification" />
 
             <Button
-                android:id="@+id/btn_create_news_back"
+                android:id="@+id/btn_update_news_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
@@ -97,7 +96,7 @@
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_create_news_create_post" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_update_post" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

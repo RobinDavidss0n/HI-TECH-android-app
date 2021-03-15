@@ -15,12 +15,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import se.ju.student.hitech.*
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS_POST
-import se.ju.student.hitech.news.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
+import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NOVELTY
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_NOVELTY
+import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
-import se.ju.student.hitech.user.userRepository
+import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
+import se.ju.student.hitech.news.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class NewsFragment : Fragment() {
 
@@ -55,14 +59,6 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (userRepository.checkIfLoggedIn()) {
-            loggedIn = true
-            binding.fabCreateNewPost.visibility = VISIBLE
-        } else {
-            binding.fabCreateNewPost.visibility = GONE
-            loggedIn = false
-        }
-
         binding.rvRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             registerForContextMenu(this)
@@ -86,7 +82,7 @@ class NewsFragment : Fragment() {
         }
 
         binding.fabCreateNewPost.setOnClickListener {
-            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS_POST)
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)
         }
     }
 
@@ -94,7 +90,7 @@ class NewsFragment : Fragment() {
         var news = MutableLiveData<List<Novelty>>()
 
         init {
-            newsRepository.loadNewsData()
+            newsRepository.loadChangesInNewsData()
             val fetchedNews = newsRepository.getAllNews()
             news.postValue(fetchedNews)
         }
@@ -145,7 +141,11 @@ class NewsFragment : Fragment() {
                                         "YES"
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        newsRepository.deleteNovelty(id)
+                                        newsRepository.deleteNovelty(id).addOnCompleteListener {
+                                            newsRepository.loadChangesInNewsData()
+                                            notifyDataSetChanged()
+                                        }
+
                                     }.setNegativeButton(
                                         "NO"
                                     ) { dialog, whichButton ->
@@ -153,7 +153,8 @@ class NewsFragment : Fragment() {
                                     }.show()
                             }
                             R.id.menu_edit -> {
-                                newsRepository.updateNovelty()
+                                (holder.itemView.context as MainActivity).changeToFragment(
+                                    TAG_FRAGMENT_UPDATE_NOVELTY)
                             }
                         }
                         true

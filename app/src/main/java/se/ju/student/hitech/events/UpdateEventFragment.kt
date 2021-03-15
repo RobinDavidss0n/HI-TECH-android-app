@@ -9,21 +9,22 @@ import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.databinding.FragmentCreateEventBinding
+import se.ju.student.hitech.databinding.FragmentUpdateEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
-class CreateNewEventFragment : Fragment() {
+class UpdateEventFragment : Fragment() {
 
-    lateinit var binding: FragmentCreateEventBinding
+    lateinit var binding: FragmentUpdateEventBinding
 
     companion object {
-        fun newInstance() = CreateNewEventFragment()
+        fun newInstance() = UpdateEventFragment()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = FragmentCreateEventBinding.inflate(layoutInflater, container, false).run {
+    ) = FragmentUpdateEventBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
 
@@ -34,16 +35,16 @@ class CreateNewEventFragment : Fragment() {
 
         binding.etEventActivity.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
+                binding.btnUpdateEvent.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
+                binding.btnUpdateEvent.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
+                binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
 
             }
@@ -52,16 +53,16 @@ class CreateNewEventFragment : Fragment() {
 
         binding.etDate.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
+                binding.btnUpdateEvent.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
+                binding.btnUpdateEvent.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
+                binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
 
             }
@@ -70,16 +71,16 @@ class CreateNewEventFragment : Fragment() {
 
         binding.etTime.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
+                binding.btnUpdateEvent.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
+                binding.btnUpdateEvent.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
+                binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
 
             }
@@ -88,16 +89,16 @@ class CreateNewEventFragment : Fragment() {
 
         binding.etLocation.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
+                binding.btnUpdateEvent.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
+                binding.btnUpdateEvent.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
+                binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
 
             }
@@ -106,40 +107,41 @@ class CreateNewEventFragment : Fragment() {
 
         binding.etInformation.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
+                binding.btnUpdateEvent.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
+                binding.btnUpdateEvent.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
+                binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
 
             }
 
         })
 
-        binding.btnCreateEvent.setOnClickListener {
+        binding.btnUpdateEvent.setOnClickListener {
             val title = binding.etEventActivity.text
             val date = binding.etDate.text
             val time = binding.etTime.text
             val location = binding.etLocation.text
             val information = binding.etInformation.text
 
-            eventRepository.addEvent(
+            eventRepository.updateEvent(
                 title.toString(),
                 date.toString(),
                 time.toString(),
                 location.toString(),
-                information.toString()
+                information.toString(),
+                id
             )
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
         }
 
-        binding.btnCreateEventBack.setOnClickListener {
+        binding.btnUpdateEventBack.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
         }
     }

@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.shop.ShopItem
 
-var shopRepository = ShopRepository()
-
 class ShopRepository {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()

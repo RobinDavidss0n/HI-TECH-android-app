@@ -77,6 +77,7 @@ class ShopFragment : Fragment() {
     class ShopViewModel : ViewModel() {
 
         val shopItems = MutableLiveData<List<ShopItem>>()
+        var shopRepository = ShopRepository()
 
         init {
             viewModelScope.launch(Dispatchers.IO) {

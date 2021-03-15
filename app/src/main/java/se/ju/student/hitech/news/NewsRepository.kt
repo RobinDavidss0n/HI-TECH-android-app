@@ -2,16 +2,22 @@ package se.ju.student.hitech.news
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import se.ju.student.hitech.news.Novelty
+import se.ju.student.hitech.shop.ShopFragment
 import kotlin.collections.List as List
-
-var newsRepository = NewsRepository()
 
 class NewsRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var newsList = mutableListOf<Novelty>()
+
+    companion object{
+        val newsRepository = NewsRepository()
+    }
 
     fun addNovelty(title: String, content: String) {
 
@@ -29,6 +35,26 @@ class NewsRepository {
 
     fun getAllNews(): List<Novelty> {
         return newsList
+    }
+
+    fun loadChangesInNewsData(): ListenerRegistration {
+        return db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
+
+            if (e != null) {
+                Log.w(TAG, "Failed to load news", e)
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                for (dc in snapshot!!.documentChanges) {
+                    val novelty = dc.document.toObject(Novelty::class.java)
+                    when (dc.type) {
+                        DocumentChange.Type.ADDED -> added(novelty)
+                        DocumentChange.Type.MODIFIED -> modified(novelty)
+                        DocumentChange.Type.REMOVED -> removed(novelty)
+                    }
+                }
+            }
+        }
     }
 
     fun loadNewsData() {
@@ -52,8 +78,26 @@ class NewsRepository {
         }
     }
 
-    fun deleteNovelty(id: Int) {
-        db.collection("news").document(id.toString()).delete()
+    private fun added(novelty: Novelty) {
+        if (!newsList.contains(novelty)) {
+            newsList.add(novelty)
+        }
+    }
+
+    private fun modified(novelty: Novelty) {
+        // remove old
+        // add new
+    }
+
+    private fun removed(novelty: Novelty) {
+        if (newsList.contains(novelty)) {
+            newsList.remove(novelty)
+        }
+    }
+
+    fun deleteNovelty(id: Int): Task<Void> {
+        return db.collection("news").document(id.toString()).delete()
+
     }
 
     private fun sortNewsList() {

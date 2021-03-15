@@ -5,12 +5,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.user.User
 
-var userRepository = UserRepository()
-
 class UserRepository {
 
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
+
+    companion object{
+        val userRepository = UserRepository()
+    }
 
     fun getUserID(): String {
         return auth.currentUser?.uid.toString()
@@ -168,7 +170,5 @@ class UserRepository {
                 callback("internalError")
             }
     }
-
-
 
 }

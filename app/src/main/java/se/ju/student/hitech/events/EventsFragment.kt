@@ -1,5 +1,6 @@
 package se.ju.student.hitech.events
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,17 +15,22 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.processNextEventInCurrentThread
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEW_EVENT
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
 import se.ju.student.hitech.databinding.ItemEventBinding
-import se.ju.student.hitech.events.eventRepository
-import se.ju.student.hitech.user.userRepository
+import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
+import se.ju.student.hitech.news.NewsRepository
+import se.ju.student.hitech.user.UserRepository
 
 class EventsFragment : Fragment() {
 
     lateinit var binding: FragmentEventsBinding
+    var userRepository = UserRepository()
     private val viewModel: EventsViewModel by viewModels()
 
     companion object {
@@ -95,7 +101,7 @@ class EventsFragment : Fragment() {
         var events = MutableLiveData<List<Event>>()
 
         init {
-            eventRepository.loadEventData()
+            eventRepository.loadChangesInEventsData()
             val fetchedEvents = eventRepository.getAllEvents()
             events.postValue(fetchedEvents)
         }
@@ -138,22 +144,24 @@ class EventsFragment : Fragment() {
                                         "YES"
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        eventRepository.deleteEvent(id)
+                                        eventRepository.deleteEvent(id).addOnCompleteListener {
+                                            eventRepository.loadChangesInEventsData()
+                                            notifyDataSetChanged()
+                                        }
                                     }.setNegativeButton(
                                         "NO"
                                     ) { dialog, whichButton ->
                                         // Do not delete
                                     }.show()
-
                             }
                             R.id.menu_edit -> {
-                                eventRepository.updateEvent()
+                                (holder.itemView.context as MainActivity).changeToFragment(
+                                    TAG_FRAGMENT_UPDATE_EVENT)
                             }
                         }
                         true
                     }
                     popupMenu.show()
-
                 }
             } else {
                 holder.binding.icMenu.visibility = GONE

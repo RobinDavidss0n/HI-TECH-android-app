@@ -14,9 +14,9 @@ import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 import se.ju.student.hitech.R
-import se.ju.student.hitech.news.newsRepository
+import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
-class CreateNewsPostFragment : Fragment() {
+class CreateNoveltyFragment : Fragment() {
 
     private var checked = false
     lateinit var title: EditText
@@ -35,6 +35,10 @@ class CreateNewsPostFragment : Fragment() {
         title = view?.findViewById(R.id.editTextNewPostTitle)!!
         content = view?.findViewById(R.id.editTextNewPostContent)!!
         createNoveltyButton = view?.findViewById(R.id.btn_create_news_create_post)!!
+
+        val notificationContent =
+            view?.findViewById<EditText>(R.id.editTextNewPostNotificationContent)?.text
+        val notificationTitle = view?.findViewById<EditText>(R.id.editTextNewPostTitle)?.text
 
         title.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -65,38 +69,49 @@ class CreateNewsPostFragment : Fragment() {
             }
 
         })
-        val notificationContent =
-            view?.findViewById<EditText>(R.id.editTextNewPostNotificationContent)?.text
 
         view?.findViewById<CheckBox>(R.id.checkbox_notification)
-            ?.setOnCheckedChangeListener { buttonView, isChecked ->
-                if (isChecked) {
-                    checked = true
-                }
+            ?.setOnCheckedChangeListener { _, isChecked ->
+                checked = isChecked
             }
+
+        view?.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
+            checked = true
+
+            // set to false?
+        }
 
         createNoveltyButton.setOnClickListener {
             newsRepository.addNovelty(title.text.toString(), content.text.toString())
 
             if (checked) {
-                // send notification
-                if (title.toString() != "" && notificationContent.toString() != "") {
-                    (context as MainActivity).createNotification(
-                        title.toString(),
-                        notificationContent.toString(),
-                        TOPIC_NEWS
-                    )
-                    checked = false
-                } else {
-                    (context as MainActivity).makeToast("Fields can't be empty")
+                if(createNotification(notificationTitle.toString(), notificationContent.toString())){
+                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                } else{
+                    (context as MainActivity).makeToast("Failed to create notification")
                 }
+            } else{
+                (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
             }
-
-            (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
 
         view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+        }
+    }
+
+    private fun createNotification(title: String, content: String): Boolean {
+        return if (title != "" && content != "") {
+            (context as MainActivity).createNotification(
+                title,
+                content,
+                TOPIC_NEWS
+            )
+            checked = false
+            true
+        } else {
+            (context as MainActivity).makeToast("Notification fields can't be empty")
+            false
         }
     }
 }
