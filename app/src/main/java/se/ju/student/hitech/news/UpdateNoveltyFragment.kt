@@ -79,12 +79,12 @@ class UpdateNoveltyFragment : Fragment() {
         }
 
         updateNoveltyButton?.setOnClickListener {
-            newsRepository.addNovelty(title!!.text.toString(), content!!.text.toString())
+            //newsRepository.addNovelty(title!!.text.toString(), content!!.text.toString())
 
             if (checked) {
                 if (createNotification(
-                        title.text.toString(),
-                        notificationContent.toString()
+                        title?.text.toString(),
+                        notificationContent?.text.toString()
                     )
                 ) {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)

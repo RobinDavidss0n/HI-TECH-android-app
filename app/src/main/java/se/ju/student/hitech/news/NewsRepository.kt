@@ -57,27 +57,6 @@ class NewsRepository {
         }
     }
 
-    fun loadNewsData() {
-        db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
-
-            if (e != null) {
-                Log.w(TAG, "Failed to load news", e)
-                return@addSnapshotListener
-            }
-            if (snapshot != null) {
-                val documents = snapshot.documents
-                documents.forEach {
-                    val novelty = it.toObject(Novelty::class.java)
-                    if (novelty != null) {
-                        if (!newsList.contains(novelty)) {
-                            newsList.add(novelty)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun added(novelty: Novelty) {
         if (!newsList.contains(novelty)) {
             newsList.add(novelty)
@@ -85,8 +64,8 @@ class NewsRepository {
     }
 
     private fun modified(novelty: Novelty) {
-        // remove old
-        // add new
+        val id = novelty.id
+        newsList[id] = novelty
     }
 
     private fun removed(novelty: Novelty) {
@@ -106,8 +85,13 @@ class NewsRepository {
         }
     }
 
-    fun updateNovelty() {
-        // TODO
+    fun updateNovelty(newTitle : String, newContent : String, id : Int) {
+        val novelty = hashMapOf(
+            "title" to newTitle,
+            "content" to newContent,
+            "id" to id
+        )
+        db.collection("news").document(id.toString()).set(novelty)
     }
 
     fun getNoveltyById(id: Int): Novelty? {

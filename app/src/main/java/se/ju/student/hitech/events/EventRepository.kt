@@ -17,20 +17,17 @@ class EventRepository {
         var eventRepository = EventRepository()
     }
 
-    fun updateEvent(newTitle: String, newDate: String, newTime: String, newLocation: String, newInformation: String, id : Int) {
+    fun updateEvent(newTitle: String, newDate: String, newTime: String, newLocation: String, newInformation: String, id: Int) {
 
-        sortEventList()
-
-       /* val event = hashMapOf(
-            "title" to title,
-            "date" to date,
-            "time" to time,
-            "location" to location,
-            "information" to information,
+        val event = hashMapOf(
+            "title" to newTitle,
+            "date" to newDate,
+            "time" to newTime,
+            "location" to newLocation,
+            "information" to newInformation,
             "id" to id
         )
-
-        db.collection("events").document(id.toString()).set(event)  */
+        db.collection("events").document(id.toString()).set(event)
     }
 
     fun addEvent(title: String, date: String, time: String, location: String, information: String) {
@@ -62,7 +59,7 @@ class EventRepository {
                 return@addSnapshotListener
             }
             if (snapshot != null) {
-                for (dc in snapshot!!.documentChanges) {
+                for (dc in snapshot.documentChanges) {
                     val event = dc.document.toObject(Event::class.java)
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> added(event)
@@ -81,8 +78,8 @@ class EventRepository {
     }
 
     private fun modified(event: Event) {
-        // remove old
-        // add new
+        val id = event.id
+        eventList[id] = event
     }
 
     private fun removed(event: Event) {
@@ -98,7 +95,6 @@ class EventRepository {
     }
 
     fun getAllEvents(): List<Event> {
-        // sortEventList()
         return eventList
     }
 

@@ -118,7 +118,6 @@ class UpdateEventFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-
             }
 
         })
