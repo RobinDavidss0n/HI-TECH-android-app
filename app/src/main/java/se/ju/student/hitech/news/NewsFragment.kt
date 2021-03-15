@@ -152,7 +152,7 @@ class NewsFragment : Fragment() {
                                     }.show()
                             }
                             R.id.menu_edit -> {
-                                (holder.itemView.context as MainActivity).setClickedNoveltyId(id)
+                                (holder.itemView.context as MainActivity).showClickedNovelty(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
                                     TAG_FRAGMENT_UPDATE_NOVELTY)
                             }

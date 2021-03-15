@@ -15,10 +15,12 @@ import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 import se.ju.student.hitech.R
+import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
 class UpdateNoveltyFragment : Fragment() {
 
     private var checked = false
+    private var noveltyId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -117,7 +119,14 @@ class UpdateNoveltyFragment : Fragment() {
         }
     }
 
-    fun clickedId(id : Int){
-        Log.d("id test", id.toString())
+    fun clickedNovelty(id : Int) {
+        noveltyId = id
+
+        val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
+        val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
+        val novelty = newsRepository.getNoveltyById(noveltyId)
+
+        title?.setText(novelty?.title)
+        content?.setText(novelty?.content)
     }
 }

@@ -109,8 +109,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setClickedNoveltyId(id : Int){
-        updateNoveltyFragment.clickedId(id)
+    fun showClickedNovelty(id : Int){
+        updateNoveltyFragment.clickedNovelty(id)
     }
 
     fun setClickedEventId(id : Int){
