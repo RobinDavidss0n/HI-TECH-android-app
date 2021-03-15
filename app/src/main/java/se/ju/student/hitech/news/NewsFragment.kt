@@ -155,7 +155,7 @@ class NewsFragment : Fragment() {
                                 (holder.itemView.context as MainActivity).showClickedNovelty(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
                                     TAG_FRAGMENT_UPDATE_NOVELTY)
-                                //notifyDataSetChanged()
+                                notifyDataSetChanged()
                             }
                         }
                         true
