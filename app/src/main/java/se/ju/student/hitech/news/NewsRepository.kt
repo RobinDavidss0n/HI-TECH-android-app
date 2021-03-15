@@ -19,7 +19,7 @@ class NewsRepository {
         val newsRepository = NewsRepository()
     }
 
-    fun addNovelty(title: String, content: String) {
+    fun addNovelty(title: String, content: String): Task<Void> {
 
         val novelty = HashMap<String, Any>()
         sortNewsList()
@@ -30,7 +30,7 @@ class NewsRepository {
             else -> newsList.first().id + 1
         }
 
-        db.collection("news").document(novelty["id"].toString()).set(novelty)
+        return db.collection("news").document(novelty["id"].toString()).set(novelty)
     }
 
     fun getAllNews(): List<Novelty> {

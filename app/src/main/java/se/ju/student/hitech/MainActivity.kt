@@ -2,6 +2,7 @@ package se.ju.student.hitech
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.LocusId
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -30,11 +31,11 @@ import se.ju.student.hitech.shop.ShopFragment
 import se.ju.student.hitech.user.RegisterUserFragment
 import se.ju.student.hitech.user.UserPageFragment
 import se.ju.student.hitech.user.UserRepository
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-
-    var userRepository = UserRepository()
+    lateinit var updateNoveltyFragment : UpdateNoveltyFragment
 
     companion object {
         const val TAG_FRAGMENT_CREATE_NEW_EVENT = "TAG_FRAGMENT_NEW_EVENT"
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
         if (savedInstanceState == null) {
+            updateNoveltyFragment = UpdateNoveltyFragment()
             supportFragmentManager
                     .beginTransaction()
                     .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
@@ -77,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, CreateNoveltyFragment(), TAG_FRAGMENT_CREATE_NOVELTY)
                     .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
                     .add(R.id.fragment_container, UpdateEventFragment(), TAG_FRAGMENT_UPDATE_EVENT)
-                    .add(R.id.fragment_container, UpdateNoveltyFragment(), TAG_FRAGMENT_UPDATE_NOVELTY)
+                    .add(R.id.fragment_container, updateNoveltyFragment, TAG_FRAGMENT_UPDATE_NOVELTY)
                     .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
@@ -105,6 +107,14 @@ class MainActivity : AppCompatActivity() {
         ).also {
             sendNotification(it)
         }
+    }
+
+    fun setClickedNoveltyId(id : Int){
+        updateNoveltyFragment.clickedId(id)
+    }
+
+    fun setClickedEventId(id : Int){
+
     }
 
     private fun sendNotification(notification: PushNotification) =

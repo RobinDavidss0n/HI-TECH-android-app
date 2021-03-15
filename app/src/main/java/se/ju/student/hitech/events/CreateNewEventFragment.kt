@@ -136,6 +136,8 @@ class CreateNewEventFragment : Fragment() {
                 location.toString(),
                 information.toString()
             )
+
+            // add on success listener
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
         }
 

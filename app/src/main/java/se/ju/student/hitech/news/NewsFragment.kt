@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NOVELTY
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_NOVELTY
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.CardNewsBinding
@@ -153,6 +152,7 @@ class NewsFragment : Fragment() {
                                     }.show()
                             }
                             R.id.menu_edit -> {
+                                (holder.itemView.context as MainActivity).setClickedNoveltyId(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
                                     TAG_FRAGMENT_UPDATE_NOVELTY)
                             }

@@ -82,7 +82,10 @@ class CreateNoveltyFragment : Fragment() {
         }
 
         createNoveltyButton.setOnClickListener {
-            newsRepository.addNovelty(title.text.toString(), content.text.toString())
+            newsRepository.addNovelty(title.text.toString(), content.text.toString()).addOnSuccessListener {
+                // change to News Fragment
+            }
+            // toast Failed to add post
 
             if (checked) {
                 if(createNotification(notificationTitle.toString(), notificationContent.toString())){

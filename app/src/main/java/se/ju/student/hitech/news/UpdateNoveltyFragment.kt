@@ -3,6 +3,7 @@ package se.ju.student.hitech.news
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,6 @@ import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 import se.ju.student.hitech.R
-import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
 class UpdateNoveltyFragment : Fragment() {
 
@@ -24,8 +24,9 @@ class UpdateNoveltyFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_update_novelty, container, false)
+    ): View? {
+        return inflater.inflate(R.layout.fragment_update_novelty, container, false)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -49,7 +50,6 @@ class UpdateNoveltyFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 updateNoveltyButton?.isEnabled = title.length() > 0 && content?.length()!! > 0
             }
-
         })
 
         content?.addTextChangedListener(object : TextWatcher {
@@ -79,7 +79,8 @@ class UpdateNoveltyFragment : Fragment() {
         }
 
         updateNoveltyButton?.setOnClickListener {
-            //newsRepository.addNovelty(title!!.text.toString(), content!!.text.toString())
+            // novelty id???
+            //newsRepository.updateNovelty(title!!.text.toString(), content!!.text.toString(), noveltyId)
 
             if (checked) {
                 if (createNotification(
@@ -114,5 +115,9 @@ class UpdateNoveltyFragment : Fragment() {
             (context as MainActivity).makeToast("Notification fields can't be empty")
             false
         }
+    }
+
+    fun clickedId(id : Int){
+        Log.d("id test", id.toString())
     }
 }
