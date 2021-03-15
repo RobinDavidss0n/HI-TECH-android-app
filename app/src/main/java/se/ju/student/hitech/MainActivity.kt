@@ -36,6 +36,7 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     lateinit var updateNoveltyFragment : UpdateNoveltyFragment
+    lateinit var updateEventFragment: UpdateEventFragment
 
     companion object {
         const val TAG_FRAGMENT_CREATE_NEW_EVENT = "TAG_FRAGMENT_NEW_EVENT"
@@ -66,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             updateNoveltyFragment = UpdateNoveltyFragment()
+            updateEventFragment = UpdateEventFragment()
             supportFragmentManager
                     .beginTransaction()
                     .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
@@ -78,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                     .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
                     .add(R.id.fragment_container, CreateNoveltyFragment(), TAG_FRAGMENT_CREATE_NOVELTY)
                     .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
-                    .add(R.id.fragment_container, UpdateEventFragment(), TAG_FRAGMENT_UPDATE_EVENT)
+                    .add(R.id.fragment_container, updateEventFragment, TAG_FRAGMENT_UPDATE_EVENT)
                     .add(R.id.fragment_container, updateNoveltyFragment, TAG_FRAGMENT_UPDATE_NOVELTY)
                     .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
@@ -114,7 +116,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setClickedEventId(id : Int){
-
+        updateEventFragment.clickedEvent(id)
     }
 
     private fun sendNotification(notification: PushNotification) =

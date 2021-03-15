@@ -5,16 +5,20 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentCreateEventBinding
 import se.ju.student.hitech.databinding.FragmentUpdateEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
+import se.ju.student.hitech.news.NewsRepository
 
 class UpdateEventFragment : Fragment() {
 
     lateinit var binding: FragmentUpdateEventBinding
+    private var eventId = 0
 
     companion object {
         fun newInstance() = UpdateEventFragment()
@@ -147,6 +151,17 @@ class UpdateEventFragment : Fragment() {
         binding.btnUpdateEventBack.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
         }
+    }
+
+    fun clickedEvent(id : Int) {
+        eventId = id
+        val event = eventRepository.getEventById(id)
+
+        binding.etDate.setText(event?.date)
+        binding.etEventActivity.setText(event?.title)
+        binding.etInformation.setText(event?.information)
+        binding.etLocation.setText(event?.location)
+        binding.etTime.setText(event?.time)
     }
 }
 
