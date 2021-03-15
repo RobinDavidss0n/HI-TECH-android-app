@@ -85,7 +85,7 @@ class UpdateNoveltyFragment : Fragment() {
 
             if (checked) {
                 if (createNotification(
-                        title?.text.toString(),
+                        title.text.toString(),
                         notificationContent?.text.toString()
                     )
                 ) {

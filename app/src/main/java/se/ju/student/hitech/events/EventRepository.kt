@@ -78,8 +78,10 @@ class EventRepository {
     }
 
     private fun modified(event: Event) {
-        val id = event.id
-        eventList[id] = event
+        val item = eventList?.find { it.id == event.id }
+        val index = eventList.indexOf(item)
+        Log.d("index", index.toString())
+        eventList[index] = event
     }
 
     private fun removed(event: Event) {

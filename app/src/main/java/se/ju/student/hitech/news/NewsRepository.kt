@@ -45,7 +45,7 @@ class NewsRepository {
                 return@addSnapshotListener
             }
             if (snapshot != null) {
-                for (dc in snapshot!!.documentChanges) {
+                for (dc in snapshot.documentChanges) {
                     val novelty = dc.document.toObject(Novelty::class.java)
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> added(novelty)
@@ -64,8 +64,10 @@ class NewsRepository {
     }
 
     private fun modified(novelty: Novelty) {
-        val id = novelty.id
-        newsList[id] = novelty
+        val item = newsList?.find { it.id == novelty.id }
+        val index = newsList.indexOf(item)
+        Log.d("index", index.toString())
+        newsList[index] = novelty
     }
 
     private fun removed(novelty: Novelty) {
