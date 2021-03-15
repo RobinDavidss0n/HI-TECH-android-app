@@ -1,7 +1,9 @@
 package se.ju.student.hitech.chat.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -10,7 +12,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import se.ju.student.hitech.EventsFragment
+import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.UserRepository
 import se.ju.student.hitech.chat.Chat
 import se.ju.student.hitech.chat.ChatRepository
@@ -53,6 +57,8 @@ class ActiveChatsFragmentAdmin : Fragment() {
                 }
 
             }
+
+            binding.progressBarActiveChats.visibility = GONE
         }
 
 
@@ -64,18 +70,20 @@ class ActiveChatsFragmentAdmin : Fragment() {
         var activeChats = MutableLiveData<List<Chat>>()
 
         init {
-            chatRepository.loadAllActiveChatsAndUpdateIfChanged() { result ->
+            chatRepository.loadAllActiveChatsAndUpdateIfChanged { result ->
                 when (result) {
-                    "successful" -> {
+                    "loaded" -> {
                         activeChats.postValue(chatRepository.getAllActiveChatsList())
 
                     }
                     "internalError" -> {
                         //notify user about error
+                        Log.d("Hello","haj")
                     }
                 }
 
             }
+
         }
 
     }
@@ -95,6 +103,10 @@ class ActiveChatsFragmentAdmin : Fragment() {
             val chat = activeChats[position]
             holder.binding.tvUsername.text = chat.localUsername
             holder.binding.tvCase.text = chat.case
+
+            holder.binding.itemUserChat.setOnClickListener {
+                (holder.itemView.context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+            }
 
         }
 
