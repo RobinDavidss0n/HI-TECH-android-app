@@ -27,6 +27,7 @@ import se.ju.student.hitech.notifications.NotificationData
 import se.ju.student.hitech.notifications.PushNotification
 import se.ju.student.hitech.notifications.RetrofitInstance
 import se.ju.student.hitech.shop.ShopFragment
+import se.ju.student.hitech.user.AdminLoginFragment
 import se.ju.student.hitech.user.RegisterUserFragment
 import se.ju.student.hitech.user.UserPageFragment
 import se.ju.student.hitech.user.UserRepository

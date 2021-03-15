@@ -1,4 +1,4 @@
-package se.ju.student.hitech
+package se.ju.student.hitech.user
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -10,11 +10,12 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import se.ju.student.hitech.user.UserRepository
+import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.R
 
 class AdminLoginFragment : Fragment() {
 
-    lateinit var  progressBar: ProgressBar
+    lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,33 +66,33 @@ class AdminLoginFragment : Fragment() {
 
     }
 
-    private fun resetPassword(email: String){
+    private fun resetPassword(email: String) {
 
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             progressBar.visibility = View.GONE
-            (context as MainActivity).makeToast("Write your email in the email field and press on 'Forgot password?' again.")
-        }else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)?.error = getString(R.string.resetPasswordInputError)
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             progressBar.visibility = View.GONE
-            (context as MainActivity).makeToast("Not a valid e-mail.")
-        } else{
+            view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)?.error = getString(R.string.invalidEmail)
+        } else {
             AlertDialog.Builder(context as MainActivity)
-                .setTitle("Reset password")
-                .setMessage("Do you want a reset link to your sent to your email?")
+                .setTitle(getString(R.string.user_page_resetPassword))
+                .setMessage(getString(R.string.resetPasswordConfirmation) + " $email?")
                 .setPositiveButton(
-                    "Yes"
+                    getString(R.string.yes)
 
                 ) { _, _ ->
                     val userRepository = UserRepository()
                     userRepository.sendPasswordReset(email) { result ->
                         progressBar.visibility = View.GONE
                         when (result) {
-                            "successful" -> (context as MainActivity).makeToast("A reset link was sent to $email!")
-                            "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                            "successful" -> (context as MainActivity).makeToast(getString(R.string.resetConfirmed)+" $email!")
+                            "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
                         }
                     }
                 }
                 .setNegativeButton(
-                    "NO"
+                    getString(R.string.no)
                 ) { _, _ ->
                     progressBar.visibility = View.GONE
                     //Don't delete
@@ -110,17 +111,17 @@ class AdminLoginFragment : Fragment() {
         passwordInputLayout?.error = ""
 
         if (email.isEmpty()) {
-            emailInputLayout?.error = "Email is empty"
+            emailInputLayout?.error = getString(R.string.emailEmpty)
             return false
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInputLayout?.error = "Not valid mail"
+            emailInputLayout?.error = getString(R.string.invalidEmail)
             return false
         }
 
         if (password.isEmpty()) {
-            passwordInputLayout?.error = "Password is empty"
+            passwordInputLayout?.error = getString(R.string.passwordEmpty)
             return false
 
         }
@@ -131,31 +132,21 @@ class AdminLoginFragment : Fragment() {
 
         val userRepository = UserRepository()
 
-        if (userRepository.checkIfLoggedIn()) {
-
-            (context as MainActivity).makeToast("Already logged in.")
+        userRepository.userLogin(email, password) { result ->
             progressBar.visibility = View.GONE
+            when (result) {
 
-
-        } else {
-
-            userRepository.userLogin(email, password) { result ->
-                progressBar.visibility = View.GONE
-                when (result) {
-
-                    "successful" ->{
-                        (context as MainActivity).makeToast("Login successful!")
-                        (context as MainActivity).changeToFragment(MainActivity.TAG_USER_PAGE)
-                    }
-                    "invalidEmail" -> (context as MainActivity).makeToast("No user is tied to this email, pleas use a correct email.")
-                    "invalidPassword" -> (context as MainActivity).makeToast("Wrong password, try again.")
-                    "emailNotVerified" -> (context as MainActivity).makeToast("Check your email to verify your account.")
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
-
+                "successful" -> {
+                    (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
+                    (context as MainActivity).changeToFragment(MainActivity.TAG_USER_PAGE)
                 }
+                "emailNotFound" -> (context as MainActivity).makeToast(getString(R.string.emailNotFound))
+                "invalidPassword" -> (context as MainActivity).makeToast(getString(R.string.invalidPassword))
+                "emailNotVerified" -> (context as MainActivity).makeToast(getString(R.string.emailNotVerified))
+                "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
+
             }
-
-
         }
+
     }
 }
