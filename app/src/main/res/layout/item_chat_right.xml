@@ -16,7 +16,7 @@
             android:orientation="vertical"
             >
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/messageRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -27,15 +27,16 @@
                 android:text="username"
                 android:textSize="18sp" >
             </TextView>
+
             <TextView
+                android:id="@+id/timeRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="18.30"
-                android:textSize="8sp" >
-            </TextView>
+                android:textSize="8sp"></TextView>
         </LinearLayout>
 
         <ImageView

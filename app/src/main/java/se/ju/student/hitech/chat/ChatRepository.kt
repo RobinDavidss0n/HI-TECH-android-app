@@ -8,17 +8,19 @@ class ChatRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val timeHandler = TimeHandler()
-    private var activeChatsList = mutableListOf<Chat>()
-    private var currentChatMessagesList = mutableListOf<Message>()
     private lateinit var currentMessageListener: ListenerRegistration
 
-
-    fun getAllActiveChatsList(): List<Chat> {
-        return activeChatsList
+    companion object{
+        private var currentChatID = ""
     }
 
-    fun getCurrentChatMessagesList(): List<Message> {
-        return currentChatMessagesList
+
+    fun getCurrentChatID(): String {
+        return currentChatID
+    }
+
+    fun setCurrentChatID(newChatID: String){
+        currentChatID = newChatID
     }
 
     fun createNewChat(localAndroidID: String, localUsername:String,case: String, callback: (String) -> Unit) {
@@ -30,13 +32,24 @@ class ChatRepository {
             "activeAdmin" to "",
             "isActive" to true,
             "lastSentMsg" to "",
-            "localUsername" to localUsername
+            "localUsername" to localUsername,
+            "chatID" to ""
         )
 
         db.collection("chats")
             .add(chat)
-            .addOnSuccessListener {
-                callback("successful")
+            .addOnSuccessListener { documentReference ->
+                val id = documentReference.id
+
+                db.collection("chats").document(id)
+                    .update("chatID", id)
+                    .addOnSuccessListener {
+                        callback("successful")
+                    }.addOnFailureListener { error ->
+                        Log.w("Create new chat error", error)
+                        callback("internalError")
+
+                    }
             }.addOnFailureListener { error ->
                 Log.w("Create new chat error", error)
                 callback("internalError")
@@ -74,7 +87,7 @@ class ChatRepository {
     fun addMessage(msgText: String, isAdmin: Boolean, chatID: String, callback: (String) -> Unit) {
 
         val msg = hashMapOf(
-            "isAdmin" to isAdmin,
+            "sentFromAdmin" to isAdmin,
             "timestamp" to timeHandler.getLocalZoneTimestampInSeconds(),
             "msgText" to msgText
         )
@@ -157,30 +170,27 @@ class ChatRepository {
 
     fun loadAllMessagesFromSpecificChatAndUpdateIfChanged(
         chatID: String,
-        callback: (String) -> Unit
+        callback: (String,  MutableList<Message>) -> Unit
     ) {
-        var firstCall = true
         currentMessageListener =  db.collection("chats").document(chatID).collection("messages")
             .orderBy("timestamp")
             .addSnapshotListener {  querySnapshot, error ->
 
                 if (error != null) {
                     Log.w("Messages listener error ", error)
-                    callback("internalError")
+                    callback("internalError", mutableListOf(Message()))
+                }else{
+                    val currentChatMessagesList = mutableListOf<Message>()
+                    querySnapshot!!.documents.forEach { doc ->
+                        val message = doc.toObject(Message::class.java)!!
+                        currentChatMessagesList.add(message)
+                    }
+
+
+
+                    callback("successful", currentChatMessagesList)
                 }
 
-                val newCurrentChatMessagesList = mutableListOf<Message>()
-                querySnapshot!!.documents.forEach { doc ->
-                    val message = doc.toObject(Message::class.java)!!
-                    newCurrentChatMessagesList.add(message)
-                }
-
-                currentChatMessagesList = newCurrentChatMessagesList
-
-                if (firstCall){
-                    firstCall = false
-                    callback("loaded")
-                }
             }
 
     }
@@ -204,13 +214,11 @@ class ChatRepository {
     }
     */
 
-    //En callback funktion som laddar in alla aktiva chattar till "activeChatsList" och uppdaterar listan när ändringar görs i databasen
-    //Första gången funktionen kallas kommer den callbacka "loaded" när den laddat in all data, efter det gör den alla uppdateringar i bakgrunden
+    //En callback funktion som laddar in alla aktiva chattar till "activeChatsList" och uppdaterar listan och gör en ny callback när ändringar görs i databasen
     //Hur man anropar funktionen finns under funktionen
     fun loadAllActiveChatsAndUpdateIfChanged(
-        callback: (String) -> Unit
+        callback: (String,  MutableList<Chat>) -> Unit
     ) {
-        var firstCall = true
         db.collection("chats")
             .whereEqualTo("isActive", true)
             .orderBy("lastUpdated", Query.Direction.DESCENDING)
@@ -218,21 +226,19 @@ class ChatRepository {
 
                 if (error != null) {
                     Log.w("Messages listener error ", error)
-                    callback("internalError")
+                    callback("internalError", mutableListOf(Chat()))
+                }else{
+                    val activeChatsList = mutableListOf<Chat>()
+                    querySnapshot?.documents?.forEach { doc ->
+                        val chat = doc.toObject(Chat::class.java)!!
+                        activeChatsList.add(chat)
+                    }
+
+
+                    callback("successful", activeChatsList)
                 }
 
-                val newActiveChatsList = mutableListOf<Chat>()
-                querySnapshot?.documents?.forEach { doc ->
-                    val chat = doc.toObject(Chat::class.java)!!
-                    newActiveChatsList.add(chat)
-                }
 
-                activeChatsList = newActiveChatsList
-
-                if (firstCall){
-                    firstCall = false
-                    callback("loaded")
-                }
 
             }
     }

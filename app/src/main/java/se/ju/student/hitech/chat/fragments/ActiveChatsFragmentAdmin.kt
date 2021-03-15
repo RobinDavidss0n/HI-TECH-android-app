@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -37,8 +38,7 @@ class ActiveChatsFragmentAdmin : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        val chatRepository = ChatRepository()
+        binding.progressBarActiveChats.visibility = VISIBLE
 
         binding.rvRecyclerViewActiveChats.apply {
             layoutManager = LinearLayoutManager(context)
@@ -70,15 +70,14 @@ class ActiveChatsFragmentAdmin : Fragment() {
         var activeChats = MutableLiveData<List<Chat>>()
 
         init {
-            chatRepository.loadAllActiveChatsAndUpdateIfChanged { result ->
+            chatRepository.loadAllActiveChatsAndUpdateIfChanged { result, list ->
                 when (result) {
-                    "loaded" -> {
-                        activeChats.postValue(chatRepository.getAllActiveChatsList())
-
+                    "successful" -> {
+                        activeChats.postValue(list)
                     }
                     "internalError" -> {
                         //notify user about error
-                        Log.d("Hello","haj")
+                        Log.d("Error fireStore","Error loading activeChat list from fireStore")
                     }
                 }
 
@@ -105,6 +104,9 @@ class ActiveChatsFragmentAdmin : Fragment() {
             holder.binding.tvCase.text = chat.case
 
             holder.binding.itemUserChat.setOnClickListener {
+                if (chat.chatID != null){
+                    ChatRepository().setCurrentChatID(chat.chatID!!)
+                }
                 (holder.itemView.context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
             }
 

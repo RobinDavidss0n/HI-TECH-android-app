@@ -8,6 +8,7 @@ data class Chat (
     var case: String? = null,
     var lastUpdated: Long? = null,
     var activeAdmin: String? = null,
-    var isActive: Boolean? = null
+    var isActive: Boolean? = null,
+    var chatID: String? = null
 )
 
