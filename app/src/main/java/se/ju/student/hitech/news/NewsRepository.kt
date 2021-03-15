@@ -2,8 +2,10 @@ package se.ju.student.hitech.news
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import se.ju.student.hitech.news.Novelty
 import se.ju.student.hitech.shop.ShopFragment
 import kotlin.collections.List as List
@@ -35,8 +37,8 @@ class NewsRepository {
         return newsList
     }
 
-    fun loadChangesInNewsData() {
-        db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
+    fun loadChangesInNewsData(): ListenerRegistration {
+        return db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
 
             if (e != null) {
                 Log.w(TAG, "Failed to load news", e)
@@ -93,8 +95,9 @@ class NewsRepository {
         }
     }
 
-    fun deleteNovelty(id: Int) {
-        db.collection("news").document(id.toString()).delete()
+    fun deleteNovelty(id: Int): Task<Void> {
+        return db.collection("news").document(id.toString()).delete()
+
     }
 
     private fun sortNewsList() {
