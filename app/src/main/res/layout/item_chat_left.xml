@@ -35,7 +35,10 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:text="18.30"
-        android:textSize="8sp"></TextView>
+        android:textSize="12sp"
+        android:textColor="@color/white">
+
+    </TextView>
 
 
 

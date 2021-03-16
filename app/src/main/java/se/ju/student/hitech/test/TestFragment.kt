@@ -32,13 +32,14 @@ class TestFragment : Fragment() {
 
         val testThatShit = view?.findViewById<Button>(R.id.test)
         var msg = 1
-        val chatID = "aSluaQPdcSkBvDNm2her"
+        val chatID = "HLafoEIXF2ui6aFJsYm9"
         val chatRepository = ChatRepository()
         val userRepository = UserRepository()
         val androidID = Settings.Secure.getString(
             context?.contentResolver,
             Settings.Secure.ANDROID_ID
         )
+        var isAdmin = true
 
         /*
         chatRepository.createNewChat(androidID, "study") { result ->
@@ -53,6 +54,19 @@ class TestFragment : Fragment() {
 
         testThatShit?.setOnClickListener {
 
+            chatRepository.addMessage(
+                msg.toString(),
+                isAdmin, chatID
+            ) { result ->
+                when (result) {
+                    "successful" -> {
+                        msg++
+                        isAdmin = !isAdmin
+                        (context as MainActivity).makeToast("Sent msg.")
+                    }
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                }
+            }
 
             /*
             chatRepository.loadAllActiveChatsAndUpdateIfChanged() { result ->
@@ -101,18 +115,7 @@ class TestFragment : Fragment() {
             }
 
 
-            chatRepository.addMessage(
-                msg.toString(),
-                UserRepository().checkIfLoggedIn(), chatID
-            ) { result ->
-                when (result) {
-                    "successful" -> {
-                        msg++
-                        (context as MainActivity).makeToast("Sent msg.")
-                    }
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
-                }
-            }
+
 
 
 

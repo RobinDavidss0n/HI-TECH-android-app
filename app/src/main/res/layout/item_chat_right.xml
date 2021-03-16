@@ -25,7 +25,8 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="username"
-                android:textSize="18sp" >
+                android:textSize="18sp"
+                android:textColor="@color/black">
             </TextView>
 
             <TextView
@@ -36,7 +37,10 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="18.30"
-                android:textSize="8sp"></TextView>
+                android:textSize="12sp"
+                android:textColor="@color/white">
+
+            </TextView>
         </LinearLayout>
 
         <ImageView
