@@ -4,7 +4,7 @@
     <string name="events">EVENTS</string>
     <string name="shop">HI SHOP</string>
     <string name="contact">CONTACT</string>
-    <string name="problem">Report problem</string>
+    <string name="problem">Report bug</string>
     <string name="login">Admin log in</string>
     <string name="about">About HI TECH</string>
     <string name="about_us">ABOUT US</string>
@@ -13,7 +13,6 @@
     <string name="visit_our_website">Visit our website</string>
     <string name="send">Send</string>
     <string name="cancel">Cancel</string>
-    <string name="report_problem_subject_email">Report problem HI TECH Android application</string>
     <string name="choose_email_client">Choose email client..</string>
     <string name="order_now">PLACE AN ORDER</string>
     <string name="about_hi_shop">The HI SHOP is a small store where you can buy everything you need for epic adventures in your overall and the student culture in Jönköping. We have overalls, patches, glue, pencils, towels for the CAPS event and much more.</string>
@@ -76,5 +75,6 @@
     <string name="failed_update_post">Post was not able to update successfully</string>
     <string name="failed_create_notification">Failed to create notification</string>
     <string name="empty_notification">Notification fields can\'t be empty</string>
+    <string name="report_bug_email_subject">Report bug - HI TECH Android application</string>
 
 </resources>

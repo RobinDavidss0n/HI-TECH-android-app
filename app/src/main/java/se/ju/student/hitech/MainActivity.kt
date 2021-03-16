@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
                 val response = RetrofitInstance.api.postNotification(notification)
 
                 if (response.isSuccessful) {
-                    Log.d(TAG_MAIN_ACTIVITY, "SUCCESSFUL")
+                    Log.d(TAG_MAIN_ACTIVITY, "successful")
                 } else {
                     Log.e(TAG_MAIN_ACTIVITY, response.errorBody().toString())
                 }
@@ -221,7 +221,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendEmail(message: Editable?) {
-        val subject = "Report problem HI TECH Android application"
+        val subject = getString(R.string.report_bug_email_subject)
 
         // email intent to HI TECH IT Manager
         val emailIntent =
@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity() {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         emailIntent.putExtra(Intent.EXTRA_TEXT, message.toString())
         try {
-            (Intent.createChooser(emailIntent, "Choose email client.."))
+            (Intent.createChooser(emailIntent, getString(R.string.choose_email_client)))
             startActivity(emailIntent)
         } catch (e: Exception) {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
@@ -251,9 +251,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
-
 }
