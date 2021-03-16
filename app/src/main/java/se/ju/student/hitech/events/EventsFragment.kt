@@ -44,17 +44,6 @@ class EventsFragment : Fragment() {
         root
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (userRepository.checkIfLoggedIn()) {
-            loggedIn = true
-            binding.fabCreateEvent.visibility = VISIBLE
-        } else {
-            binding.fabCreateEvent.visibility = GONE
-            loggedIn = false
-        }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -80,12 +69,21 @@ class EventsFragment : Fragment() {
                         adapter?.notifyDataSetChanged()
                     }
                 }
-                binding.fabCreateEvent.setOnClickListener {
-                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
-                }
-
                 binding.pbEvent.visibility = GONE
             }
+        }
+
+        // change to listener?
+        if (userRepository.checkIfLoggedIn()) {
+            loggedIn = true
+            binding.fabCreateEvent.visibility = VISIBLE
+        } else {
+            binding.fabCreateEvent.visibility = GONE
+            loggedIn = false
+        }
+
+        binding.fabCreateEvent.setOnClickListener {
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
         }
     }
 
@@ -136,10 +134,7 @@ class EventsFragment : Fragment() {
                                         "YES"
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        eventRepository.deleteEvent(id).addOnCompleteListener {
-                                            eventRepository.loadChangesInEventsData()
-                                            notifyDataSetChanged()
-                                        }
+                                        eventRepository.deleteEvent(id)
                                     }.setNegativeButton(
                                         "NO"
                                     ) { dialog, whichButton ->
@@ -163,7 +158,6 @@ class EventsFragment : Fragment() {
 
         override fun getItemCount() = events.size
     }
-
 }
 
 
