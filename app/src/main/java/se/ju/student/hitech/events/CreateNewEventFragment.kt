@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentCreateEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
@@ -139,11 +140,10 @@ class CreateNewEventFragment : Fragment() {
                     }
                     "internalError" -> {
                         binding.progressBar.visibility = GONE
-                        (context as MainActivity).makeToast("Failed to create post")
+                        (context as MainActivity).makeToast(getString(R.string.failed_create_event))
                     }
                 }
             }
-
         }
 
         binding.btnCreateEventBack.setOnClickListener {

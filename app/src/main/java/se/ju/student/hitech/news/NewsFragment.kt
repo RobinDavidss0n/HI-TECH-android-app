@@ -138,15 +138,15 @@ class NewsFragment : Fragment() {
                         when (it.itemId) {
                             R.id.menu_delete -> {
                                 AlertDialog.Builder(holder.itemView.context)
-                                    .setTitle("Delete post")
-                                    .setMessage("Do you really want to delete this post?")
+                                    .setTitle(holder.itemView.context.getString(R.string.delete_novelty))
+                                    .setMessage(holder.itemView.context.getString(R.string.delete_post_are_you_sure))
                                     .setPositiveButton(
-                                        "YES"
+                                        holder.itemView.context.getString(R.string.yes)
                                     ) { dialog, whichButton ->
                                         // delete event
                                         newsRepository.deleteNovelty(id)
                                     }.setNegativeButton(
-                                        "NO"
+                                        holder.itemView.context.getString(R.string.no)
                                     ) { dialog, whichButton ->
                                         // Do not delete
                                     }.show()

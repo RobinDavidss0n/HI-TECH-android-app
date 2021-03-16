@@ -89,7 +89,7 @@ class CreateNoveltyFragment : Fragment() {
                                 progressBar?.visibility = GONE
                             } else {
                                 progressBar?.visibility = GONE
-                                (context as MainActivity).makeToast("Failed to create notification")
+                                (context as MainActivity).makeToast(getString(R.string.failed_create_notification))
                             }
                         } else{
                             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
@@ -98,7 +98,7 @@ class CreateNoveltyFragment : Fragment() {
                     }
                     "internalError" -> {
                         progressBar?.visibility = GONE
-                        (context as MainActivity).makeToast("Failed to create post")
+                        (context as MainActivity).makeToast(getString(R.string.failed_create_post))
                     }
                 }
             }
@@ -120,7 +120,7 @@ class CreateNoveltyFragment : Fragment() {
             checked = false
             true
         } else {
-            (context as MainActivity).makeToast("Notification fields can't be empty")
+            (context as MainActivity).makeToast(getString(R.string.empty_notification))
             false
         }
     }

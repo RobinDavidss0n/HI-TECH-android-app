@@ -22,7 +22,6 @@ import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
 import se.ju.student.hitech.databinding.ItemEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
-import se.ju.student.hitech.news.NewsRepository
 import se.ju.student.hitech.user.UserRepository
 
 class EventsFragment : Fragment() {
@@ -137,15 +136,15 @@ class EventsFragment : Fragment() {
                         when (it.itemId) {
                             R.id.menu_delete -> {
                                 AlertDialog.Builder(holder.itemView.context)
-                                    .setTitle("Delete event")
-                                    .setMessage("Do you really want to delete this event?")
+                                    .setTitle(holder.itemView.context.getString(R.string.delete_event))
+                                    .setMessage(holder.itemView.context.getString(R.string.delete_event_are_you_sure))
                                     .setPositiveButton(
-                                        "YES"
+                                        holder.itemView.context.getString(R.string.yes)
                                     ) { dialog, whichButton ->
                                         // delete event
                                         eventRepository.deleteEvent(id)
                                     }.setNegativeButton(
-                                        "NO"
+                                        holder.itemView.context.getString(R.string.no)
                                     ) { dialog, whichButton ->
                                         // Do not delete
                                     }.show()

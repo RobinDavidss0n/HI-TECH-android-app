@@ -94,7 +94,7 @@ class UpdateNoveltyFragment : Fragment() {
                         progressBar?.visibility = GONE
                     } else {
                         progressBar?.visibility = GONE
-                        (context as MainActivity).makeToast("Failed to create notification")
+                        (context as MainActivity).makeToast(getString(R.string.failed_create_notification))
                     }
                 } else {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
@@ -102,7 +102,7 @@ class UpdateNoveltyFragment : Fragment() {
                 }
             }.addOnFailureListener {
                 progressBar?.visibility = GONE
-                (context as MainActivity).makeToast("Failed to update post")
+                (context as MainActivity).makeToast(getString(R.string.failed_update_post))
             }
         }
 
@@ -123,7 +123,7 @@ class UpdateNoveltyFragment : Fragment() {
             checked = false
             true
         } else {
-            (context as MainActivity).makeToast("Notification fields can't be empty")
+            (context as MainActivity).makeToast(getString(R.string.empty_notification))
             false
         }
     }

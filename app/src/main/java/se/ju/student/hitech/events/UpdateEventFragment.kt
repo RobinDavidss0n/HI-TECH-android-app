@@ -146,7 +146,7 @@ class UpdateEventFragment : Fragment() {
 
             }.addOnFailureListener {
                 binding.progressBar.visibility = GONE
-                (context as MainActivity).makeToast("Failed to update post")
+                (context as MainActivity).makeToast(getString(R.string.failed_update_event))
             }
         }
 
