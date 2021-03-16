@@ -24,7 +24,8 @@
                 android:background="@drawable/item_chat_right_background"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="username"
+                android:text="text"
+                android:layout_gravity="right"
                 android:textSize="18sp"
                 android:textColor="@color/black">
             </TextView>
