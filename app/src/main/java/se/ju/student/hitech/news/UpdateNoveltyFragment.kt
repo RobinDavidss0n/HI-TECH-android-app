@@ -33,15 +33,15 @@ class UpdateNoveltyFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_update_novelty, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val notificationContent =
-            view?.findViewById<EditText>(R.id.editTextUpdatePostNotificationContent)
-        val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
-        val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
-        val updateNoveltyButton = view?.findViewById<Button>(R.id.btn_update_post)
-        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+            view.findViewById<EditText>(R.id.editTextUpdatePostNotificationContent)
+        val title = view.findViewById<EditText>(R.id.editTextUpdatePostTitle)
+        val content = view.findViewById<EditText>(R.id.editTextUpdatePostContent)
+        val updateNoveltyButton = view.findViewById<Button>(R.id.btn_update_post)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         title?.setText("")
         content?.setText("")
@@ -76,7 +76,7 @@ class UpdateNoveltyFragment : Fragment() {
 
         })
 
-        view?.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
+        view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
             onCheckBoxClicked(it)
         }
 
@@ -106,11 +106,12 @@ class UpdateNoveltyFragment : Fragment() {
             }
         }
 
-        view?.findViewById<Button>(R.id.btn_update_news_back)?.setOnClickListener {
+        view.findViewById<Button>(R.id.btn_update_news_back)?.setOnClickListener {
             progressBar?.visibility = GONE
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
     }
+
 
     private fun createNotification(title: String, content: String): Boolean {
         return if (title != "" && content != "") {
@@ -132,7 +133,7 @@ class UpdateNoveltyFragment : Fragment() {
             checked = view.isChecked
         }
     }
-
+    
     fun clickedNovelty(id: Int) {
         noveltyId = id
 

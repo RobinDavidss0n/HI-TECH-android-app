@@ -32,9 +32,9 @@ class ViewNoveltyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val title = view?.findViewById<TextView>(R.id.newsTitleNoImage)
-        val content = view?.findViewById<TextView>(R.id.newsContentNoImage)
-        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+        val title = view.findViewById<TextView>(R.id.newsTitleNoImage)
+        val content = view.findViewById<TextView>(R.id.newsContentNoImage)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = VISIBLE
 
