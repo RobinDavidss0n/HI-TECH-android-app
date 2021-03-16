@@ -79,24 +79,28 @@ class CreateNoveltyFragment : Fragment() {
 
         createNoveltyButton?.setOnClickListener {
             progressBar?.visibility = VISIBLE
-            newsRepository.addNovelty(
-                title!!.text.toString(),
-                content!!.text.toString()
-            ).addOnSuccessListener {
-                if (checked) {
-                    if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
-                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                        progressBar?.visibility = GONE
-                    } else {
-                        progressBar?.visibility = GONE
-                        (context as MainActivity).makeToast("Failed to create notification")
+
+            newsRepository.addNovelty(title!!.text.toString(), content!!.text.toString()){ result ->
+                when(result){
+                    "successful" -> {
+                        if (checked) {
+                            if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
+                                (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                                progressBar?.visibility = GONE
+                            } else {
+                                progressBar?.visibility = GONE
+                                (context as MainActivity).makeToast("Failed to create notification")
+                            }
+                        } else{
+                            (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                            progressBar?.visibility = GONE
+                        }
                     }
-                } else{
-                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                    progressBar?.visibility = GONE
+                    "internalError" -> {
+                        progressBar?.visibility = GONE
+                        (context as MainActivity).makeToast("Failed to create post")
+                    }
                 }
-            }.addOnFailureListener{
-                (context as MainActivity).makeToast("Failed to create post")
             }
         }
 

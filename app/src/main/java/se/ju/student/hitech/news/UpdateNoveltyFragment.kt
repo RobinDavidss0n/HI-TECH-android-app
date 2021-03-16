@@ -133,7 +133,7 @@ class UpdateNoveltyFragment : Fragment() {
             checked = view.isChecked
         }
     }
-    
+
     fun clickedNovelty(id: Int) {
         noveltyId = id
 

@@ -1,14 +1,8 @@
 package se.ju.student.hitech.news
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import se.ju.student.hitech.news.Novelty
-import se.ju.student.hitech.shop.ShopFragment
-import kotlin.collections.List as List
 
 class NewsRepository {
 
@@ -19,21 +13,29 @@ class NewsRepository {
         val newsRepository = NewsRepository()
     }
 
-    fun addNovelty(title: String, content: String): Task<Void> {
+    fun addNovelty(title: String, content: String, callback: (String) -> Unit) {
 
-        val novelty = HashMap<String, Any>()
-        novelty["title"] = title
-        novelty["content"] = content
-        novelty["id"] = when {
-            latestId == 0 -> 1
-            else -> latestId + 1
+        loadAllNewsData { result, list ->
+            when (result) {
+                "notFound" -> {
+                    Log.d("Error fireStore", "Error loading novelty from fireStore")
+                }
+                "successful" -> {
+                    latestId = list.last().id
+                    val novelty = HashMap<String, Any>()
+                    novelty["title"] = title
+                    novelty["content"] = content
+                    novelty["id"] = latestId + 1
+
+                    db.collection("news").document(novelty["id"].toString()).set(novelty).addOnCompleteListener {
+                        callback("successful")
+                    }.addOnFailureListener{
+                        callback("internalError")
+                    }
+                }
+            }
         }
-
-        latestId += 1
-        return db.collection("news").document(novelty["id"].toString()).set(novelty)
     }
-
-    // SORTERA och hämta högsta
 
     fun listenForNewsChanges(
         callback: (String, MutableList<Novelty>) -> Unit
@@ -62,12 +64,12 @@ class NewsRepository {
             if (snapshot.isEmpty) {
                 callback("notFound", mutableListOf(Novelty()))
             } else {
+                val currentNewsList = mutableListOf<Novelty>()
                 snapshot.documents.forEach { DocumentSnapshot ->
-                    val currentNewsList = mutableListOf<Novelty>()
                     val novelty = DocumentSnapshot.toObject(Novelty::class.java)!!
                     currentNewsList.add(novelty)
-                    callback("successful", currentNewsList)
                 }
+                callback("successful", currentNewsList)
             }
 
         }.addOnFailureListener { error ->
