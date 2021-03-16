@@ -76,15 +76,8 @@ class UpdateNoveltyFragment : Fragment() {
 
         })
 
-        view?.findViewById<CheckBox>(R.id.checkbox_notification)
-            ?.setOnCheckedChangeListener { _, isChecked ->
-                checked = isChecked
-            }
-
         view?.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
-            checked = true
-
-            // set to false?
+            onCheckBoxClicked(it)
         }
 
         updateNoveltyButton?.setOnClickListener {
@@ -100,13 +93,15 @@ class UpdateNoveltyFragment : Fragment() {
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                         progressBar?.visibility = GONE
                     } else {
+                        progressBar?.visibility = GONE
                         (context as MainActivity).makeToast("Failed to create notification")
                     }
-                } else{
+                } else {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                     progressBar?.visibility = GONE
                 }
-            }.addOnFailureListener{
+            }.addOnFailureListener {
+                progressBar?.visibility = GONE
                 (context as MainActivity).makeToast("Failed to update post")
             }
         }
@@ -129,6 +124,12 @@ class UpdateNoveltyFragment : Fragment() {
         } else {
             (context as MainActivity).makeToast("Notification fields can't be empty")
             false
+        }
+    }
+
+    fun onCheckBoxClicked(view: View) {
+        if (view is CheckBox) {
+            checked = view.isChecked
         }
     }
 

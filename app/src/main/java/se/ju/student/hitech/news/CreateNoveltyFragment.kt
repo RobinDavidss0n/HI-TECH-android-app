@@ -23,7 +23,6 @@ import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 class CreateNoveltyFragment : Fragment() {
 
     private var checked = false
-    private var noveltyId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,15 +32,16 @@ class CreateNoveltyFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_create_novelty, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val notificationContent =
-            view?.findViewById<EditText>(R.id.editTextNewPostNotificationContent)
-        val title = view?.findViewById<EditText>(R.id.editTextNewPostTitle)
-        val content = view?.findViewById<EditText>(R.id.editTextNewPostContent)
-        val createNoveltyButton = view?.findViewById<Button>(R.id.btn_news_newPost)
-        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+            view.findViewById<EditText>(R.id.editTextNewPostNotificationContent)
+        val title = view.findViewById<EditText>(R.id.editTextNewPostTitle)
+        val content = view.findViewById<EditText>(R.id.editTextNewPostContent)
+        val createNoveltyButton = view.findViewById<Button>(R.id.btn_create_news_create_post)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+
+        progressBar?.visibility = GONE
 
         title?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -73,19 +73,11 @@ class CreateNoveltyFragment : Fragment() {
 
         })
 
-        view?.findViewById<CheckBox>(R.id.checkbox_notification)
-            ?.setOnCheckedChangeListener { _, isChecked ->
-                checked = isChecked
-            }
-
-        view?.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
-            checked = true
-
-            // set to false?
+        view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
+            onCheckBoxClicked(it)
         }
 
         createNoveltyButton?.setOnClickListener {
-
             progressBar?.visibility = VISIBLE
             newsRepository.addNovelty(
                 title!!.text.toString(),
@@ -96,6 +88,7 @@ class CreateNoveltyFragment : Fragment() {
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                         progressBar?.visibility = GONE
                     } else {
+                        progressBar?.visibility = GONE
                         (context as MainActivity).makeToast("Failed to create notification")
                     }
                 } else{
@@ -107,7 +100,7 @@ class CreateNoveltyFragment : Fragment() {
             }
         }
 
-        view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
+        view.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
             progressBar?.visibility = GONE
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
@@ -125,6 +118,12 @@ class CreateNoveltyFragment : Fragment() {
         } else {
             (context as MainActivity).makeToast("Notification fields can't be empty")
             false
+        }
+    }
+
+    fun onCheckBoxClicked(view: View) {
+        if (view is CheckBox) {
+            checked = view.isChecked
         }
     }
 }
