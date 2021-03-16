@@ -1,9 +1,11 @@
 package se.ju.student.hitech
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,16 +14,18 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.chat.fragments.ActiveChatsFragmentAdmin
 import se.ju.student.hitech.chat.fragments.ContactCaseFragment
 import se.ju.student.hitech.chat.fragments.ContactFragment
 import se.ju.student.hitech.test.TestFragment
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_TEST = "TAG_TEST"
     }
 
+    @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_HITECH)
@@ -55,20 +60,28 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
 
-                    .beginTransaction()
-                    .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
-                    .add(R.id.fragment_container, ContactCaseFragment(), TAG_FRAGMENT_CONTACT_CASE)
-                    .add(R.id.fragment_container, ActiveChatsFragmentAdmin(), TAG_FRAGMENT_CONTACT_ADMIN_VIEW)
-                    .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
-                    .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
-                    .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
-                    .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                    .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
-                    .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
-                    .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
-                    .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
-                    .add(R.id.fragment_container, TestFragment(), TAG_TEST)
-                    .commitNow()
+                .beginTransaction()
+                .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
+                .add(R.id.fragment_container, ContactCaseFragment(), TAG_FRAGMENT_CONTACT_CASE)
+                .add(
+                    R.id.fragment_container,
+                    ActiveChatsFragmentAdmin(),
+                    TAG_FRAGMENT_CONTACT_ADMIN_VIEW
+                )
+                .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
+                .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
+                .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
+                .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
+                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
+                .add(
+                    R.id.fragment_container,
+                    CreateNewEventFragment(),
+                    TAG_FRAGMENT_CREATE_NEW_EVENT
+                )
+                .add(R.id.fragment_container, TestFragment(), TAG_TEST)
+                .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
 
@@ -78,17 +91,16 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNav.setOnNavigationItemSelectedListener {
-            val contactTag = if (UserRepository().checkIfLoggedIn()){
-                TAG_FRAGMENT_CONTACT_ADMIN_VIEW
-            }else{
-                TAG_FRAGMENT_CONTACT_CASE
-            }
             when (it.itemId) {
                 R.id.nav_news -> changeToFragment(TAG_FRAGMENT_NEWS)
                 R.id.nav_events -> changeToFragment(TAG_FRAGMENT_EVENTS)
                 R.id.nav_shop -> changeToFragment(TAG_FRAGMENT_SHOP)
-                R.id.nav_contact -> changeToFragment(contactTag)
-               // R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT_CASE) if logged in
+                R.id.nav_contact -> {
+                    checkWhichContactFragmentToShow { fragment ->
+                        changeToFragment(fragment)
+                    }
+                }
+                // R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT_CASE) if logged in
             }
             true
         }
@@ -100,6 +112,46 @@ class MainActivity : AppCompatActivity() {
             topic
         ).also {
             sendNotification(it)
+        }
+    }
+
+    @SuppressLint("HardwareIds")
+    private fun checkWhichContactFragmentToShow(callback: (String) -> Unit) {
+        if (UserRepository().checkIfLoggedIn()) {
+            changeToFragment(TAG_FRAGMENT_CONTACT_ADMIN_VIEW)
+        } else {
+            val androidID = Settings.Secure.getString(
+                this.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+
+            ChatRepository().getChatIDWithAndroidID(androidID) { result, chatID ->
+                when (result) {
+
+                    "successful" -> {
+                        ChatRepository().setCurrentChatID(chatID)
+                        reloadContactFragment()
+                        callback(TAG_FRAGMENT_CONTACT)
+                    }
+
+                    "notFound" -> {
+                        callback(TAG_FRAGMENT_CONTACT_CASE)
+                    }
+                    "internalError" -> makeToast("Something went wrong, check your internet connection and try again.")
+                }
+            }
+        }
+    }
+
+    fun reloadContactFragment(){
+
+
+        val frg = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_CONTACT)
+        if (frg != null){
+            val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+            ft.detach(frg)
+            ft.attach(frg)
+            ft.commitNow()
         }
     }
 

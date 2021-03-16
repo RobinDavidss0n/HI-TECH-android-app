@@ -11,7 +11,7 @@ class ChatRepository {
     private lateinit var currentMessageListener: ListenerRegistration
 
     companion object{
-        private var currentChatID = ""
+        private var currentChatID = "noChatSelected"
     }
 
 
@@ -129,28 +129,28 @@ class ChatRepository {
 
     }
 
-    fun getChatWithAndroidID(
+    fun getChatIDWithAndroidID(
         androidID: String,
-        callback: (String, Message) -> Unit
+        callback: (String, String) -> Unit
     ) {
 
         db.collection("chats")
             .whereEqualTo("androidIDUser", androidID)
+            .limit(1)
             .get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot.isEmpty) {
-                    callback("notFound", Message())
+                    callback("notFound", "")
                 } else {
 
-                   snapshot.documents.forEach { DocumentSnapshot ->
-                       val chat = DocumentSnapshot.toObject(Message::class.java)!!
-                       callback("successful", chat)
+                   snapshot.documents.forEach { docSnap ->
+                       callback("successful", docSnap.id)
                     }
                 }
 
             }.addOnFailureListener { error ->
                 Log.w("Get user info database error", error)
-                callback("internalError", Message())
+                callback("internalError", "")
 
             }
 

@@ -27,6 +27,7 @@ import se.ju.student.hitech.handlers.convertTimeToStringHourMinutesFormat
 class ContactFragment : Fragment() {
     lateinit var binding: FragmentContactBinding
     private val viewModel: ContactViewModel by viewModels()
+    private lateinit var chatRepository: ChatRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +41,7 @@ class ContactFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //binding.progressBarActiveChats.visibility = View.VISIBLE
+        chatRepository = ChatRepository()
 
         binding.rvRecyclerViewMessages.apply {
             layoutManager = LinearLayoutManager(context)
@@ -52,7 +54,7 @@ class ContactFragment : Fragment() {
                 binding.rvRecyclerViewMessages.post {
 
                     binding.rvRecyclerViewMessages.apply {
-                        adapter = ContactAdapter(context ,it)
+                        adapter = ContactAdapter(context, it)
                         adapter?.notifyDataSetChanged()
                     }
                 }
@@ -62,6 +64,20 @@ class ContactFragment : Fragment() {
             //binding.progressBarActiveChats.visibility = View.GONE
         }
 
+        binding.sendMesseage.setOnClickListener {
+
+
+            chatRepository.addMessage( binding.messageInput.text.toString(), UserRepository().checkIfLoggedIn(), chatRepository.getCurrentChatID()) { result ->
+                when (result) {
+                    "successful" -> {
+                        binding.messageInput.text.clear()
+                        Log.d("FireStore", "Message sent.")
+                    }
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                }
+            }
+        }
+
 
     }
 
@@ -69,31 +85,34 @@ class ContactFragment : Fragment() {
     class ContactViewModel : ViewModel() {
         var chatRepository = ChatRepository()
         var currentMessages = MutableLiveData<List<se.ju.student.hitech.chat.Message>>()
+        var chatID = chatRepository.getCurrentChatID()
 
         init {
-            chatRepository.loadAllMessagesFromSpecificChatAndUpdateIfChanged("HLafoEIXF2ui6aFJsYm9") { result, list ->
-                when (result) {
-                    "successful" -> {
-                        currentMessages.postValue(list)
+            Log.d("chatID", chatID)
+            if (chatID != "noChatSelected"){
+                chatRepository.loadAllMessagesFromSpecificChatAndUpdateIfChanged(chatID) { result, list ->
+                    when (result) {
+                        "successful" -> {
+                            currentMessages.postValue(list)
+                        }
+                        "internalError" -> {
+                            //notify user about error
+                            Log.d("Error fireStore", "Error loading activeChat list from fireStore")
+                        }
                     }
-                    "internalError" -> {
-                        //notify user about error
-                        Log.d("Error fireStore", "Error loading activeChat list from fireStore")
-                    }
-                }
 
+                }
             }
 
         }
 
     }
 
-    class ContactAdapter(private val context: Context, private val currentMessages: List<se.ju.student.hitech.chat.Message>) :
+    class ContactAdapter(
+        private val context: Context,
+        private val currentMessages: List<se.ju.student.hitech.chat.Message>
+    ) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        companion object {
-            const val VIEW_TYPE_ONE = 1
-            const val VIEW_TYPE_TWO = 2
-        }
 
         private inner class ContactViewHolderRight(itemView: View) :
             RecyclerView.ViewHolder(itemView) {
@@ -110,7 +129,6 @@ class ContactFragment : Fragment() {
             RecyclerView.ViewHolder(itemView) {
 
 
-
             var messageLeft: TextView = itemView.findViewById(R.id.messageLeft)
             var timeLeft: TextView = itemView.findViewById(R.id.timeLeft)
             fun bind(position: Int) {
@@ -121,11 +139,11 @@ class ContactFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return if (viewType == VIEW_TYPE_ONE) {
+            return if (viewType == 1 /* 1 = true, 0 = false */) {
                 ContactViewHolderRight(
                     LayoutInflater.from(context).inflate(R.layout.item_chat_right, parent, false)
                 )
-            }else{
+            } else {
                 ContactViewHolderLeft(
                     LayoutInflater.from(context).inflate(R.layout.item_chat_left, parent, false)
                 )
@@ -137,7 +155,7 @@ class ContactFragment : Fragment() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-            if (currentMessages[position].sentFromAdmin) {
+            if (currentMessages[position].sentFromAdmin && UserRepository().checkIfLoggedIn()) {
                 (holder as ContactViewHolderRight).bind(position)
             } else {
                 (holder as ContactViewHolderLeft).bind(position)
@@ -145,13 +163,13 @@ class ContactFragment : Fragment() {
         }
 
         override fun getItemViewType(position: Int): Int {
-            return if (currentMessages[position].sentFromAdmin){
-                1
-            }else{
-                2
-
+            return if (currentMessages[position].sentFromAdmin && UserRepository().checkIfLoggedIn()) {
+                1 //true
+            } else {
+                0 //false
             }
         }
 
     }
+
 }
