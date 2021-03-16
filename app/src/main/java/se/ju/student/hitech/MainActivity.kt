@@ -72,8 +72,8 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
                 .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
                 .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                 .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                 .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
                 .add(
                     R.id.fragment_container,
@@ -145,13 +145,12 @@ class MainActivity : AppCompatActivity() {
 
     fun reloadContactFragment(){
 
-
-        val frg = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_CONTACT)
-        if (frg != null){
-            val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.detach(frg)
-            ft.attach(frg)
-            ft.commitNow()
+        val contactFragment = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_CONTACT)
+        if (contactFragment != null){
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.remove(contactFragment)
+            fragmentTransaction.add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+            fragmentTransaction.commit()
         }
     }
 

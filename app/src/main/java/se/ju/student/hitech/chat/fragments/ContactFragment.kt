@@ -66,8 +66,12 @@ class ContactFragment : Fragment() {
 
         binding.sendMesseage.setOnClickListener {
 
-
-            chatRepository.addMessage( binding.messageInput.text.toString(), UserRepository().checkIfLoggedIn(), chatRepository.getCurrentChatID()) { result ->
+            Log.d("Send message", chatRepository.getCurrentChatID())
+            chatRepository.addMessage(
+                binding.messageInput.text.toString(),
+                UserRepository().checkIfLoggedIn(),
+                chatRepository.getCurrentChatID()
+            ) { result ->
                 when (result) {
                     "successful" -> {
                         binding.messageInput.text.clear()
@@ -88,8 +92,9 @@ class ContactFragment : Fragment() {
         var chatID = chatRepository.getCurrentChatID()
 
         init {
+            Log.d("WORKING", "IT'S WORKING")
             Log.d("chatID", chatID)
-            if (chatID != "noChatSelected"){
+            if (chatID != "noChatSelected") {
                 chatRepository.loadAllMessagesFromSpecificChatAndUpdateIfChanged(chatID) { result, list ->
                     when (result) {
                         "successful" -> {
@@ -157,6 +162,8 @@ class ContactFragment : Fragment() {
 
             if (currentMessages[position].sentFromAdmin && UserRepository().checkIfLoggedIn()) {
                 (holder as ContactViewHolderRight).bind(position)
+            } else if (!currentMessages[position].sentFromAdmin && !UserRepository().checkIfLoggedIn()) {
+                (holder as ContactViewHolderRight).bind(position)
             } else {
                 (holder as ContactViewHolderLeft).bind(position)
             }
@@ -164,9 +171,11 @@ class ContactFragment : Fragment() {
 
         override fun getItemViewType(position: Int): Int {
             return if (currentMessages[position].sentFromAdmin && UserRepository().checkIfLoggedIn()) {
-                1 //true
+                1
+            } else if (!currentMessages[position].sentFromAdmin && !UserRepository().checkIfLoggedIn()) {
+                1
             } else {
-                0 //false
+                0
             }
         }
 

@@ -104,6 +104,7 @@ class ActiveChatsFragmentAdmin : Fragment() {
             holder.binding.tvCase.text = chat.case
 
             holder.binding.itemUserChat.setOnClickListener {
+                ChatRepository().setCurrentChatID(chat.chatID.toString())
                 (holder.itemView.context as MainActivity).reloadContactFragment()
                 (holder.itemView.context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
             }

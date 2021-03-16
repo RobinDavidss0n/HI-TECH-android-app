@@ -32,7 +32,7 @@ class TestFragment : Fragment() {
 
         val testThatShit = view?.findViewById<Button>(R.id.test)
         var msg = 1
-        val chatID = "HLafoEIXF2ui6aFJsYm9"
+        val chatID = "mDodNq6hE27N75g2Fzmf"
         val chatRepository = ChatRepository()
         val userRepository = UserRepository()
         val androidID = Settings.Secure.getString(
@@ -41,16 +41,18 @@ class TestFragment : Fragment() {
         )
         var isAdmin = true
 
-        /*
-        chatRepository.createNewChat(androidID, "study") { result ->
+
+        /*chatRepository.createNewChat(androidID, "Robin", "case1") { result ->
             when (result) {
                 "successful" -> {
                     (context as MainActivity).makeToast("Chat created.")
                 }
                 "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
             }
-        }*/
+        }
 
+
+         */
 
         testThatShit?.setOnClickListener {
 
