@@ -12,6 +12,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class AdminLoginFragment : Fragment() {
 
@@ -37,7 +38,7 @@ class AdminLoginFragment : Fragment() {
         progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)!!
 
         loginButton?.setOnClickListener {
-            UserRepository().userLogout()
+            userRepository.userLogout()
             if (verifyLoginInputs(
                     emailInput?.text.toString().trim(),
                     passwordInput?.text.toString()
@@ -62,8 +63,6 @@ class AdminLoginFragment : Fragment() {
             resetPassword(emailInput?.text.toString().trim())
 
         }
-
-
     }
 
     private fun resetPassword(email: String) {
@@ -82,7 +81,6 @@ class AdminLoginFragment : Fragment() {
                     getString(R.string.yes)
 
                 ) { _, _ ->
-                    val userRepository = UserRepository()
                     userRepository.sendPasswordReset(email) { result ->
                         progressBar.visibility = View.GONE
                         when (result) {
@@ -99,7 +97,6 @@ class AdminLoginFragment : Fragment() {
                 }
                 .show()
         }
-
     }
 
     private fun verifyLoginInputs(email: String, password: String): Boolean {
@@ -130,8 +127,6 @@ class AdminLoginFragment : Fragment() {
 
     private fun userLogin(email: String, password: String) {
 
-        val userRepository = UserRepository()
-
         userRepository.userLogin(email, password) { result ->
             progressBar.visibility = View.GONE
             when (result) {
@@ -147,6 +142,5 @@ class AdminLoginFragment : Fragment() {
 
             }
         }
-
     }
 }

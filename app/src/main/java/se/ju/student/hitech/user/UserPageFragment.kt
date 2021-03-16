@@ -15,10 +15,11 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class UserPageFragment : Fragment() {
 
-    lateinit var  progressBar: ProgressBar
+    lateinit var progressBar: ProgressBar
     lateinit var emailInput: TextInputEditText
     lateinit var nameInput: TextInputEditText
     lateinit var roleInput: TextInputEditText
@@ -59,26 +60,25 @@ class UserPageFragment : Fragment() {
                     roleInput.text.toString().trim()
                 )
             }
-
         }
 
-        logoutButton?.setOnClickListener{
-            UserRepository().userLogout()
+        logoutButton?.setOnClickListener {
+            userRepository.userLogout()
             (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
             (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
         }
 
-        resetPassword?.setOnClickListener{
+        resetPassword?.setOnClickListener {
             resetPassword()
         }
-        deleteAccount?.setOnClickListener{
+        deleteAccount?.setOnClickListener {
             deleteAccount()
         }
     }
 
-    private fun setUserInfoIntoInputFields(){
+    private fun setUserInfoIntoInputFields() {
         progressBar.visibility = View.VISIBLE
-        UserRepository().getCurrentUserInfo({user, email ->
+        userRepository.getCurrentUserInfo({ user, email ->
             progressBar.visibility = View.GONE
             emailInput.setText(email)
             nameInput.setText(user.name)
@@ -119,13 +119,11 @@ class UserPageFragment : Fragment() {
         if (name.isEmpty()) {
             nameInputLayout?.error = getString(R.string.nameEmpty)
             return false
-
         }
 
         if (role.isEmpty()) {
             roleInputLayout?.error = getString(R.string.roleEmpty)
             return false
-
         }
         return true
     }
@@ -162,18 +160,13 @@ class UserPageFragment : Fragment() {
                 //Don't delete
             }
             .show()
-
-
-
     }
 
-    private fun resetPassword(){
-
-        val userRepository = UserRepository()
-        userRepository.getCurrentUserInfo({_, email ->
+    private fun resetPassword() {
+        userRepository.getCurrentUserInfo({ _, email ->
             AlertDialog.Builder(context as MainActivity)
                 .setTitle(getString(R.string.user_page_resetPassword))
-                .setMessage(getString(R.string.resetPasswordConfirmation)+ " $email?")
+                .setMessage(getString(R.string.resetPasswordConfirmation) + " $email?")
                 .setPositiveButton(
                     getString(R.string.yes)
 
@@ -183,12 +176,10 @@ class UserPageFragment : Fragment() {
                         Log.d("email", email)
                         progressBar.visibility = View.GONE
                         when (result) {
-                            "successful" -> (context as MainActivity).makeToast(getString(R.string.resetConfirmed)+" $email!")
+                            "successful" -> (context as MainActivity).makeToast(getString(R.string.resetConfirmed) + " $email!")
                             "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
                         }
-
                     }
-
                 }
                 .setNegativeButton(
                     getString(R.string.no)
@@ -200,28 +191,23 @@ class UserPageFragment : Fragment() {
         }, {
             (context as MainActivity).makeToast(getString(R.string.internalError))
         })
-
-
     }
 
-    private fun deleteAccount(){
+    private fun deleteAccount() {
         AlertDialog.Builder(context as MainActivity)
             .setTitle(getString(R.string.deleteAccount))
             .setMessage(getString(R.string.deleteAccountConfirmation))
             .setPositiveButton(
                 getString(R.string.yes)
-
             ) { _, _ ->
 
-                UserRepository().deleteCurrentUser {result ->
+                userRepository.deleteCurrentUser { result ->
                     progressBar.visibility = View.GONE
                     when (result) {
                         "successful" -> (context as MainActivity).makeToast(getString(R.string.accountDeleted))
                         "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
                     }
-
                 }
-
             }
             .setNegativeButton(
                 getString(R.string.no)
@@ -231,5 +217,4 @@ class UserPageFragment : Fragment() {
             }
             .show()
     }
-
 }
