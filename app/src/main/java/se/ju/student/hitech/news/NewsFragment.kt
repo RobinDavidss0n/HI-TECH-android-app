@@ -3,6 +3,7 @@ package se.ju.student.hitech.news
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -17,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NOVELTY
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_NOVELTY
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.CardNewsBinding
@@ -45,17 +45,6 @@ class NewsFragment : Fragment() {
         root
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (userRepository.checkIfLoggedIn()) {
-            loggedIn = true
-            binding.fabCreateNewPost.visibility = VISIBLE
-        } else {
-            binding.fabCreateNewPost.visibility = GONE
-            loggedIn = false
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -74,28 +63,42 @@ class NewsFragment : Fragment() {
                     }
                     binding.progressBar.visibility = GONE
                 }
+
             }
         }
 
-        binding.swipeRefreshNews.setOnRefreshListener {
-            binding.swipeRefreshNews.isRefreshing = false
+        // change to listener?
+        loggedIn = userRepository.checkIfLoggedIn()
+
+        if (loggedIn) {
+            binding.fabCreateNewPost.visibility = VISIBLE
+        } else {
+            binding.fabCreateNewPost.visibility = GONE
         }
 
         binding.fabCreateNewPost.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)
         }
+
     }
 
     class NewsViewModel : ViewModel() {
         var news = MutableLiveData<List<Novelty>>()
 
         init {
-            newsRepository.loadChangesInNewsData()
-            val fetchedNews = newsRepository.getAllNews()
-            news.postValue(fetchedNews)
+            newsRepository.listenForNewsChanges { result, list ->
+                when (result) {
+                    "successful" -> {
+                        news.postValue(list.asReversed())
+                    }
+                    "internalError" -> {
+                        //notify user about error
+                        Log.d("Error fireStore", "Error loading news list from fireStore")
+                    }
+                }
+            }
         }
     }
-
 
     class NewsViewHolder(val binding: CardNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -141,11 +144,7 @@ class NewsFragment : Fragment() {
                                         "YES"
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        newsRepository.deleteNovelty(id).addOnCompleteListener {
-                                            newsRepository.loadChangesInNewsData()
-                                            notifyDataSetChanged()
-                                        }
-
+                                        newsRepository.deleteNovelty(id)
                                     }.setNegativeButton(
                                         "NO"
                                     ) { dialog, whichButton ->
@@ -153,8 +152,10 @@ class NewsFragment : Fragment() {
                                     }.show()
                             }
                             R.id.menu_edit -> {
+                                (holder.itemView.context as MainActivity).showClickedNovelty(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
-                                    TAG_FRAGMENT_UPDATE_NOVELTY)
+                                    TAG_FRAGMENT_UPDATE_NOVELTY
+                                )
                             }
                         }
                         true

@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
@@ -26,11 +29,12 @@ class CreateNewEventFragment : Fragment() {
     ) = FragmentCreateEventBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
-
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.progressBar.visibility = GONE
 
         binding.etEventActivity.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -39,13 +43,11 @@ class CreateNewEventFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnCreateEvent.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-
             }
 
         })
@@ -57,13 +59,11 @@ class CreateNewEventFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnCreateEvent.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-
             }
 
         })
@@ -75,13 +75,11 @@ class CreateNewEventFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnCreateEvent.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-
             }
 
         })
@@ -93,13 +91,11 @@ class CreateNewEventFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnCreateEvent.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-
             }
 
         })
@@ -111,18 +107,18 @@ class CreateNewEventFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnCreateEvent.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-
             }
 
         })
 
         binding.btnCreateEvent.setOnClickListener {
+            binding.progressBar.visibility = VISIBLE
+
             val title = binding.etEventActivity.text
             val date = binding.etDate.text
             val time = binding.etTime.text
@@ -135,8 +131,19 @@ class CreateNewEventFragment : Fragment() {
                 time.toString(),
                 location.toString(),
                 information.toString()
-            )
-            (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
+            ) { result ->
+                when (result) {
+                    "successful" -> {
+                        binding.progressBar.visibility = GONE
+                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
+                    }
+                    "internalError" -> {
+                        binding.progressBar.visibility = GONE
+                        (context as MainActivity).makeToast("Failed to create post")
+                    }
+                }
+            }
+
         }
 
         binding.btnCreateEventBack.setOnClickListener {
@@ -144,4 +151,3 @@ class CreateNewEventFragment : Fragment() {
         }
     }
 }
-

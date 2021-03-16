@@ -1,8 +1,8 @@
 package se.ju.student.hitech.events
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -15,10 +15,8 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.processNextEventInCurrentThread
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEW_EVENT
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
@@ -47,17 +45,6 @@ class EventsFragment : Fragment() {
         root
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (userRepository.checkIfLoggedIn()) {
-            loggedIn = true
-            binding.fabCreateEvent.visibility = VISIBLE
-        } else {
-            binding.fabCreateEvent.visibility = GONE
-            loggedIn = false
-        }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -83,17 +70,21 @@ class EventsFragment : Fragment() {
                         adapter?.notifyDataSetChanged()
                     }
                 }
-                binding.fabCreateEvent.setOnClickListener {
-                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
-                }
-
-                binding.swipeRefreshEvents.setOnRefreshListener {
-
-                    binding.swipeRefreshEvents.isRefreshing = false
-                }
-
                 binding.pbEvent.visibility = GONE
             }
+        }
+
+        // change to listener?
+        if (userRepository.checkIfLoggedIn()) {
+            loggedIn = true
+            binding.fabCreateEvent.visibility = VISIBLE
+        } else {
+            binding.fabCreateEvent.visibility = GONE
+            loggedIn = false
+        }
+
+        binding.fabCreateEvent.setOnClickListener {
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
         }
     }
 
@@ -101,9 +92,17 @@ class EventsFragment : Fragment() {
         var events = MutableLiveData<List<Event>>()
 
         init {
-            eventRepository.loadChangesInEventsData()
-            val fetchedEvents = eventRepository.getAllEvents()
-            events.postValue(fetchedEvents)
+            eventRepository.listenForEventChanges { result, list ->
+                when (result) {
+                    "successful" -> {
+                        events.postValue(list.asReversed())
+                    }
+                    "internalError" -> {
+                        //notify user about error
+                        Log.d("Error fireStore", "Error loading news list from fireStore")
+                    }
+                }
+            }
         }
     }
 
@@ -144,10 +143,7 @@ class EventsFragment : Fragment() {
                                         "YES"
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        eventRepository.deleteEvent(id).addOnCompleteListener {
-                                            eventRepository.loadChangesInEventsData()
-                                            notifyDataSetChanged()
-                                        }
+                                        eventRepository.deleteEvent(id)
                                     }.setNegativeButton(
                                         "NO"
                                     ) { dialog, whichButton ->
@@ -155,6 +151,7 @@ class EventsFragment : Fragment() {
                                     }.show()
                             }
                             R.id.menu_edit -> {
+                                (holder.itemView.context as MainActivity).setClickedEventId(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
                                     TAG_FRAGMENT_UPDATE_EVENT)
                             }
@@ -170,7 +167,6 @@ class EventsFragment : Fragment() {
 
         override fun getItemCount() = events.size
     }
-
 }
 
 

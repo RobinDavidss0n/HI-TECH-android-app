@@ -1,117 +1,112 @@
 package se.ju.student.hitech.events
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import se.ju.student.hitech.events.Event
 
 class EventRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var eventList = mutableListOf<Event>()
+    private var latestId: Int = 0
 
     companion object {
-        var eventRepository = EventRepository()
+        val eventRepository = EventRepository()
     }
 
-    fun updateEvent(newTitle: String, newDate: String, newTime: String, newLocation: String, newInformation: String, id : Int) {
+    fun addEvent(title: String, date: String, time: String, location: String, information: String, callback: (String) -> Unit) {
 
-        sortEventList()
+        loadAllEventsData { result, list ->
+            when (result) {
+                "notFound" -> {
+                    Log.d("Error fireStore", "Error loading novelty from fireStore")
+                }
+                "successful" -> {
+                    latestId = list.last().id
+                    val event = hashMapOf(
+                        "title" to title,
+                        "date" to date,
+                        "time" to time,
+                        "location" to location,
+                        "information" to information,
+                        "id" to latestId + 1
+                    )
 
-       /* val event = hashMapOf(
-            "title" to title,
-            "date" to date,
-            "time" to time,
-            "location" to location,
-            "information" to information,
-            "id" to id
-        )
-
-        db.collection("events").document(id.toString()).set(event)  */
-    }
-
-    fun addEvent(title: String, date: String, time: String, location: String, information: String) {
-
-        sortEventList()
-
-        val id = when {
-            eventList.count() == 0 -> 1
-            else -> eventList.first().id + 1
-        }
-
-        val event = hashMapOf(
-            "title" to title,
-            "date" to date,
-            "time" to time,
-            "location" to location,
-            "information" to information,
-            "id" to id
-        )
-
-        db.collection("events").document(id.toString()).set(event)
-    }
-
-    fun loadChangesInEventsData(): ListenerRegistration {
-        return db.collection("events").orderBy("id").addSnapshotListener { snapshot, e ->
-
-            if (e != null) {
-                Log.w(TAG, "Failed to load news", e)
-                return@addSnapshotListener
-            }
-            if (snapshot != null) {
-                for (dc in snapshot!!.documentChanges) {
-                    val event = dc.document.toObject(Event::class.java)
-                    when (dc.type) {
-                        DocumentChange.Type.ADDED -> added(event)
-                        DocumentChange.Type.MODIFIED -> modified(event)
-                        DocumentChange.Type.REMOVED -> removed(event)
+                    db.collection("events").document(event["id"].toString()).set(event).addOnCompleteListener {
+                        callback("successful")
+                    }.addOnFailureListener{
+                        callback("internalError")
                     }
                 }
             }
         }
     }
 
-    private fun added(event: Event) {
-        if (!eventList.contains(event)) {
-            eventList.add(event)
-        }
-    }
+    fun listenForEventChanges(
+        callback: (String, MutableList<Event>) -> Unit
+    ) {
+        db.collection("events").orderBy("id")
+            .addSnapshotListener { querySnapshot, error ->
 
-    private fun modified(event: Event) {
-        // remove old
-        // add new
-    }
-
-    private fun removed(event: Event) {
-        if (eventList.contains(event)) {
-            eventList.remove(event)
-        }
-    }
-
-    private fun sortEventList() {
-        eventList.sortByDescending { event ->
-            event.id
-        }
-    }
-
-    fun getAllEvents(): List<Event> {
-        // sortEventList()
-        return eventList
-    }
-
-    fun deleteEvent(id: Int): Task<Void> {
-        return db.collection("events").document(id.toString()).delete()
-    }
-
-    fun getEventById(id: Int): Event? {
-        for (event in eventList) {
-            if (event.id == id) {
-                return event
+                if (error != null) {
+                    Log.w("Messages listener error ", error)
+                    callback("internalError", mutableListOf(Event()))
+                } else {
+                    val currentEventList = mutableListOf<Event>()
+                    querySnapshot?.documents?.forEach { doc ->
+                        val event = doc.toObject(Event::class.java)!!
+                        currentEventList.add(event)
+                    }
+                    callback("successful", currentEventList)
+                }
             }
+    }
+
+    private fun loadAllEventsData(
+        callback: (String, MutableList<Event>) -> Unit
+    ) {
+        db.collection("events").orderBy("id").get().addOnSuccessListener { snapshot ->
+            if (snapshot.isEmpty) {
+                callback("notFound", mutableListOf(Event()))
+            } else {
+                val currentEventList = mutableListOf<Event>()
+                snapshot.documents.forEach { DocumentSnapshot ->
+                    val event = DocumentSnapshot.toObject(Event::class.java)!!
+                    currentEventList.add(event)
+                }
+                callback("successful", currentEventList)
+            }
+
+        }.addOnFailureListener { error ->
+            Log.w("Get user info database error", error)
+            callback("internalError", mutableListOf(Event()))
         }
-        return null
+    }
+
+    fun deleteEvent(id: Int) {
+        db.collection("events").document(id.toString()).delete()
+    }
+
+    fun updateEvent(newTitle: String, newDate: String, newTime: String, newLocation: String, newInformation: String, id: Int): Task<Void> {
+
+        val event = hashMapOf(
+            "title" to newTitle,
+            "date" to newDate,
+            "time" to newTime,
+            "location" to newLocation,
+            "information" to newInformation,
+            "id" to id
+        )
+        return db.collection("events").document(id.toString()).set(event)
+    }
+
+    fun getEventById(id: Int, callback: (String, Event) -> Unit) {
+        db.collection("events").document(id.toString()).get().addOnSuccessListener {
+            val event = it.toObject(Event::class.java)
+            if (event != null) {
+                callback("successful", event)
+            }
+        }.addOnFailureListener {
+            callback("internalError", Event())
+        }
     }
 }

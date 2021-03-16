@@ -1,11 +1,17 @@
 package se.ju.student.hitech.news
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
 import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 import se.ju.student.hitech.news.Novelty
@@ -23,15 +29,31 @@ class ViewNoveltyFragment : Fragment() {
             }
     }
 
-    private var novelty: Novelty? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        val title = view.findViewById<TextView>(R.id.newsTitleNoImage)
+        val content = view.findViewById<TextView>(R.id.newsContentNoImage)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+
+        progressBar?.visibility = VISIBLE
 
         arguments?.let {
-            if (it.containsKey(ARG_NOVELTY_ID)){
+            if (it.containsKey(ARG_NOVELTY_ID)) {
                 val noveltyId = requireArguments().getInt(ARG_NOVELTY_ID)
-                novelty = newsRepository.getNoveltyById(noveltyId)
+                newsRepository.getNoveltyById(noveltyId) { result, novelty ->
+                    when (result) {
+                        "successful" -> {
+                            title.text = novelty.title
+                            content.text = novelty.content
+                            progressBar?.visibility = GONE
+                        }
+                        "internalError" -> {
+                            //notify user about error
+                            Log.d("Error fireStore", "Error loading novelty from fireStore")
+                        }
+                    }
+                }
             }
         }
     }
@@ -40,14 +62,6 @@ class ViewNoveltyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_view_novelty, container, false)
-
-        novelty?.let {
-            rootView.findViewById<TextView>(R.id.newsTitleNoImage).text = it.title
-            rootView.findViewById<TextView>(R.id.newsContentNoImage).text = it.content
-        }
-
-        return rootView
+        return inflater.inflate(R.layout.fragment_view_novelty, container, false)
     }
-
 }
