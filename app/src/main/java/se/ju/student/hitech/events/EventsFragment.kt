@@ -84,11 +84,6 @@ class EventsFragment : Fragment() {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEW_EVENT)
                 }
 
-                binding.swipeRefreshEvents.setOnRefreshListener {
-
-                    binding.swipeRefreshEvents.isRefreshing = false
-                }
-
                 binding.pbEvent.visibility = GONE
             }
         }

@@ -45,17 +45,6 @@ class NewsFragment : Fragment() {
         root
     }
 
-    override fun onStart() {
-        super.onStart()
-        loggedIn = userRepository.checkIfLoggedIn()
-
-        if (loggedIn) {
-            binding.fabCreateNewPost.visibility = VISIBLE
-        } else {
-            binding.fabCreateNewPost.visibility = GONE
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -78,17 +67,14 @@ class NewsFragment : Fragment() {
             }
         }
 
-   /*     binding.swipeRefreshNews.setOnRefreshListener {
-            loggedIn = userRepository.checkIfLoggedIn()
+        // change to listener?
+        loggedIn = userRepository.checkIfLoggedIn()
 
-            if (loggedIn) {
-                binding.fabCreateNewPost.visibility = VISIBLE
-            } else {
-                binding.fabCreateNewPost.visibility = GONE
-            }
-
-            binding.swipeRefreshNews.isRefreshing = false
-        }   */
+        if (loggedIn) {
+            binding.fabCreateNewPost.visibility = VISIBLE
+        } else {
+            binding.fabCreateNewPost.visibility = GONE
+        }
 
         binding.fabCreateNewPost.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)

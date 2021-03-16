@@ -57,7 +57,7 @@ class NewsRepository {
             }
     }
 
-    fun loadAllNewsData(
+    private fun loadAllNewsData(
         callback: (String, MutableList<Novelty>) -> Unit
     ) {
         db.collection("news").orderBy("id").get().addOnSuccessListener { snapshot ->
