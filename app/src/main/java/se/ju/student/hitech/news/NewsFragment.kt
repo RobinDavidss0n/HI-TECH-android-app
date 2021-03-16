@@ -100,20 +100,6 @@ class NewsFragment : Fragment() {
         var news = MutableLiveData<List<Novelty>>()
 
         init {
-
-         /*   newsRepository.loadAllNewsData{ result, list ->
-                when(result){
-                    "successful" -> {
-                        news.postValue(list)
-                    }
-                    "internalError" -> {
-                        //notify user about error
-                        Log.d("Error fireStore", "Error loading news list from fireStore")
-                    }
-                }
-
-            }   */
-
             newsRepository.listenForNewsChanges { result, list ->
                 when (result) {
                     "successful" -> {

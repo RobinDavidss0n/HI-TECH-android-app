@@ -3,6 +3,7 @@ package se.ju.student.hitech.news
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,10 +81,18 @@ class UpdateNoveltyFragment : Fragment() {
         }
 
         updateNoveltyButton?.setOnClickListener {
-            newsRepository.updateNovelty(title!!.text.toString(), content!!.text.toString(), noveltyId)
+            newsRepository.updateNovelty(
+                title!!.text.toString(),
+                content!!.text.toString(),
+                noveltyId
+            )
 
             if (checked) {
-                if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
+                if (createNotification(
+                        title.text.toString(),
+                        notificationContent?.text.toString()
+                    )
+                ) {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                 } else {
                     (context as MainActivity).makeToast("Failed to create notification")
@@ -113,14 +122,27 @@ class UpdateNoveltyFragment : Fragment() {
         }
     }
 
-    fun clickedNovelty(id : Int) {
+    fun clickedNovelty(id: Int) {
         noveltyId = id
 
         val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
         val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
-        val novelty = newsRepository.getNoveltyById(noveltyId)
+        var clickedNovelty: Novelty? = null
 
-        title?.setText(novelty?.title)
-        content?.setText(novelty?.content)
+        newsRepository.getNoveltyById(noveltyId) { result, novelty ->
+            when (result) {
+                "successful" -> {
+                    clickedNovelty = novelty
+                    title?.setText(clickedNovelty?.title)
+                    content?.setText(clickedNovelty?.content)
+                }
+                "internalError" -> {
+                    //notify user about error
+                    title?.setText("")
+                    content?.setText("")
+                    Log.d("Error fireStore", "Error loading novelty from fireStore")
+                }
+            }
+        }
     }
 }

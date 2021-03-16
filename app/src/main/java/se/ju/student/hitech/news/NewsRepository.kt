@@ -33,6 +33,8 @@ class NewsRepository {
         return db.collection("news").document(novelty["id"].toString()).set(novelty)
     }
 
+    // SORTERA och hämta högsta
+
     fun listenForNewsChanges(
         callback: (String, MutableList<Novelty>) -> Unit
     ) {
@@ -44,18 +46,9 @@ class NewsRepository {
                     callback("internalError", mutableListOf(Novelty()))
                 } else {
                     val currentNewsList = mutableListOf<Novelty>()
-                    if (querySnapshot != null) {
-
-                        for (dc in querySnapshot.documentChanges) {
-                            val novelty = dc.document.toObject(Novelty::class.java)
-                            when (dc.type) {
-                                DocumentChange.Type.ADDED -> currentNewsList.add(novelty)
-                                DocumentChange.Type.REMOVED -> currentNewsList.remove(novelty)
-                                DocumentChange.Type.MODIFIED -> {
-                                    // TODO
-                                }
-                            }
-                        }
+                    querySnapshot?.documents?.forEach { doc ->
+                        val novelty = doc.toObject(Novelty::class.java)!!
+                        currentNewsList.add(novelty)
                     }
                     callback("successful", currentNewsList)
                 }
@@ -79,7 +72,7 @@ class NewsRepository {
 
         }.addOnFailureListener { error ->
             Log.w("Get user info database error", error)
-            //callback("internalError", Novelty())
+            callback("internalError", mutableListOf(Novelty()))
         }
     }
 
@@ -96,11 +89,14 @@ class NewsRepository {
         db.collection("news").document(id.toString()).set(novelty)
     }
 
-    fun getNoveltyById(id: Int): Novelty? {
-        var novelty: Novelty? = null
+    fun getNoveltyById(id: Int, callback: (String, Novelty) -> Unit) {
         db.collection("news").document(id.toString()).get().addOnSuccessListener {
-            novelty = it.toObject(Novelty::class.java)
+            val novelty = it.toObject(Novelty::class.java)
+            if (novelty != null) {
+                callback("successful", novelty)
+            }
+        }.addOnFailureListener {
+            callback("internalError", Novelty())
         }
-        return novelty
     }
 }
