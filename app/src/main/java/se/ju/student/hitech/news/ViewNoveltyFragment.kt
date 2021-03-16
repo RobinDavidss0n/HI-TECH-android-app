@@ -5,8 +5,12 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
@@ -25,10 +29,14 @@ class ViewNoveltyFragment : Fragment() {
             }
     }
 
-    private var clickedNovelty: Novelty? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        val title = view?.findViewById<TextView>(R.id.newsTitleNoImage)
+        val content = view?.findViewById<TextView>(R.id.newsContentNoImage)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+
+        progressBar?.visibility = VISIBLE
 
         arguments?.let {
             if (it.containsKey(ARG_NOVELTY_ID)) {
@@ -36,7 +44,9 @@ class ViewNoveltyFragment : Fragment() {
                 newsRepository.getNoveltyById(noveltyId) { result, novelty ->
                     when (result) {
                         "successful" -> {
-                            clickedNovelty = novelty
+                            title.text = novelty.title
+                            content.text = novelty.content
+                            progressBar?.visibility = GONE
                         }
                         "internalError" -> {
                             //notify user about error
@@ -46,12 +56,6 @@ class ViewNoveltyFragment : Fragment() {
                 }
             }
         }
-
-    /*    clickedNovelty?.let {
-            val title = findViewById<TextView>(R.id.newsTitleNoImage).text = it.title
-            rootView.findViewById<TextView>(R.id.newsContentNoImage).text = it.content
-        }   */
-
     }
 
     override fun onCreateView(

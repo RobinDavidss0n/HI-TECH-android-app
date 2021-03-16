@@ -6,10 +6,13 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
@@ -38,6 +41,10 @@ class UpdateNoveltyFragment : Fragment() {
         val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
         val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
         val updateNoveltyButton = view?.findViewById<Button>(R.id.btn_update_post)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+
+        title?.setText("")
+        content?.setText("")
 
         title?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -81,28 +88,31 @@ class UpdateNoveltyFragment : Fragment() {
         }
 
         updateNoveltyButton?.setOnClickListener {
+
+            progressBar?.visibility = VISIBLE
             newsRepository.updateNovelty(
                 title!!.text.toString(),
                 content!!.text.toString(),
                 noveltyId
-            )
-
-            if (checked) {
-                if (createNotification(
-                        title.text.toString(),
-                        notificationContent?.text.toString()
-                    )
-                ) {
+            ).addOnSuccessListener {
+                if (checked) {
+                    if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
+                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                        progressBar?.visibility = GONE
+                    } else {
+                        (context as MainActivity).makeToast("Failed to create notification")
+                    }
+                } else{
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                } else {
-                    (context as MainActivity).makeToast("Failed to create notification")
+                    progressBar?.visibility = GONE
                 }
-            } else {
-                (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+            }.addOnFailureListener{
+                (context as MainActivity).makeToast("Failed to update post")
             }
         }
 
         view?.findViewById<Button>(R.id.btn_update_news_back)?.setOnClickListener {
+            progressBar?.visibility = GONE
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
     }
@@ -127,14 +137,17 @@ class UpdateNoveltyFragment : Fragment() {
 
         val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
         val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
-        var clickedNovelty: Novelty? = null
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+        var clickedNovelty: Novelty?
 
+        progressBar?.visibility = VISIBLE
         newsRepository.getNoveltyById(noveltyId) { result, novelty ->
             when (result) {
                 "successful" -> {
                     clickedNovelty = novelty
                     title?.setText(clickedNovelty?.title)
                     content?.setText(clickedNovelty?.content)
+                    progressBar?.visibility = GONE
                 }
                 "internalError" -> {
                     //notify user about error

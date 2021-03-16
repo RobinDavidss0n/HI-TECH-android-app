@@ -80,13 +80,13 @@ class NewsRepository {
         db.collection("news").document(id.toString()).delete()
     }
 
-    fun updateNovelty(newTitle: String, newContent: String, id: Int) {
+    fun updateNovelty(newTitle: String, newContent: String, id: Int): Task<Void> {
         val novelty = hashMapOf(
             "title" to newTitle,
             "content" to newContent,
             "id" to id
         )
-        db.collection("news").document(id.toString()).set(novelty)
+        return db.collection("news").document(id.toString()).set(novelty)
     }
 
     fun getNoveltyById(id: Int, callback: (String, Novelty) -> Unit) {

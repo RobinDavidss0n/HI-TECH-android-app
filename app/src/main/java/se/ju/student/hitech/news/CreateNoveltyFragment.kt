@@ -3,12 +3,16 @@ package se.ju.student.hitech.news
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
@@ -19,53 +23,52 @@ import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 class CreateNoveltyFragment : Fragment() {
 
     private var checked = false
-    lateinit var title: EditText
-    lateinit var content: EditText
-    lateinit var createNoveltyButton: Button
+    private var noveltyId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_create_news, container, false)
+    ): View? {
+        return inflater.inflate(R.layout.fragment_create_novelty, container, false)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        title = view?.findViewById(R.id.editTextNewPostTitle)!!
-        content = view?.findViewById(R.id.editTextNewPostContent)!!
-        createNoveltyButton = view?.findViewById(R.id.btn_create_news_create_post)!!
 
         val notificationContent =
-            view?.findViewById<EditText>(R.id.editTextNewPostNotificationContent)?.text
-        val notificationTitle = view?.findViewById<EditText>(R.id.editTextNewPostTitle)?.text
+            view?.findViewById<EditText>(R.id.editTextNewPostNotificationContent)
+        val title = view?.findViewById<EditText>(R.id.editTextNewPostTitle)
+        val content = view?.findViewById<EditText>(R.id.editTextNewPostContent)
+        val createNoveltyButton = view?.findViewById<Button>(R.id.btn_news_newPost)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
 
-        title.addTextChangedListener(object : TextWatcher {
+        title?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                createNoveltyButton.isEnabled = false
+                createNoveltyButton?.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                createNoveltyButton.isEnabled = count > 0
+                createNoveltyButton?.isEnabled = count > 0
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                createNoveltyButton.isEnabled = title.length() > 0 && content.length() > 0
+                createNoveltyButton?.isEnabled = title.length() > 0 && content?.length()!! > 0
             }
-
         })
-        content.addTextChangedListener(object : TextWatcher {
+
+        content?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                createNoveltyButton.isEnabled = false
+                createNoveltyButton?.isEnabled = false
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                createNoveltyButton.isEnabled = count > 0
+                createNoveltyButton?.isEnabled = count > 0
             }
 
             override fun afterTextChanged(s: Editable?) {
-                createNoveltyButton.isEnabled = content.length() > 0 && title.length() > 0
+                createNoveltyButton?.isEnabled = content.length() > 0 && title?.length()!! > 0
             }
 
         })
@@ -81,24 +84,31 @@ class CreateNoveltyFragment : Fragment() {
             // set to false?
         }
 
-        createNoveltyButton.setOnClickListener {
-            newsRepository.addNovelty(title.text.toString(), content.text.toString()).addOnSuccessListener {
-                // change to News Fragment
-            }
-            // toast Failed to add post
+        createNoveltyButton?.setOnClickListener {
 
-            if (checked) {
-                if(createNotification(notificationTitle.toString(), notificationContent.toString())){
-                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+            progressBar?.visibility = VISIBLE
+            newsRepository.addNovelty(
+                title!!.text.toString(),
+                content!!.text.toString()
+            ).addOnSuccessListener {
+                if (checked) {
+                    if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
+                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                        progressBar?.visibility = GONE
+                    } else {
+                        (context as MainActivity).makeToast("Failed to create notification")
+                    }
                 } else{
-                    (context as MainActivity).makeToast("Failed to create notification")
+                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                    progressBar?.visibility = GONE
                 }
-            } else{
-                (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+            }.addOnFailureListener{
+                (context as MainActivity).makeToast("Failed to create post")
             }
         }
 
         view?.findViewById<Button>(R.id.btn_create_news_back)?.setOnClickListener {
+            progressBar?.visibility = GONE
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
         }
     }

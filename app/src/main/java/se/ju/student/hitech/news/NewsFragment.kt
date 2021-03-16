@@ -78,7 +78,7 @@ class NewsFragment : Fragment() {
             }
         }
 
-        binding.swipeRefreshNews.setOnRefreshListener {
+   /*     binding.swipeRefreshNews.setOnRefreshListener {
             loggedIn = userRepository.checkIfLoggedIn()
 
             if (loggedIn) {
@@ -88,7 +88,7 @@ class NewsFragment : Fragment() {
             }
 
             binding.swipeRefreshNews.isRefreshing = false
-        }
+        }   */
 
         binding.fabCreateNewPost.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)
@@ -182,6 +182,5 @@ class NewsFragment : Fragment() {
         }
 
         override fun getItemCount() = news.size
-
     }
 }
