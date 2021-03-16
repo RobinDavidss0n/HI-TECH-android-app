@@ -95,7 +95,7 @@ class EventsFragment : Fragment() {
             eventRepository.listenForEventChanges { result, list ->
                 when (result) {
                     "successful" -> {
-                        events.postValue(list)
+                        events.postValue(list.asReversed())
                     }
                     "internalError" -> {
                         //notify user about error

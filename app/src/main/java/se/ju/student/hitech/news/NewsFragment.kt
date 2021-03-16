@@ -89,7 +89,7 @@ class NewsFragment : Fragment() {
             newsRepository.listenForNewsChanges { result, list ->
                 when (result) {
                     "successful" -> {
-                        news.postValue(list)
+                        news.postValue(list.asReversed())
                     }
                     "internalError" -> {
                         //notify user about error
