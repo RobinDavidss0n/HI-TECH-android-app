@@ -199,8 +199,7 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-
+    
     private fun showReportProblemAlert() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report_problem, null)
 
@@ -236,7 +235,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
         }
     }
-
 
     fun changeToFragment(fragment_tag: String) {
         currentFragmentShowing = fragment_tag
