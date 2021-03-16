@@ -3,6 +3,7 @@ package se.ju.student.hitech.news
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -48,9 +49,9 @@ class NewsFragment : Fragment() {
         super.onStart()
         loggedIn = userRepository.checkIfLoggedIn()
 
-        if(loggedIn){
+        if (loggedIn) {
             binding.fabCreateNewPost.visibility = VISIBLE
-        } else{
+        } else {
             binding.fabCreateNewPost.visibility = GONE
         }
     }
@@ -80,14 +81,11 @@ class NewsFragment : Fragment() {
         binding.swipeRefreshNews.setOnRefreshListener {
             loggedIn = userRepository.checkIfLoggedIn()
 
-            if(loggedIn){
+            if (loggedIn) {
                 binding.fabCreateNewPost.visibility = VISIBLE
-            } else{
+            } else {
                 binding.fabCreateNewPost.visibility = GONE
             }
-
-            newsRepository.loadChangesInNewsData()
-            binding.rvRecyclerView.adapter?.notifyDataSetChanged()
 
             binding.swipeRefreshNews.isRefreshing = false
         }
@@ -100,18 +98,35 @@ class NewsFragment : Fragment() {
 
     class NewsViewModel : ViewModel() {
         var news = MutableLiveData<List<Novelty>>()
-        // ta bort någonting för stunden - värde isRemoving
-        // didRemoveSuccessful
 
         init {
-            newsRepository.loadChangesInNewsData()
-            // get all news data - complete listener
-            // en till funktion för lyssnare - listenfornewschanges - callback varje gång något ändras
-            val fetchedNews = newsRepository.getAllNews()
-            news.postValue(fetchedNews)
+
+         /*   newsRepository.loadAllNewsData{ result, list ->
+                when(result){
+                    "successful" -> {
+                        news.postValue(list)
+                    }
+                    "internalError" -> {
+                        //notify user about error
+                        Log.d("Error fireStore", "Error loading news list from fireStore")
+                    }
+                }
+
+            }   */
+
+            newsRepository.listenForNewsChanges { result, list ->
+                when (result) {
+                    "successful" -> {
+                        news.postValue(list)
+                    }
+                    "internalError" -> {
+                        //notify user about error
+                        Log.d("Error fireStore", "Error loading news list from fireStore")
+                    }
+                }
+            }
         }
     }
-
 
     class NewsViewHolder(val binding: CardNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -167,7 +182,8 @@ class NewsFragment : Fragment() {
                             R.id.menu_edit -> {
                                 (holder.itemView.context as MainActivity).showClickedNovelty(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
-                                    TAG_FRAGMENT_UPDATE_NOVELTY)
+                                    TAG_FRAGMENT_UPDATE_NOVELTY
+                                )
                             }
                         }
                         true
@@ -180,5 +196,6 @@ class NewsFragment : Fragment() {
         }
 
         override fun getItemCount() = news.size
+
     }
 }

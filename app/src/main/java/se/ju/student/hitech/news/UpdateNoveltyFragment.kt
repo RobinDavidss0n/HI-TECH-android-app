@@ -83,11 +83,7 @@ class UpdateNoveltyFragment : Fragment() {
             newsRepository.updateNovelty(title!!.text.toString(), content!!.text.toString(), noveltyId)
 
             if (checked) {
-                if (createNotification(
-                        title.text.toString(),
-                        notificationContent?.text.toString()
-                    )
-                ) {
+                if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                 } else {
                     (context as MainActivity).makeToast("Failed to create notification")

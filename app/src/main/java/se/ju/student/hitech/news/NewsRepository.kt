@@ -13,82 +13,81 @@ import kotlin.collections.List as List
 class NewsRepository {
 
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var newsList = mutableListOf<Novelty>()
+    private var latestId: Int = 0
 
-    companion object{
+    companion object {
         val newsRepository = NewsRepository()
     }
 
     fun addNovelty(title: String, content: String): Task<Void> {
 
         val novelty = HashMap<String, Any>()
-        sortNewsList()
         novelty["title"] = title
         novelty["content"] = content
         novelty["id"] = when {
-            newsList.count() == 0 -> 1
-            else -> newsList.first().id + 1
+            latestId == 0 -> 1
+            else -> latestId + 1
         }
 
+        latestId += 1
         return db.collection("news").document(novelty["id"].toString()).set(novelty)
     }
 
-    fun getAllNews(): List<Novelty> {
-        return newsList
-    }
+    fun listenForNewsChanges(
+        callback: (String, MutableList<Novelty>) -> Unit
+    ) {
+        db.collection("news").orderBy("id")
+            .addSnapshotListener { querySnapshot, error ->
 
-    fun loadChangesInNewsData(): ListenerRegistration{ // callback{
-        return db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
+                if (error != null) {
+                    Log.w("Messages listener error ", error)
+                    callback("internalError", mutableListOf(Novelty()))
+                } else {
+                    val currentNewsList = mutableListOf<Novelty>()
+                    if (querySnapshot != null) {
 
-            if (e != null) {
-                Log.w(TAG, "Failed to load news", e)
-                return@addSnapshotListener
-            }
-            if (snapshot != null) {
-                for (dc in snapshot.documentChanges) {
-                    val novelty = dc.document.toObject(Novelty::class.java)
-                    when (dc.type) {
-                        // callback och skickar in ändrat dokument
-                        DocumentChange.Type.ADDED -> added(novelty)
-                        DocumentChange.Type.MODIFIED -> modified(novelty)
-                        DocumentChange.Type.REMOVED -> removed(novelty)
+                        for (dc in querySnapshot.documentChanges) {
+                            val novelty = dc.document.toObject(Novelty::class.java)
+                            when (dc.type) {
+                                DocumentChange.Type.ADDED -> currentNewsList.add(novelty)
+                                DocumentChange.Type.REMOVED -> currentNewsList.remove(novelty)
+                                DocumentChange.Type.MODIFIED -> {
+                                    // TODO
+                                }
+                            }
+                        }
                     }
+                    callback("successful", currentNewsList)
                 }
             }
+    }
+
+    fun loadAllNewsData(
+        callback: (String, MutableList<Novelty>) -> Unit
+    ) {
+        db.collection("news").orderBy("id").get().addOnSuccessListener { snapshot ->
+            if (snapshot.isEmpty) {
+                callback("notFound", mutableListOf(Novelty()))
+            } else {
+                snapshot.documents.forEach { DocumentSnapshot ->
+                    val currentNewsList = mutableListOf<Novelty>()
+                    val novelty = DocumentSnapshot.toObject(Novelty::class.java)!!
+                    currentNewsList.add(novelty)
+                    callback("successful", currentNewsList)
+                }
+            }
+
+        }.addOnFailureListener { error ->
+            Log.w("Get user info database error", error)
+            //callback("internalError", Novelty())
         }
     }
 
-    private fun added(novelty: Novelty) {
-        if (!newsList.contains(novelty)) {
-            newsList.add(novelty)
-        }
+    fun deleteNovelty(id: Int) {
+        db.collection("news").document(id.toString()).delete()
     }
 
-    private fun modified(novelty: Novelty) {
-        val item = newsList.find { it.id == novelty.id }
-        val index = newsList.indexOf(item)
-        Log.d("index", index.toString())
-        newsList[index] = novelty
-    }
-
-    private fun removed(novelty: Novelty) {
-        if (newsList.contains(novelty)) {
-            newsList.remove(novelty)
-        }
-    }
-
-    fun deleteNovelty(id: Int): Task<Void> {
-        return db.collection("news").document(id.toString()).delete()
-
-    }
-
-    private fun sortNewsList() {
-        newsList.sortByDescending { novelty ->
-            novelty.id
-        }
-    }
-
-    fun updateNovelty(newTitle : String, newContent : String, id : Int) {
+    fun updateNovelty(newTitle: String, newContent: String, id: Int) {
         val novelty = hashMapOf(
             "title" to newTitle,
             "content" to newContent,
@@ -98,12 +97,10 @@ class NewsRepository {
     }
 
     fun getNoveltyById(id: Int): Novelty? {
-
-        for (novelty in newsList) {
-            if (novelty.id == id) {
-                return novelty
-            }
+        var novelty: Novelty? = null
+        db.collection("news").document(id.toString()).get().addOnSuccessListener {
+            novelty = it.toObject(Novelty::class.java)
         }
-        return null
+        return novelty
     }
 }

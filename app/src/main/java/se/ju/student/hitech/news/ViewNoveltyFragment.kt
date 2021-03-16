@@ -49,5 +49,4 @@ class ViewNoveltyFragment : Fragment() {
 
         return rootView
     }
-
 }
