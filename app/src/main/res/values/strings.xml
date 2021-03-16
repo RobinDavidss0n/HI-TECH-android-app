@@ -64,7 +64,8 @@
     <string name="deleteAccount">Delete account</string>
     <string name="deleteAccountConfirmation">Do you really want to delete your account? This action can not be undone.</string>
     <string name="accountDeleted">Account deleted.</string>
-
+    <string name="update_post">UPDATE POST</string>
+    <string name="report_issue">What is the issue?</string>
 
 
 </resources>

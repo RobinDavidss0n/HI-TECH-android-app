@@ -56,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:backgroundTint="#FDD609"
+        android:backgroundTint="#FEDB00"
         android:fontFamily="@font/avenir_next_bold"
         android:shadowColor="#FFFFFF"
         android:text="@string/User_page_logout"

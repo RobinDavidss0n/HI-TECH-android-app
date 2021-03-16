@@ -70,7 +70,7 @@ class EventsFragment : Fragment() {
                         adapter?.notifyDataSetChanged()
                     }
                 }
-                binding.pbEvent.visibility = GONE
+                binding.progressBar.visibility = GONE
             }
         }
 

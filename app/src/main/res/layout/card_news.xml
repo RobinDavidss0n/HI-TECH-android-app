@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/avenir_next_bold"
-            android:text="This is a sample title"
+            android:text=""
             android:textColor="@color/yellow"
             android:textSize="27sp"
             app:layout_constraintStart_toStartOf="parent"

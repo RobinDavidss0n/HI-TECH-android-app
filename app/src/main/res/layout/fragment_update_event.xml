@@ -57,7 +57,7 @@
                 android:hint="Time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_date"/>
+                app:layout_constraintTop_toBottomOf="@+id/et_date" />
 
             <EditText
                 android:id="@+id/et_location"
@@ -67,34 +67,32 @@
                 android:hint="Location"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_time"/>
+                app:layout_constraintTop_toBottomOf="@+id/et_time" />
 
             <EditText
+                android:id="@+id/et_information"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/et_information"
                 android:layout_margin="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:hint="Information about event"
-                app:layout_constraintTop_toBottomOf="@id/et_location"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_location" />
 
             <Button
                 android:id="@+id/btn_update_event"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:background="@drawable/button_background_selector"
+                android:enabled="false"
                 android:fontFamily="@font/avenir_next_bold"
                 android:padding="10dp"
                 android:text="UPDATE EVENT"
-                android:background="@drawable/button_background_selector"
                 android:textColor="@color/black"
-                android:enabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_information"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/et_information" />
 
             <Button
                 android:id="@+id/btn_update_event_back"
@@ -111,6 +109,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
@@ -120,4 +119,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
