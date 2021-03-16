@@ -22,6 +22,7 @@ import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
 import se.ju.student.hitech.databinding.ItemEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
+import se.ju.student.hitech.news.NewsRepository
 import se.ju.student.hitech.user.UserRepository
 
 class EventsFragment : Fragment() {
@@ -91,9 +92,17 @@ class EventsFragment : Fragment() {
         var events = MutableLiveData<List<Event>>()
 
         init {
-            eventRepository.loadChangesInEventsData()
-            val fetchedEvents = eventRepository.getAllEvents()
-            events.postValue(fetchedEvents)
+            eventRepository.listenForEventChanges { result, list ->
+                when (result) {
+                    "successful" -> {
+                        events.postValue(list)
+                    }
+                    "internalError" -> {
+                        //notify user about error
+                        Log.d("Error fireStore", "Error loading news list from fireStore")
+                    }
+                }
+            }
         }
     }
 

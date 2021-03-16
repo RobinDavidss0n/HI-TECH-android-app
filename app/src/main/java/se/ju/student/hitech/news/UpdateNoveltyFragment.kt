@@ -140,15 +140,13 @@ class UpdateNoveltyFragment : Fragment() {
         val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
         val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
-        var clickedNovelty: Novelty?
 
         progressBar?.visibility = VISIBLE
         newsRepository.getNoveltyById(noveltyId) { result, novelty ->
             when (result) {
                 "successful" -> {
-                    clickedNovelty = novelty
-                    title?.setText(clickedNovelty?.title)
-                    content?.setText(clickedNovelty?.content)
+                    title?.setText(novelty.title)
+                    content?.setText(novelty.content)
                     progressBar?.visibility = GONE
                 }
                 "internalError" -> {
@@ -156,6 +154,7 @@ class UpdateNoveltyFragment : Fragment() {
                     title?.setText("")
                     content?.setText("")
                     Log.d("Error fireStore", "Error loading novelty from fireStore")
+                    progressBar?.visibility = GONE
                 }
             }
         }
