@@ -4,13 +4,8 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/profile_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_circle" />
 <LinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
@@ -23,7 +18,7 @@
         android:background="@drawable/item_chat_left_background"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:text="username"
+        android:text="skjhdilchdlejkbdjkhbekjbdkjhebijk"
         android:textSize="18sp" >
     </TextView>
 

@@ -11,7 +11,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
@@ -25,7 +25,7 @@
                 android:background="@drawable/item_chat_right_background"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="text"
+                android:text="iukgrkjfhgrekjhdkjchfgrjkedhkjhfbrnkeujdhbjfhddcxsdfckjhvdjhdfbkjhcgjkdhbudghkjfhgrjkhkjfhrgjhdhfkjhgrkuhkjhrbkjjfhkjhvdbfkjhrbjhdkjdhfuhfbdjdhbfkjhbdhbuidbudffjdhbjkdhbjdhbd"
                 android:layout_gravity="right"
                 android:textSize="18sp"
                 android:textColor="@color/black">
@@ -40,16 +40,13 @@
                 android:paddingEnd="10dp"
                 android:text="18.30"
                 android:textSize="12sp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="right"
                 android:textColor="@color/white">
 
             </TextView>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_circle" />
 
 
     </LinearLayout>

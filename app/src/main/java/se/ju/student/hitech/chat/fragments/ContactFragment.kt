@@ -65,7 +65,7 @@ class ContactFragment : Fragment() {
         }
 
         binding.sendMesseage.setOnClickListener {
-
+            //binding.rvRecyclerViewMessages.scrollToPosition(binding)
             Log.d("Send message", chatRepository.getCurrentChatID())
             chatRepository.addMessage(
                 binding.messageInput.text.toString(),
@@ -110,6 +110,7 @@ class ContactFragment : Fragment() {
             }
 
         }
+
 
     }
 
@@ -159,7 +160,6 @@ class ContactFragment : Fragment() {
         override fun getItemCount() = currentMessages.size
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
             if (currentMessages[position].sentFromAdmin && UserRepository().checkIfLoggedIn()) {
                 (holder as ContactViewHolderRight).bind(position)
             } else if (!currentMessages[position].sentFromAdmin && !UserRepository().checkIfLoggedIn()) {
