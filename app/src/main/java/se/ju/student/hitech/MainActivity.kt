@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.LocusId
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,8 +36,9 @@ import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-    lateinit var updateNoveltyFragment : UpdateNoveltyFragment
+    lateinit var updateNoveltyFragment: UpdateNoveltyFragment
     lateinit var updateEventFragment: UpdateEventFragment
+    var currentFragmentShowing = ""
 
     companion object {
         const val TAG_FRAGMENT_CREATE_NEW_EVENT = "TAG_FRAGMENT_NEW_EVENT"
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_USER_PAGE = "TAG_FRAGMENT_USER_PAGE"
         const val TAG_FRAGMENT_UPDATE_EVENT = "TAG_FRAGMENT_UPDATE_EVENT"
         const val TAG_FRAGMENT_UPDATE_NOVELTY = "TAG_FRAGMENT_UPDATE_NOVELTY"
+        const val TAG_CURRENT_FRAGMENT = "TAG_CURRENT_FRAGMENT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,20 +72,24 @@ class MainActivity : AppCompatActivity() {
             updateNoveltyFragment = UpdateNoveltyFragment()
             updateEventFragment = UpdateEventFragment()
             supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
-                    .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
-                    .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
-                    .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
-                    .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                    .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
-                    .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
-                    .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
-                    .add(R.id.fragment_container, CreateNoveltyFragment(), TAG_FRAGMENT_CREATE_NOVELTY)
-                    .add(R.id.fragment_container, CreateNewEventFragment(), TAG_FRAGMENT_CREATE_NEW_EVENT)
-                    .add(R.id.fragment_container, updateEventFragment, TAG_FRAGMENT_UPDATE_EVENT)
-                    .add(R.id.fragment_container, updateNoveltyFragment, TAG_FRAGMENT_UPDATE_NOVELTY)
-                    .commitNow()
+                .beginTransaction()
+                .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
+                .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
+                .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
+                .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
+                .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
+                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
+                .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
+                .add(R.id.fragment_container, CreateNoveltyFragment(), TAG_FRAGMENT_CREATE_NOVELTY)
+                .add(
+                    R.id.fragment_container,
+                    CreateNewEventFragment(),
+                    TAG_FRAGMENT_CREATE_NEW_EVENT
+                )
+                .add(R.id.fragment_container, updateEventFragment, TAG_FRAGMENT_UPDATE_EVENT)
+                .add(R.id.fragment_container, updateNoveltyFragment, TAG_FRAGMENT_UPDATE_NOVELTY)
+                .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
 
@@ -102,6 +109,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(TAG_CURRENT_FRAGMENT, currentFragmentShowing)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        currentFragmentShowing = savedInstanceState.getString(TAG_CURRENT_FRAGMENT).toString()
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        // keep menu items unchecked when restoring state
+        when (currentFragmentShowing) {
+            TAG_FRAGMENT_ABOUT -> bottomNav.uncheckAllItems()
+            TAG_FRAGMENT_ADMIN_LOGIN -> bottomNav.uncheckAllItems()
+            TAG_USER_PAGE -> bottomNav.uncheckAllItems()
+        }
+    }
+
     fun createNotification(title: String, message: String, topic: String) {
         PushNotification(
             NotificationData(title, message),
@@ -111,11 +137,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showClickedNovelty(id : Int){
+    fun showClickedNovelty(id: Int) {
         updateNoveltyFragment.clickedNovelty(id)
     }
 
-    fun setClickedEventId(id : Int){
+    fun setClickedEventId(id: Int) {
         updateEventFragment.clickedEvent(id)
     }
 
@@ -212,6 +238,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun changeToFragment(fragment_tag: String) {
+        currentFragmentShowing = fragment_tag
         with(supportFragmentManager.beginTransaction()) {
 
             for (fragment in supportFragmentManager.fragments) {

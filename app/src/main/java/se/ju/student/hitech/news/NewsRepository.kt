@@ -37,7 +37,7 @@ class NewsRepository {
         return newsList
     }
 
-    fun loadChangesInNewsData(): ListenerRegistration {
+    fun loadChangesInNewsData(): ListenerRegistration{ // callback{
         return db.collection("news").orderBy("id").addSnapshotListener { snapshot, e ->
 
             if (e != null) {
@@ -48,6 +48,7 @@ class NewsRepository {
                 for (dc in snapshot.documentChanges) {
                     val novelty = dc.document.toObject(Novelty::class.java)
                     when (dc.type) {
+                        // callback och skickar in ändrat dokument
                         DocumentChange.Type.ADDED -> added(novelty)
                         DocumentChange.Type.MODIFIED -> modified(novelty)
                         DocumentChange.Type.REMOVED -> removed(novelty)
@@ -64,7 +65,7 @@ class NewsRepository {
     }
 
     private fun modified(novelty: Novelty) {
-        val item = newsList?.find { it.id == novelty.id }
+        val item = newsList.find { it.id == novelty.id }
         val index = newsList.indexOf(item)
         Log.d("index", index.toString())
         newsList[index] = novelty

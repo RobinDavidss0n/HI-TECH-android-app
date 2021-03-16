@@ -46,12 +46,12 @@ class NewsFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (userRepository.checkIfLoggedIn()) {
-            loggedIn = true
+        loggedIn = userRepository.checkIfLoggedIn()
+
+        if(loggedIn){
             binding.fabCreateNewPost.visibility = VISIBLE
-        } else {
+        } else{
             binding.fabCreateNewPost.visibility = GONE
-            loggedIn = false
         }
     }
 
@@ -73,23 +73,40 @@ class NewsFragment : Fragment() {
                     }
                     binding.progressBar.visibility = GONE
                 }
+
             }
         }
 
         binding.swipeRefreshNews.setOnRefreshListener {
+            loggedIn = userRepository.checkIfLoggedIn()
+
+            if(loggedIn){
+                binding.fabCreateNewPost.visibility = VISIBLE
+            } else{
+                binding.fabCreateNewPost.visibility = GONE
+            }
+
+            newsRepository.loadChangesInNewsData()
+            binding.rvRecyclerView.adapter?.notifyDataSetChanged()
+
             binding.swipeRefreshNews.isRefreshing = false
         }
 
         binding.fabCreateNewPost.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)
         }
+
     }
 
     class NewsViewModel : ViewModel() {
         var news = MutableLiveData<List<Novelty>>()
+        // ta bort någonting för stunden - värde isRemoving
+        // didRemoveSuccessful
 
         init {
             newsRepository.loadChangesInNewsData()
+            // get all news data - complete listener
+            // en till funktion för lyssnare - listenfornewschanges - callback varje gång något ändras
             val fetchedNews = newsRepository.getAllNews()
             news.postValue(fetchedNews)
         }
@@ -140,11 +157,7 @@ class NewsFragment : Fragment() {
                                         "YES"
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        newsRepository.deleteNovelty(id).addOnCompleteListener {
-                                            newsRepository.loadChangesInNewsData()
-                                            notifyDataSetChanged()
-                                        }
-
+                                        newsRepository.deleteNovelty(id)
                                     }.setNegativeButton(
                                         "NO"
                                     ) { dialog, whichButton ->
@@ -155,7 +168,6 @@ class NewsFragment : Fragment() {
                                 (holder.itemView.context as MainActivity).showClickedNovelty(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
                                     TAG_FRAGMENT_UPDATE_NOVELTY)
-                                notifyDataSetChanged()
                             }
                         }
                         true
