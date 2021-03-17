@@ -85,4 +85,5 @@
     <string name="empty_content">Content is empty</string>
     <string name="empty_notification_description">Notification description is empty</string>
     <string name="error_loading_novelty">Error loading novelty</string>
+    <string name="create_event">CREATE EVENT</string>
 </resources>
