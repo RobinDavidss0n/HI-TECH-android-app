@@ -52,51 +52,53 @@ class CreateNoveltyFragment : Fragment() {
 
             if (checked) {
                 if (verifyPostNotificationUserInputs(
-                        title.text.toString().trim(),
-                        content.text.toString().trim(),
-                        notificationContent.text.toString().trim()
+                        title.text.toString(),
+                        content.text.toString(),
+                        notificationContent.text.toString()
                     )
                 ) {
                     progressBar?.visibility = VISIBLE
+                    newsRepository.addNovelty(
+                        title.text.toString(),
+                        content.text.toString()
+                    ) { result ->
+                        when (result) {
+                            "successful" -> {
+                                progressBar.visibility = GONE
+                                createNotification(
+                                    title.text.toString(),
+                                    notificationContent.text.toString()
+                                )
+                                (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                            }
+                            "internalError" -> {
+                                progressBar?.visibility = GONE
+                                (context as MainActivity).makeToast(getString(R.string.failed_create_post))
+                            }
+                        }
+                    }
                 }
             } else {
                 if (verifyPostUserInputs(
-                        title.text.toString().trim(),
-                        content.text.toString().trim()
+                        title.text.toString(),
+                        content.text.toString()
                     )
                 ) {
                     progressBar?.visibility = VISIBLE
-                    
-                }
-            }
-
-            newsRepository.addNovelty(
-                title!!.text.toString(),
-                content!!.text.toString()
-            ) { result ->
-                when (result) {
-                    "successful" -> {
-                        if (checked) {
-                            if (createNotification(
-                                    title.text.toString(),
-                                    notificationContent?.text.toString()
-                                )
-                            ) {
-                                (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                                progressBar?.visibility = GONE
-                            } else {
-                                progressBar?.visibility = GONE
-                                (context as MainActivity).makeToast(getString(R.string.failed_create_notification))
+                    newsRepository.addNovelty(
+                        title.text.toString(),
+                        content.text.toString()
+                    ) { result ->
+                        when (result) {
+                            "successful" -> {
+                                progressBar.visibility = GONE
                                 (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                             }
-                        } else {
-                            (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                            progressBar?.visibility = GONE
+                            "internalError" -> {
+                                progressBar?.visibility = GONE
+                                (context as MainActivity).makeToast(getString(R.string.failed_create_post))
+                            }
                         }
-                    }
-                    "internalError" -> {
-                        progressBar?.visibility = GONE
-                        (context as MainActivity).makeToast(getString(R.string.failed_create_post))
                     }
                 }
             }
@@ -108,19 +110,9 @@ class CreateNoveltyFragment : Fragment() {
         }
     }
 
-    private fun createNotification(title: String, content: String): Boolean {
-        return if (title != "" && content != "") {
-            (context as MainActivity).createNotification(
-                title,
-                content,
-                TOPIC_NEWS
-            )
-            checked = false
-            true
-        } else {
-            (context as MainActivity).makeToast(getString(R.string.empty_notification))
-            false
-        }
+    private fun createNotification(title: String, content: String) {
+        (context as MainActivity).createNotification(title, content, TOPIC_NEWS)
+        checked = false
     }
 
     private fun verifyPostNotificationUserInputs(
@@ -129,23 +121,28 @@ class CreateNoveltyFragment : Fragment() {
         notificationContent: String
     ): Boolean {
         val notificationContentInputLayout =
-            view?.findViewById<TextInputLayout>(R.id.editTextNewPostNotificationContent)
-        val titleInputLayout = view?.findViewById<TextInputLayout>(R.id.editTextNewPostTitle)
-        val contentInputLayout = view?.findViewById<TextInputLayout>(R.id.editTextNewPostContent)
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostNotificationContent)
+        val titleInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostTitle)
+        val contentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostContent)
 
         notificationContentInputLayout?.error = ""
         titleInputLayout?.error = ""
         contentInputLayout?.error = ""
 
         if (title.isEmpty()) {
+            titleInputLayout?.error = "Title is empty"
             return false
         }
 
         if (content.isEmpty()) {
+            contentInputLayout?.error = "Content is empty"
             return false
         }
 
         if (notificationContent.isEmpty()) {
+            notificationContentInputLayout?.error = "Notification description is empty"
             return false
         }
 
@@ -153,17 +150,24 @@ class CreateNoveltyFragment : Fragment() {
     }
 
     private fun verifyPostUserInputs(title: String, content: String): Boolean {
-        val titleInputLayout = view?.findViewById<TextInputLayout>(R.id.editTextNewPostTitle)
-        val contentInputLayout = view?.findViewById<TextInputLayout>(R.id.editTextNewPostContent)
+        val titleInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostTitle)
+        val contentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostContent)
+        val notificationContentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostNotificationContent)
 
         titleInputLayout?.error = ""
         contentInputLayout?.error = ""
+        notificationContentInputLayout?.error = ""
 
         if (title.isEmpty()) {
+            titleInputLayout?.error = "Title is empty"
             return false
         }
 
         if (content.isEmpty()) {
+            contentInputLayout?.error = "Content is empty"
             return false
         }
 
