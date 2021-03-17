@@ -129,7 +129,6 @@ class UserLoginFragment : Fragment() {
         userRepository.userLogin(email, password) { result ->
             progressBar.visibility = View.GONE
             when (result) {
-
                 "successful" -> {
                     (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
                     (context as MainActivity).changeToFragment(MainActivity.TAG_USER_PAGE)

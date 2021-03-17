@@ -18,6 +18,7 @@ class UserRepository {
     }
 
     fun checkIfLoggedIn(): Boolean {
+        reloadUser()
         if (auth.currentUser != null) {
             return true
         }
@@ -57,8 +58,13 @@ class UserRepository {
         }
     }
 
+    private fun reloadUser() {
+        auth.currentUser?.reload()
+    }
+
     fun userLogout() {
         auth.signOut()
+        reloadUser()
     }
 
     fun createUser(
@@ -94,7 +100,7 @@ class UserRepository {
         callbackOnSuccessful: (User, String) -> Unit,
         callbackOnFailure: (String) -> Unit
     ) {
-
+        reloadUser()
         db.collection("users").document(getUserID())
             .get()
             .addOnSuccessListener { result ->
@@ -107,10 +113,8 @@ class UserRepository {
             }.addOnFailureListener { error ->
                 Log.d("Get user info database error", error.toString())
                 callbackOnFailure("internalError")
-
             }
     }
-
 
     fun updateCurrentUserInfo(
         newEmail: String,
@@ -118,7 +122,6 @@ class UserRepository {
         newRole: String,
         callback: (String) -> Unit
     ) {
-
         db.collection("users").document(getUserID())
             .update("name", newName, "role", newRole)
             .addOnSuccessListener {
@@ -132,7 +135,6 @@ class UserRepository {
             }.addOnFailureListener { error ->
                 Log.d("Update user info database error", error.toString())
                 callback("internalError")
-
             }
     }
 
