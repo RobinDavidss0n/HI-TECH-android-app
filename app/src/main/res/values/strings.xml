@@ -40,7 +40,7 @@
     <string name="invalidEmail">Not valid e-mail</string>
     <string name="passwordEmpty">Password is empty</string>
     <string name="passwordNotLongEnough">Password need to be at least 6 character long</string>
-    <string name="passwordNotMatch">Passwords dose not match</string>
+    <string name="passwordNotMatch">Passwords does not match</string>
     <string name="nameEmpty">Name is empty</string>
     <string name="roleEmpty">Role is empty</string>
     <string name="createUserSuccessful">User was created successfully!</string>
