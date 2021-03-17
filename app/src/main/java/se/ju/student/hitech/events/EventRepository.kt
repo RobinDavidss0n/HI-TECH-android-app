@@ -90,8 +90,8 @@ class EventRepository {
         }
     }
 
-    fun deleteEvent(id: Int) {
-        db.collection("events").document(id.toString()).delete()
+    fun deleteEvent(id: Int): Task<Void> {
+        return db.collection("events").document(id.toString()).delete()
     }
 
     fun updateEvent(

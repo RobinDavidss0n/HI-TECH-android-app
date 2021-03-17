@@ -142,7 +142,11 @@ class EventsFragment : Fragment() {
                                         holder.itemView.context.getString(R.string.yes)
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        eventRepository.deleteEvent(id)
+                                        eventRepository.deleteEvent(id).addOnFailureListener {
+                                            (holder.itemView.context as MainActivity).makeToast(
+                                                holder.itemView.context.getString(R.string.error_delete_event)
+                                            )
+                                        }
                                     }.setNegativeButton(
                                         holder.itemView.context.getString(R.string.no)
                                     ) { dialog, whichButton ->

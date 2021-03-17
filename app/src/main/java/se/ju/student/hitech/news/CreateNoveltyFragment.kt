@@ -1,8 +1,6 @@
 package se.ju.student.hitech.news
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -10,7 +8,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
@@ -77,6 +74,8 @@ class CreateNoveltyFragment : Fragment() {
                             }
                         }
                     }
+                } else {
+                    progressBar?.visibility = GONE
                 }
             } else {
                 if (verifyPostUserInputs(
@@ -100,6 +99,8 @@ class CreateNoveltyFragment : Fragment() {
                             }
                         }
                     }
+                } else {
+                    progressBar.visibility = GONE
                 }
             }
         }
@@ -142,7 +143,8 @@ class CreateNoveltyFragment : Fragment() {
         }
 
         if (notificationContent.isEmpty()) {
-            notificationContentInputLayout?.error = getString(R.string.empty_notification_description)
+            notificationContentInputLayout?.error =
+                getString(R.string.empty_notification_description)
             return false
         }
 

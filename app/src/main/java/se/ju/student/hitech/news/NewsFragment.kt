@@ -142,7 +142,11 @@ class NewsFragment : Fragment() {
                                         holder.itemView.context.getString(R.string.yes)
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        newsRepository.deleteNovelty(id)
+                                        newsRepository.deleteNovelty(id).addOnFailureListener {
+                                            (holder.itemView.context as MainActivity).makeToast(
+                                                holder.itemView.context.getString(R.string.error_delete_novelty)
+                                            )
+                                        }
                                     }.setNegativeButton(
                                         holder.itemView.context.getString(R.string.no)
                                     ) { dialog, whichButton ->

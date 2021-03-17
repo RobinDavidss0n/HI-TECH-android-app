@@ -79,8 +79,8 @@ class NewsRepository {
         }
     }
 
-    fun deleteNovelty(id: Int) {
-        db.collection("news").document(id.toString()).delete()
+    fun deleteNovelty(id: Int): Task<Void> {
+        return db.collection("news").document(id.toString()).delete()
     }
 
     fun updateNovelty(newTitle: String, newContent: String, id: Int): Task<Void> {

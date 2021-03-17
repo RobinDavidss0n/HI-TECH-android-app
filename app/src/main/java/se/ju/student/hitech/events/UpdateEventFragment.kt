@@ -1,8 +1,6 @@
 package se.ju.student.hitech.events
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,32 +34,35 @@ class UpdateEventFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.progressBar.visibility = GONE
-
 
         binding.btnUpdateEvent.setOnClickListener {
             binding.progressBar.visibility = VISIBLE
-            val title = binding.etEventActivity.text
-            val date = binding.etDate.text
-            val time = binding.etTime.text
-            val location = binding.etLocation.text
-            val information = binding.etInformation.text
+            val title = binding.etEventActivity.text.toString()
+            val date = binding.etDate.text.toString()
+            val time = binding.etTime.text.toString()
+            val location = binding.etLocation.text.toString()
+            val information = binding.etInformation.text.toString()
 
-            eventRepository.updateEvent(
-                title.toString(),
-                date.toString(),
-                time.toString(),
-                location.toString(),
-                information.toString(),
-                eventId
-            ).addOnSuccessListener {
-                binding.progressBar.visibility = GONE
-                (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
+            if (verifyEventUserInputs(title, date, time, location, information)) {
+                binding.progressBar.visibility = VISIBLE
+                eventRepository.updateEvent(
+                    title,
+                    date,
+                    time,
+                    location,
+                    information,
+                    eventId
+                ).addOnSuccessListener {
+                    binding.progressBar.visibility = GONE
+                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
 
-            }.addOnFailureListener {
+                }.addOnFailureListener {
+                    binding.progressBar.visibility = GONE
+                    (context as MainActivity).makeToast(getString(R.string.failed_update_event))
+                }
+            } else {
                 binding.progressBar.visibility = GONE
-                (context as MainActivity).makeToast(getString(R.string.failed_update_event))
             }
         }
 
@@ -94,6 +95,48 @@ class UpdateEventFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun verifyEventUserInputs(
+        title: String,
+        date: String,
+        time: String,
+        location: String,
+        information: String
+    ): Boolean {
+        binding.textInputLayoutUpdateEventTitle.error = ""
+        binding.textInputLayoutUpdateEventDate.error = ""
+        binding.textInputLayoutUpdateEventTime.error = ""
+        binding.textInputLayoutUpdateEventLocation.error = ""
+        binding.textInputLayoutUpdateEventInformation.error = ""
+
+        if (title.isEmpty()) {
+            binding.textInputLayoutUpdateEventTitle.error = getString(R.string.empty_title)
+            return false
+        }
+
+        if (date.isEmpty()) {
+            binding.textInputLayoutUpdateEventDate.error = getString(R.string.empty_date)
+            return false
+        }
+
+        if (time.isEmpty()) {
+            binding.textInputLayoutUpdateEventTime.error = getString(R.string.empty_time)
+            return false
+        }
+
+        if (location.isEmpty()) {
+            binding.textInputLayoutUpdateEventLocation.error = getString(R.string.empty_location)
+            return false
+        }
+
+        if (information.isEmpty()) {
+            binding.textInputLayoutUpdateEventInformation.error =
+                getString(R.string.empty_information)
+            return false
+        }
+
+        return true
     }
 }
 

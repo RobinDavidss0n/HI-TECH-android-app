@@ -1,15 +1,12 @@
 package se.ju.student.hitech.events
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.R
@@ -66,6 +63,8 @@ class CreateNewEventFragment : Fragment() {
                         }
                     }
                 }
+            } else {
+                binding.progressBar.visibility = GONE
             }
         }
 

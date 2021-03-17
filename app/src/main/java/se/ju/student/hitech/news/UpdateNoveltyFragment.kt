@@ -77,6 +77,8 @@ class UpdateNoveltyFragment : Fragment() {
                         progressBar?.visibility = GONE
                         (context as MainActivity).makeToast(getString(R.string.failed_update_post))
                     }
+                } else {
+                    progressBar.visibility = GONE
                 }
             } else {
                 if (verifyPostUserInputs(title.text.toString(), content.text.toString())) {
@@ -92,6 +94,8 @@ class UpdateNoveltyFragment : Fragment() {
                         progressBar?.visibility = GONE
                         (context as MainActivity).makeToast(getString(R.string.failed_update_post))
                     }
+                } else {
+                    progressBar.visibility = GONE
                 }
             }
         }
