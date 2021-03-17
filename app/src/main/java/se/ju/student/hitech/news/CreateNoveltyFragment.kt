@@ -13,6 +13,8 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
@@ -34,48 +36,39 @@ class CreateNoveltyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val notificationContent =
-            view.findViewById<EditText>(R.id.editTextNewPostNotificationContent)
-        val title = view.findViewById<EditText>(R.id.editTextNewPostTitle)
-        val content = view.findViewById<EditText>(R.id.editTextNewPostContent)
+            view.findViewById<TextInputEditText>(R.id.editTextNewPostNotificationContent)
+        val title = view.findViewById<TextInputEditText>(R.id.editTextNewPostTitle)
+        val content = view.findViewById<TextInputEditText>(R.id.editTextNewPostContent)
         val createNoveltyButton = view.findViewById<Button>(R.id.btn_create_news_create_post)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = GONE
-
-        title?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                createNoveltyButton?.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                createNoveltyButton?.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                createNoveltyButton?.isEnabled = title.length() > 0 && content?.length()!! > 0
-            }
-        })
-
-        content?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                createNoveltyButton?.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                createNoveltyButton?.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                createNoveltyButton?.isEnabled = content.length() > 0 && title?.length()!! > 0
-            }
-        })
 
         view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
             onCheckBoxClicked(it)
         }
 
         createNoveltyButton?.setOnClickListener {
-            progressBar?.visibility = VISIBLE
+
+            if (checked) {
+                if (verifyPostNotificationUserInputs(
+                        title.text.toString().trim(),
+                        content.text.toString().trim(),
+                        notificationContent.text.toString().trim()
+                    )
+                ) {
+                    progressBar?.visibility = VISIBLE
+                }
+            } else {
+                if (verifyPostUserInputs(
+                        title.text.toString().trim(),
+                        content.text.toString().trim()
+                    )
+                ) {
+                    progressBar?.visibility = VISIBLE
+                    
+                }
+            }
 
             newsRepository.addNovelty(
                 title!!.text.toString(),
@@ -128,6 +121,53 @@ class CreateNoveltyFragment : Fragment() {
             (context as MainActivity).makeToast(getString(R.string.empty_notification))
             false
         }
+    }
+
+    private fun verifyPostNotificationUserInputs(
+        title: String,
+        content: String,
+        notificationContent: String
+    ): Boolean {
+        val notificationContentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.editTextNewPostNotificationContent)
+        val titleInputLayout = view?.findViewById<TextInputLayout>(R.id.editTextNewPostTitle)
+        val contentInputLayout = view?.findViewById<TextInputLayout>(R.id.editTextNewPostContent)
+
+        notificationContentInputLayout?.error = ""
+        titleInputLayout?.error = ""
+        contentInputLayout?.error = ""
+
+        if (title.isEmpty()) {
+            return false
+        }
+
+        if (content.isEmpty()) {
+            return false
+        }
+
+        if (notificationContent.isEmpty()) {
+            return false
+        }
+
+        return true
+    }
+
+    private fun verifyPostUserInputs(title: String, content: String): Boolean {
+        val titleInputLayout = view?.findViewById<TextInputLayout>(R.id.editTextNewPostTitle)
+        val contentInputLayout = view?.findViewById<TextInputLayout>(R.id.editTextNewPostContent)
+
+        titleInputLayout?.error = ""
+        contentInputLayout?.error = ""
+
+        if (title.isEmpty()) {
+            return false
+        }
+
+        if (content.isEmpty()) {
+            return false
+        }
+
+        return true
     }
 
     fun onCheckBoxClicked(view: View) {
