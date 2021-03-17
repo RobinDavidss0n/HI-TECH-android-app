@@ -27,11 +27,12 @@ class NewsRepository {
                     novelty["content"] = content
                     novelty["id"] = latestId + 1
 
-                    db.collection("news").document(novelty["id"].toString()).set(novelty).addOnCompleteListener {
-                        callback("successful")
-                    }.addOnFailureListener{
-                        callback("internalError")
-                    }
+                    db.collection("news").document(novelty["id"].toString()).set(novelty)
+                        .addOnCompleteListener {
+                            callback("successful")
+                        }.addOnFailureListener {
+                            callback("internalError")
+                        }
                 }
             }
         }

@@ -9,15 +9,12 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.R
-import se.ju.student.hitech.databinding.FragmentCreateEventBinding
 import se.ju.student.hitech.databinding.FragmentUpdateEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
-import se.ju.student.hitech.news.NewsRepository
 
 class UpdateEventFragment : Fragment() {
 
@@ -55,7 +52,6 @@ class UpdateEventFragment : Fragment() {
                 binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.etDate.addTextChangedListener(object : TextWatcher {
@@ -71,7 +67,6 @@ class UpdateEventFragment : Fragment() {
                 binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.etTime.addTextChangedListener(object : TextWatcher {
@@ -81,14 +76,12 @@ class UpdateEventFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnUpdateEvent.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.etLocation.addTextChangedListener(object : TextWatcher {
@@ -98,14 +91,12 @@ class UpdateEventFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnUpdateEvent.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.etInformation.addTextChangedListener(object : TextWatcher {
@@ -115,14 +106,12 @@ class UpdateEventFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.btnUpdateEvent.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
                 binding.btnUpdateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.btnUpdateEvent.setOnClickListener {
@@ -178,9 +167,7 @@ class UpdateEventFragment : Fragment() {
                     binding.progressBar.visibility = GONE
                 }
             }
-
         }
-
     }
 }
 

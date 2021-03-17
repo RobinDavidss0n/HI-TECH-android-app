@@ -50,7 +50,6 @@ class CreateNewEventFragment : Fragment() {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.etDate.addTextChangedListener(object : TextWatcher {
@@ -66,7 +65,6 @@ class CreateNewEventFragment : Fragment() {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.etTime.addTextChangedListener(object : TextWatcher {
@@ -82,7 +80,6 @@ class CreateNewEventFragment : Fragment() {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.etLocation.addTextChangedListener(object : TextWatcher {
@@ -98,7 +95,6 @@ class CreateNewEventFragment : Fragment() {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.etInformation.addTextChangedListener(object : TextWatcher {
@@ -114,7 +110,6 @@ class CreateNewEventFragment : Fragment() {
                 binding.btnCreateEvent.isEnabled =
                     binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
             }
-
         })
 
         binding.btnCreateEvent.setOnClickListener {

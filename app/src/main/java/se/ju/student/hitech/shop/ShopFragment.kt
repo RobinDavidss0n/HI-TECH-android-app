@@ -10,12 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import se.ju.student.hitech.databinding.FragmentShopBinding
 import se.ju.student.hitech.databinding.GridItemViewBinding
 
@@ -35,7 +32,6 @@ class ShopFragment : Fragment() {
     ) = FragmentShopBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,10 +55,8 @@ class ShopFragment : Fragment() {
 
                     binding.progressbarShop.visibility = View.GONE
                 }
-
             }
         }
-
     }
 
     private fun openNewTabWindow(urls: String, context: ShopFragment) {
@@ -80,15 +74,10 @@ class ShopFragment : Fragment() {
         var shopRepository = ShopRepository()
 
         init {
-            viewModelScope.launch(Dispatchers.IO) {
-
-                shopRepository.loadShopImages(shopItems) { fetchedImages, shopItems ->
-                    shopItems.postValue(fetchedImages)
-                }
-
+            shopRepository.loadShopImages(shopItems) { fetchedImages, shopItems ->
+                shopItems.postValue(fetchedImages)
             }
         }
-
     }
 
     class ShopViewHolder(val binding: GridItemViewBinding) : RecyclerView.ViewHolder(binding.root)

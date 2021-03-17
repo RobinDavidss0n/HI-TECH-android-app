@@ -53,7 +53,6 @@ class UpdateNoveltyFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateNoveltyButton?.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -73,7 +72,6 @@ class UpdateNoveltyFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 updateNoveltyButton?.isEnabled = content.length() > 0 && title?.length()!! > 0
             }
-
         })
 
         view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
@@ -89,7 +87,11 @@ class UpdateNoveltyFragment : Fragment() {
                 noveltyId
             ).addOnSuccessListener {
                 if (checked) {
-                    if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
+                    if (createNotification(
+                            title.text.toString(),
+                            notificationContent?.text.toString()
+                        )
+                    ) {
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                         progressBar?.visibility = GONE
                     } else {
@@ -98,8 +100,8 @@ class UpdateNoveltyFragment : Fragment() {
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                     }
                 } else {
-                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                     progressBar?.visibility = GONE
+                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                 }
             }.addOnFailureListener {
                 progressBar?.visibility = GONE

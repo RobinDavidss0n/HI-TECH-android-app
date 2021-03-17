@@ -51,7 +51,7 @@
     <string name="yes">Yes</string>
     <string name="no">NO</string>
     <string name="resetConfirmed">A reset link was sent to </string>
-    <string name="emailNotFound">No user is tied to this email, pleas use a correct email.</string>
+    <string name="emailNotFound">No user is tied to this email, please use a correct email.</string>
     <string name="invalidPassword">Wrong password, try again.</string>
     <string name="emailNotVerified">Check your email to verify your account.</string>
     <string name="loginSuccessful">Login successful!</string>
@@ -76,5 +76,4 @@
     <string name="failed_create_notification">Failed to create notification</string>
     <string name="empty_notification">Notification fields can\'t be empty</string>
     <string name="report_bug_email_subject">Report bug - HI TECH Android application</string>
-
 </resources>

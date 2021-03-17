@@ -63,7 +63,6 @@ class NewsFragment : Fragment() {
                     }
                     binding.progressBar.visibility = GONE
                 }
-
             }
         }
 
@@ -79,7 +78,6 @@ class NewsFragment : Fragment() {
         binding.fabCreateNewPost.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)
         }
-
     }
 
     class NewsViewModel : ViewModel() {

@@ -3,7 +3,6 @@ package se.ju.student.hitech.news
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -50,7 +49,6 @@ class CreateNoveltyFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 createNoveltyButton?.isEnabled = count > 0
-
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -70,7 +68,6 @@ class CreateNoveltyFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 createNoveltyButton?.isEnabled = content.length() > 0 && title?.length()!! > 0
             }
-
         })
 
         view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
@@ -80,11 +77,18 @@ class CreateNoveltyFragment : Fragment() {
         createNoveltyButton?.setOnClickListener {
             progressBar?.visibility = VISIBLE
 
-            newsRepository.addNovelty(title!!.text.toString(), content!!.text.toString()){ result ->
-                when(result){
+            newsRepository.addNovelty(
+                title!!.text.toString(),
+                content!!.text.toString()
+            ) { result ->
+                when (result) {
                     "successful" -> {
                         if (checked) {
-                            if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
+                            if (createNotification(
+                                    title.text.toString(),
+                                    notificationContent?.text.toString()
+                                )
+                            ) {
                                 (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                                 progressBar?.visibility = GONE
                             } else {
@@ -92,7 +96,7 @@ class CreateNoveltyFragment : Fragment() {
                                 (context as MainActivity).makeToast(getString(R.string.failed_create_notification))
                                 (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                             }
-                        } else{
+                        } else {
                             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                             progressBar?.visibility = GONE
                         }

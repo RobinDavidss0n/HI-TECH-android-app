@@ -14,7 +14,7 @@ import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
-class AdminLoginFragment : Fragment() {
+class UserLoginFragment : Fragment() {
 
     lateinit var progressBar: ProgressBar
 
@@ -35,7 +35,7 @@ class AdminLoginFragment : Fragment() {
             view?.findViewById<TextInputEditText>(R.id.admin_login_passwordTextInputEditText)
         val loginButton = view?.findViewById<Button>(R.id.admin_login_loginButton)
 
-        progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)!!
+        progressBar = view?.findViewById(R.id.admin_login_progressBar)!!
 
         loginButton?.setOnClickListener {
             userRepository.userLogout()
@@ -47,7 +47,6 @@ class AdminLoginFragment : Fragment() {
                 progressBar.visibility = View.VISIBLE
                 userLogin(emailInput?.text.toString().trim(), passwordInput?.text.toString())
             }
-
         }
 
         val register = view?.findViewById<TextView>(R.id.admin_login_register)

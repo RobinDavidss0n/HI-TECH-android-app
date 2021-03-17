@@ -132,6 +132,5 @@ class RegisterUserFragment : Fragment() {
                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
             }
         }
-
     }
 }

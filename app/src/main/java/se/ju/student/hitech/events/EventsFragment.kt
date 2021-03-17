@@ -152,7 +152,8 @@ class EventsFragment : Fragment() {
                             R.id.menu_edit -> {
                                 (holder.itemView.context as MainActivity).setClickedEventId(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
-                                    TAG_FRAGMENT_UPDATE_EVENT)
+                                    TAG_FRAGMENT_UPDATE_EVENT
+                                )
                             }
                         }
                         true

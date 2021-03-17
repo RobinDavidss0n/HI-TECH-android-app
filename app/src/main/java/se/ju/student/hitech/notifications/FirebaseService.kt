@@ -3,7 +3,6 @@ package se.ju.student.hitech.notifications
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
-import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.Context
@@ -18,11 +17,10 @@ import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
 import kotlin.random.Random
 
-private const val CHANNEL_ID = "notification_channel"
-
 class FirebaseService : FirebaseMessagingService() {
 
     companion object{
+        private const val CHANNEL_ID = "notification_channel"
         var sharedPref: SharedPreferences? = null
 
         var token: String?
