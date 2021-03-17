@@ -1,8 +1,8 @@
 package se.ju.student.hitech.chat.fragments
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,17 +17,18 @@ import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
 import se.ju.student.hitech.UserRepository
-import se.ju.student.hitech.chat.Chat
 import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.databinding.FragmentContactBinding
-import se.ju.student.hitech.databinding.ItemChatRightBinding
-import se.ju.student.hitech.databinding.ItemUserChatBinding
 import se.ju.student.hitech.handlers.convertTimeToStringHourMinutesFormat
 
 class ContactFragment : Fragment() {
-    lateinit var binding: FragmentContactBinding
+    private lateinit var binding: FragmentContactBinding
     private val viewModel: ContactViewModel by viewModels()
     private lateinit var chatRepository: ChatRepository
+    private lateinit var userRepository: UserRepository
+    private lateinit var messagesAdapter: ContactAdapter
+    private lateinit var currentChatID: String
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,9 +43,12 @@ class ContactFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         //binding.progressBarActiveChats.visibility = View.VISIBLE
         chatRepository = ChatRepository()
+        userRepository = UserRepository()
+        currentChatID = chatRepository.getCurrentChatID()
 
         binding.rvRecyclerViewMessages.apply {
             layoutManager = LinearLayoutManager(context)
+
         }
 
         viewModel.currentMessages.observe(viewLifecycleOwner) {
@@ -56,61 +60,299 @@ class ContactFragment : Fragment() {
                     binding.rvRecyclerViewMessages.apply {
                         adapter = ContactAdapter(context, it)
                         adapter?.notifyDataSetChanged()
+                        messagesAdapter = adapter as ContactAdapter
                     }
                 }
-
+            }
+            viewModel.currentMessages.value?.let { it1 ->
+                binding.rvRecyclerViewMessages.scrollToPosition(it1.size - 1)
             }
 
-            //binding.progressBarActiveChats.visibility = View.GONE
+
         }
 
+        loadAllMessagesAndUpdateIfChanged()
+        setText()
+
         binding.sendMesseage.setOnClickListener {
-            //binding.rvRecyclerViewMessages.scrollToPosition(binding)
-            Log.d("Send message", chatRepository.getCurrentChatID())
-            chatRepository.addMessage(
-                binding.messageInput.text.toString(),
-                UserRepository().checkIfLoggedIn(),
-                chatRepository.getCurrentChatID()
-            ) { result ->
-                when (result) {
-                    "successful" -> {
-                        binding.messageInput.text.clear()
-                        Log.d("FireStore", "Message sent.")
+            sendMessage()
+        }
+
+        binding.leaveOrJoinChat.setOnClickListener {
+            leaveOrJoinChat()
+        }
+
+        binding.closeChat.setOnClickListener {
+            closeChat()
+        }
+
+    }
+
+    private fun closeChat() {
+        AlertDialog.Builder(context as MainActivity)
+            .setTitle("Close chat")
+            .setMessage("Do you want to close the chat?")
+            .setPositiveButton(
+                "Yes"
+
+            ) { _, _ ->
+                binding.progressbarContact.visibility = View.VISIBLE
+                chatRepository.closeChat(currentChatID) { result ->
+                    when (result) {
+
+                        "successful" -> {
+                            userRepository.removeChatFromUser(currentChatID) { it2 ->
+                                when (it2) {
+                                    "successful" -> {
+                                        (context as MainActivity).changeToFragment(
+                                            MainActivity.TAG_FRAGMENT_CONTACT_ADMIN_VIEW
+                                        )
+                                    }
+                                    "internalError" -> (context as MainActivity).makeToast("error")
+                                }
+                                binding.progressbarContact.visibility = View.GONE
+                            }
+                        }
+
+                        "internalError" -> {
+                            binding.progressbarContact.visibility = View.GONE
+                            (context as MainActivity).makeToast("error")
+                        }
+
                     }
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+
+
                 }
+            }
+            .setNegativeButton(
+                "NO"
+            ) { _, _ ->
+                //Don't delete
+            }
+            .show()
+    }
+
+
+    private fun leaveOrJoinChat() {
+
+        chatRepository.isChatOccupied(currentChatID) { result ->
+            when (result) {
+                "false" -> {
+                    AlertDialog.Builder(context as MainActivity)
+                        .setTitle("Join chat")
+                        .setMessage("Do you want to join the chat?")
+                        .setPositiveButton(
+                            "Yes"
+
+                        ) { _, _ ->
+                            binding.progressbarContact.visibility = View.VISIBLE
+                            userRepository.getUsername(userRepository.getUserID()) { result, username ->
+                                when (result) {
+                                    "successful" -> {
+                                        chatRepository.addAdminToChat(
+                                            userRepository.getUserID(),
+                                            username,
+                                            currentChatID
+                                        ) {
+                                            when (it) {
+                                                "successful" -> {
+
+                                                    setText()
+                                                    userRepository.addChatToUser(
+                                                            currentChatID
+                                                            ) { it2 ->
+                                                        when (it2) {
+                                                            "successful" -> {
+                                                                setText()
+                                                            }
+                                                            "internalError" -> (context as MainActivity).makeToast(
+                                                                "error"
+                                                            )
+                                                        }
+                                                        binding.progressbarContact.visibility =
+                                                            View.GONE
+                                                    }
+                                                }
+
+
+
+                                                "internalError" -> {
+                                                    binding.progressbarContact.visibility =
+                                                        View.GONE
+                                                    (context as MainActivity).makeToast("error")
+                                                }
+
+                                            }
+
+
+                                        }
+                                    }
+                                    "internalError" -> {
+                                        binding.progressbarContact.visibility = View.GONE
+                                        (context as MainActivity).makeToast("error")
+                                    }
+                                }
+
+                            }
+
+
+                        }
+                        .setNegativeButton(
+                            "NO"
+                        ) { _, _ ->
+                            //Don't delete
+                        }
+                        .show()
+
+                }
+                "true" -> {
+                    AlertDialog.Builder(context as MainActivity)
+                        .setTitle("Leave chat")
+                        .setMessage("Do you want to leave the chat?")
+                        .setPositiveButton(
+                            "Yes"
+
+                        ) { _, _ ->
+                            binding.progressbarContact.visibility = View.VISIBLE
+                            chatRepository.removeAdminFromChat(currentChatID) {
+                                when (it) {
+                                    "successful" -> userRepository.removeChatFromUser(currentChatID) { it2 ->
+                                        when (it2) {
+                                            "successful" -> {
+                                                (context as MainActivity).changeToFragment(
+                                                    MainActivity.TAG_FRAGMENT_CONTACT_ADMIN_VIEW
+                                                )
+                                            }
+                                            "internalError" -> (context as MainActivity).makeToast("error")
+                                        }
+                                        binding.progressbarContact.visibility = View.GONE
+                                    }
+
+                                    "internalError" -> {
+                                        binding.progressbarContact.visibility = View.GONE
+                                        (context as MainActivity).makeToast("error")
+                                    }
+
+                                }
+
+                            }
+                        }
+                        .setNegativeButton(
+                            "NO"
+                        ) { _, _ ->
+                            //Don't delete
+                        }
+                        .show()
+                }
+                "internalError" -> {
+                    (context as MainActivity).makeToast("error")
+                    binding.progressbarContact.visibility = View.GONE
+                }
+
             }
         }
 
 
     }
 
+    private fun setText() {
+        chatRepository.getChatWithChatID(currentChatID) { result, chat ->
+            when (result) {
+                "successful" -> {
+                    if (userRepository.checkIfLoggedIn()) {
+                        binding.chattingWith.text = "Chatting With ${chat.localUsername}"
 
-    class ContactViewModel : ViewModel() {
-        var chatRepository = ChatRepository()
-        var currentMessages = MutableLiveData<List<se.ju.student.hitech.chat.Message>>()
-        var chatID = chatRepository.getCurrentChatID()
 
-        init {
-            Log.d("WORKING", "IT'S WORKING")
-            Log.d("chatID", chatID)
-            if (chatID != "noChatSelected") {
-                chatRepository.loadAllMessagesFromSpecificChatAndUpdateIfChanged(chatID) { result, list ->
-                    when (result) {
-                        "successful" -> {
-                            currentMessages.postValue(list)
+                        chatRepository.checkIfCurrentAdminIsInChatOrIfEmpty(
+                            userRepository.getUserID(),
+                            currentChatID
+                        ) {
+                            when (it) {
+                                "true" ->{
+                                    binding.leaveOrJoinChat.visibility = View.VISIBLE
+                                    binding.leaveOrJoinChat.text = "Leave chat"
+                                    binding.closeChat.visibility = View.VISIBLE
+                                }
+                                "empty" -> {
+                                    binding.leaveOrJoinChat.visibility = View.VISIBLE
+                                    binding.leaveOrJoinChat.text = "Join chat"
+                                }
+                                "false" -> {
+                                    binding.currentAdmin.visibility = View.VISIBLE
+                                    binding.currentAdmin.text =
+                                        "${chat.adminUsername} is currently chatting here."
+                                    binding.sendMessageLayout.visibility = View.GONE
+                                }
+                                "internalError" -> (context as MainActivity).makeToast("error")
+                            }
                         }
-                        "internalError" -> {
-                            //notify user about error
-                            Log.d("Error fireStore", "Error loading activeChat list from fireStore")
-                        }
+
+                    } else {
+                        binding.chattingWith.text = "Chatting With ${chat.adminUsername}"
                     }
 
+
+                }
+
+                "internalError" -> (context as MainActivity).makeToast("error")
+
+            }
+        }
+    }
+
+    private fun loadAllMessagesAndUpdateIfChanged() {
+
+        if (currentChatID != "noChatSelected") {
+            chatRepository.loadAllMessagesFromSpecificChatAndUpdateIfChanged(currentChatID) { result, firstFullList, newMessage ->
+                when (result) {
+                    "firstSetup" -> {
+                        viewModel.messageList = firstFullList
+                        viewModel.currentMessages.postValue(viewModel.messageList)
+
+                    }
+                    "newData" -> {
+                        viewModel.messageList.add(newMessage)
+                        messagesAdapter.notifyDataSetChanged()
+                    }
+                    "internalError" -> {
+                        //notify user about error
+                        Log.d("Error fireStore", "Error loading activeChat list from fireStore")
+                    }
+                }
+                binding.progressbarContact.visibility = View.GONE
+
+            }
+        }
+    }
+
+    private fun sendMessage() {
+        val msg = binding.messageInput.text.toString()
+
+        if (msg.isNotEmpty()) {
+            chatRepository.addMessage(
+                msg,
+                UserRepository().checkIfLoggedIn(),
+                currentChatID
+            ) { result ->
+                when (result) {
+                    "successful" -> {
+                        //messagesAdapter.notifyDataSetChanged()
+                        binding.messageInput.text.clear()
+                        viewModel.currentMessages.value?.let { it1 ->
+                            binding.rvRecyclerViewMessages.scrollToPosition(it1.size - 1)
+                        }
+                        Log.d("FireStore", "Message sent.")
+                    }
+                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
                 }
             }
-
         }
+    }
 
+    class ContactViewModel : ViewModel() {
+        var currentMessages = MutableLiveData<List<se.ju.student.hitech.chat.Message>>()
+
+        lateinit var messageList: MutableList<se.ju.student.hitech.chat.Message>
 
     }
 

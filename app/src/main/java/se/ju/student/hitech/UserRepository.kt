@@ -1,24 +1,23 @@
 package se.ju.student.hitech
 
 import android.util.Log
-import android.view.View
 import com.google.common.base.Strings
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.UserDataReader
-import kotlin.math.sign
 
 class UserRepository {
 
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
+
+
     fun getUserID(): String {
         return auth.currentUser?.uid.toString()
     }
+
+
 
     fun checkIfLoggedIn(): Boolean {
         if (auth.currentUser != null) {
@@ -27,14 +26,30 @@ class UserRepository {
         return false
     }
 
+    fun getUsername(adminID: String, callback: (String, String) -> Unit) {
+        db.collection("users").document(getUserID())
+            .get()
+            .addOnSuccessListener { docSnap ->
+                val username = docSnap.get("name").toString()
+                callback("successful", username)
+
+            }.addOnFailureListener { error ->
+                Log.w("Get user info database error", error)
+                callback("internalError", "")
+
+            }
+    }
+
+
     fun userLogin(email: String, password: String, callback: (String) -> Unit) {
         var result: String
-        auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
-            result = when {
-                isEmailVerified() -> "successful"
-                else -> "emailNotVerified"
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+             when {
+                isEmailVerified() -> callback("successful")
+                else -> callback("emailNotVerified")
             }
-            callback(result)
+
 
         }.addOnFailureListener { error ->
             val e = error.toString()
@@ -95,7 +110,10 @@ class UserRepository {
 
     }
 
-    fun getCurrentUserInfo(callbackOnSuccessful: (User, String) -> Unit, callbackOnFailure: (String) -> Unit){
+    fun getCurrentUserInfo(
+        callbackOnSuccessful: (User, String) -> Unit,
+        callbackOnFailure: (String) -> Unit
+    ){
 
         db.collection("users").document(getUserID())
             .get()
@@ -115,7 +133,12 @@ class UserRepository {
 
 
 
-    fun updateCurrentUserInfo(newEmail: String, newName: String, newRole: String, callback: (String) -> Unit){
+    fun updateCurrentUserInfo(
+        newEmail: String,
+        newName: String,
+        newRole: String,
+        callback: (String) -> Unit
+    ){
 
         db.collection("users").document(getUserID())
             .update("name", newName, "role", newRole)
@@ -123,7 +146,7 @@ class UserRepository {
                 auth.currentUser!!.updateEmail(newEmail)
                     .addOnSuccessListener {
                         callback("successful")
-                    }.addOnFailureListener{error ->
+                    }.addOnFailureListener{ error ->
                         Log.w("Update user email error", error)
                         callback("internalError")
                     }
@@ -138,7 +161,7 @@ class UserRepository {
         auth.currentUser!!.updatePassword(newPassword)
             .addOnSuccessListener {
                 callback("successful")
-            }.addOnFailureListener{error ->
+            }.addOnFailureListener{ error ->
                 Log.w("Update user email error", error)
                 callback("internalError")
             }
@@ -168,7 +191,7 @@ class UserRepository {
                         Log.w("Delete user info database error", error)
                         callback("internalError")
                     }
-            }.addOnFailureListener{error ->
+            }.addOnFailureListener{ error ->
                 Log.w("Delete user error", error)
                 callback("internalError")
             }

@@ -10,7 +10,7 @@ class ChatRepository {
     private val timeHandler = TimeHandler()
     private lateinit var currentMessageListener: ListenerRegistration
 
-    companion object{
+    companion object {
         private var currentChatID = "noChatSelected"
     }
 
@@ -19,11 +19,16 @@ class ChatRepository {
         return currentChatID
     }
 
-    fun setCurrentChatID(newChatID: String){
+    fun setCurrentChatID(newChatID: String) {
         currentChatID = newChatID
     }
 
-    fun createNewChat(localAndroidID: String, localUsername:String,case: String, callback: (String) -> Unit) {
+    fun createNewChat(
+        localAndroidID: String,
+        localUsername: String,
+        case: String,
+        callback: (String, String) -> Unit
+    ) {
 
         val chat = hashMapOf(
             "androidIDUser" to localAndroidID,
@@ -33,7 +38,8 @@ class ChatRepository {
             "isActive" to true,
             "lastSentMsg" to "",
             "localUsername" to localUsername,
-            "chatID" to ""
+            "chatID" to "",
+            "adminUsername" to ""
         )
 
         db.collection("chats")
@@ -44,28 +50,94 @@ class ChatRepository {
                 db.collection("chats").document(id)
                     .update("chatID", id)
                     .addOnSuccessListener {
-                        callback("successful")
+                        callback("successful", id)
                     }.addOnFailureListener { error ->
                         Log.w("Create new chat error", error)
-                        callback("internalError")
+                        callback("internalError", "")
 
                     }
             }.addOnFailureListener { error ->
                 Log.w("Create new chat error", error)
+                callback("internalError", "")
+
+            }
+    }
+
+    fun addAdminToChat(adminID: String, adminUsername: String, chatID: String, callback: (String) -> Unit) {
+
+
+        db.collection("chats").document(chatID)
+            .update("activeAdmin", adminID, "adminUsername", adminUsername)
+            .addOnSuccessListener {
+                callback("successful")
+            }.addOnFailureListener { error ->
+                Log.w("Add admin to chat database error", error)
                 callback("internalError")
 
             }
     }
 
-    fun addAdminToChat(adminID: String, chatID: String, callback: (String) -> Unit) {
+    fun isChatOccupied(chatID: String, callback: (String) -> Unit) {
 
         db.collection("chats").document(chatID)
-            .update("activeAdmin", adminID)
-            .addOnSuccessListener {
-                callback("successful")
+            .get()
+            .addOnSuccessListener { docSnap ->
+                val activeAdmin = docSnap.get("activeAdmin")
+                if (activeAdmin == ""){
+                    callback("false")
+                }else{
+                    callback("true")
+                }
+
             }.addOnFailureListener { error ->
                 Log.w("Add user to chat database error", error)
                 callback("internalError")
+
+            }
+    }
+
+    fun checkIfCurrentAdminIsInChatOrIfEmpty(adminID: String ,chatID: String, callback: (String) -> Unit) {
+
+        db.collection("chats").document(chatID)
+            .get()
+            .addOnSuccessListener { docSnap ->
+                when (docSnap.get("activeAdmin")) {
+                    adminID -> {
+                        callback("true")
+                    }
+                    "" -> {
+                        callback("empty")
+                    }
+                    else -> {
+                        callback("false")
+                    }
+                }
+
+            }.addOnFailureListener { error ->
+                Log.w("Add user to chat database error", error)
+                callback("internalError")
+
+            }
+    }
+
+    fun getChatWithChatID(chatID: String, callback: (String, Chat) -> Unit) {
+
+        db.collection("chats").document(chatID)
+            .get()
+            .addOnSuccessListener { docSnap ->
+                if (docSnap.exists()) {
+                    val chat = docSnap.toObject(Chat::class.java)
+                    if (chat != null){
+                        callback("successful", chat)
+                    }
+
+                } else {
+                    callback("notFound", Chat())
+
+                }
+            }.addOnFailureListener { error ->
+                Log.w("Add user to chat database error", error)
+                callback("internalError", Chat())
 
             }
     }
@@ -79,7 +151,6 @@ class ChatRepository {
             }.addOnFailureListener { error ->
                 Log.w("Remove user from chat database error", error)
                 callback("internalError")
-
             }
     }
 
@@ -96,7 +167,12 @@ class ChatRepository {
             .add(msg)
             .addOnSuccessListener {
                 db.collection("chats").document(chatID)
-                    .update("lastUpdated", timeHandler.getLocalZoneTimestampInSeconds(), "lastSentMsg", msgText)
+                    .update(
+                        "lastUpdated",
+                        timeHandler.getLocalZoneTimestampInSeconds(),
+                        "lastSentMsg",
+                        msgText
+                    )
                     .addOnSuccessListener {
                         callback("successful")
                     }.addOnFailureListener { error ->
@@ -111,7 +187,7 @@ class ChatRepository {
             }
     }
 
-    fun deactivateChat(chatID: String, callback: (String) -> Unit) {
+    fun closeChat(chatID: String, callback: (String) -> Unit) {
 
         db.collection("chats").document(chatID)
             .update(
@@ -120,7 +196,7 @@ class ChatRepository {
                 "activeAdmin", ""
             )
             .addOnSuccessListener {
-
+                callback("successful")
             }.addOnFailureListener { error ->
                 Log.w("Deactivate chat database error", error)
                 callback("internalError")
@@ -143,8 +219,8 @@ class ChatRepository {
                     callback("notFound", "")
                 } else {
 
-                   snapshot.documents.forEach { docSnap ->
-                       callback("successful", docSnap.id)
+                    snapshot.documents.forEach { docSnap ->
+                        callback("successful", docSnap.id)
                     }
                 }
 
@@ -157,8 +233,10 @@ class ChatRepository {
     }
 
     //Tar bort den specifika chatt meddelande lyssnaren
-    fun removeCurrentSpecificChatMessagesLoader(){
-        currentMessageListener.remove()
+    fun removeCurrentSpecificChatMessagesLoader() {
+        if (this::currentMessageListener.isInitialized){
+            currentMessageListener.remove()
+        }
 
     }
 
@@ -170,25 +248,41 @@ class ChatRepository {
 
     fun loadAllMessagesFromSpecificChatAndUpdateIfChanged(
         chatID: String,
-        callback: (String,  MutableList<Message>) -> Unit
+        callback: (String, MutableList<Message>, Message) -> Unit
     ) {
-        currentMessageListener =  db.collection("chats").document(chatID).collection("messages")
+        var firstCall = true
+        currentMessageListener = db.collection("chats").document(chatID).collection("messages")
             .orderBy("timestamp")
-            .addSnapshotListener {  querySnapshot, error ->
+            .addSnapshotListener { querySnapshot, error ->
 
                 if (error != null) {
                     Log.w("Messages listener error ", error)
-                    callback("internalError", mutableListOf(Message()))
-                }else{
-                    val currentChatMessagesList = mutableListOf<Message>()
-                    querySnapshot!!.documents.forEach { doc ->
-                        val message = doc.toObject(Message::class.java)!!
-                        currentChatMessagesList.add(message)
+                    callback("internalError", mutableListOf(Message()), Message())
+                } else {
+                    if (firstCall) {
+                        firstCall = false
+                        val currentChatMessagesList = mutableListOf<Message>()
+                        querySnapshot!!.documents.forEach { doc ->
+                            val message = doc.toObject(Message::class.java)
+                            if (message != null){
+                                currentChatMessagesList.add(message)
+                            }
+                        }
+                        callback("firstSetup", currentChatMessagesList, Message())
+
+                    } else {
+                        querySnapshot!!.documentChanges.forEach { dc ->
+                            when (dc.type) {
+                                DocumentChange.Type.ADDED -> {
+                                    val message = dc.document.toObject(Message::class.java)
+
+                                        callback("newData", mutableListOf(Message()), message)
+                                }
+                                else -> Log.d("Message update", "Message update but not a new message.")
+                            }
+                        }
                     }
 
-
-
-                    callback("successful", currentChatMessagesList)
                 }
 
             }
@@ -217,8 +311,9 @@ class ChatRepository {
     //En callback funktion som laddar in alla aktiva chattar till "activeChatsList" och uppdaterar listan och gör en ny callback när ändringar görs i databasen
     //Hur man anropar funktionen finns under funktionen
     fun loadAllActiveChatsAndUpdateIfChanged(
-        callback: (String,  MutableList<Chat>) -> Unit
+        callback: (String, MutableList<Chat>) -> Unit
     ) {
+
         db.collection("chats")
             .whereEqualTo("isActive", true)
             .orderBy("lastUpdated", Query.Direction.DESCENDING)
@@ -227,17 +322,19 @@ class ChatRepository {
                 if (error != null) {
                     Log.w("Messages listener error ", error)
                     callback("internalError", mutableListOf(Chat()))
-                }else{
+                } else {
+
                     val activeChatsList = mutableListOf<Chat>()
-                    querySnapshot?.documents?.forEach { doc ->
-                        val chat = doc.toObject(Chat::class.java)!!
-                        activeChatsList.add(chat)
+                    querySnapshot!!.documents.forEach { doc ->
+                        val chat = doc.toObject(Chat::class.java)
+                        if (chat != null){
+                            activeChatsList.add(chat)
+                        }
+
                     }
-
-
                     callback("successful", activeChatsList)
-                }
 
+                }
 
 
             }
@@ -338,7 +435,7 @@ class ChatRepository {
                             }
                         }
                     }
-                }else{
+                } else {
                     firstCall = false
                 }
 

@@ -61,7 +61,6 @@ class ActiveChatsFragmentAdmin : Fragment() {
             binding.progressBarActiveChats.visibility = GONE
         }
 
-
     }
 
 

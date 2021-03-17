@@ -82,9 +82,11 @@ class ContactCaseFragment : Fragment() {
             Settings.Secure.ANDROID_ID
         )
         val localUsername = binding.localUsername.text.toString()
-        chatRepository.createNewChat(androidID,localUsername,case) { result ->
+        chatRepository.createNewChat(androidID,localUsername,case) { result, chatID ->
             when (result) {
                 "successful" -> {
+                    ChatRepository().setCurrentChatID(chatID)
+                    (context as MainActivity).reloadContactFragment()
                     (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
                 }
                 "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")

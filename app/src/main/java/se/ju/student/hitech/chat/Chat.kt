@@ -9,6 +9,7 @@ data class Chat (
     var lastUpdated: Long? = null,
     var activeAdmin: String? = null,
     var isActive: Boolean? = null,
-    var chatID: String? = null
+    var chatID: String? = null,
+    var adminUsername: String? = null
 )
 
