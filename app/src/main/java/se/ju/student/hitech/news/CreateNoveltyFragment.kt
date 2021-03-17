@@ -90,6 +90,7 @@ class CreateNoveltyFragment : Fragment() {
                             } else {
                                 progressBar?.visibility = GONE
                                 (context as MainActivity).makeToast(getString(R.string.failed_create_notification))
+                                (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                             }
                         } else{
                             (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)

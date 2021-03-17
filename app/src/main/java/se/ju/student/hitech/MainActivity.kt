@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-    
+
     private fun showReportProblemAlert() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report_problem, null)
 
