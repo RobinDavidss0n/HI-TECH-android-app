@@ -81,4 +81,8 @@
     <string name="location">Location</string>
     <string name="information_about_event">Information about event</string>
     <string name="update_event">UPDATE EVENT</string>
+    <string name="empty_title">Title is empty</string>
+    <string name="empty_content">Content is empty</string>
+    <string name="empty_notification_description">Notification description is empty</string>
+    <string name="error_loading_novelty">Error loading novelty</string>
 </resources>

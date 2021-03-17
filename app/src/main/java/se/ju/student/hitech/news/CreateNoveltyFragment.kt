@@ -132,17 +132,17 @@ class CreateNoveltyFragment : Fragment() {
         contentInputLayout?.error = ""
 
         if (title.isEmpty()) {
-            titleInputLayout?.error = "Title is empty"
+            titleInputLayout?.error = getString(R.string.empty_title)
             return false
         }
 
         if (content.isEmpty()) {
-            contentInputLayout?.error = "Content is empty"
+            contentInputLayout?.error = getString(R.string.empty_content)
             return false
         }
 
         if (notificationContent.isEmpty()) {
-            notificationContentInputLayout?.error = "Notification description is empty"
+            notificationContentInputLayout?.error = getString(R.string.empty_notification_description)
             return false
         }
 
@@ -162,12 +162,12 @@ class CreateNoveltyFragment : Fragment() {
         notificationContentInputLayout?.error = ""
 
         if (title.isEmpty()) {
-            titleInputLayout?.error = "Title is empty"
+            titleInputLayout?.error = getString(R.string.empty_title)
             return false
         }
 
         if (content.isEmpty()) {
-            contentInputLayout?.error = "Content is empty"
+            contentInputLayout?.error = getString(R.string.empty_content)
             return false
         }
 

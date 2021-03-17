@@ -1,8 +1,6 @@
 package se.ju.student.hitech.news
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +12,8 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
@@ -37,42 +37,16 @@ class UpdateNoveltyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val notificationContent =
-            view.findViewById<EditText>(R.id.editTextUpdatePostNotificationContent)
-        val title = view.findViewById<EditText>(R.id.editTextUpdatePostTitle)
-        val content = view.findViewById<EditText>(R.id.editTextUpdatePostContent)
+            view.findViewById<TextInputEditText>(R.id.editTextUpdatePostNotificationContent)
+        val title = view.findViewById<TextInputEditText>(R.id.editTextUpdatePostTitle)
+        val content = view.findViewById<TextInputEditText>(R.id.editTextUpdatePostContent)
         val updateNoveltyButton = view.findViewById<Button>(R.id.btn_update_post)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         title?.setText("")
         content?.setText("")
 
-        title?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                updateNoveltyButton?.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                updateNoveltyButton?.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                updateNoveltyButton?.isEnabled = title.length() > 0 && content?.length()!! > 0
-            }
-        })
-
-        content?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                updateNoveltyButton?.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                updateNoveltyButton?.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                updateNoveltyButton?.isEnabled = content.length() > 0 && title?.length()!! > 0
-            }
-        })
+        progressBar.visibility = GONE
 
         view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
             onCheckBoxClicked(it)
@@ -80,32 +54,45 @@ class UpdateNoveltyFragment : Fragment() {
 
         updateNoveltyButton?.setOnClickListener {
 
-            progressBar?.visibility = VISIBLE
-            newsRepository.updateNovelty(
-                title!!.text.toString(),
-                content!!.text.toString(),
-                noveltyId
-            ).addOnSuccessListener {
-                if (checked) {
-                    if (createNotification(
+            if (checked) {
+                if (verifyPostNotificationUserInputs(
+                        title.text.toString(),
+                        content.text.toString(),
+                        notificationContent.text.toString()
+                    )
+                ) {
+                    progressBar.visibility = VISIBLE
+                    newsRepository.updateNovelty(
+                        title.text.toString(),
+                        content.text.toString(),
+                        noveltyId
+                    ).addOnSuccessListener {
+                        progressBar?.visibility = GONE
+                        createNotification(
                             title.text.toString(),
-                            notificationContent?.text.toString()
+                            notificationContent.text.toString()
                         )
-                    ) {
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                    }.addOnFailureListener {
                         progressBar?.visibility = GONE
-                    } else {
-                        progressBar?.visibility = GONE
-                        (context as MainActivity).makeToast(getString(R.string.failed_create_notification))
-                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                        (context as MainActivity).makeToast(getString(R.string.failed_update_post))
                     }
-                } else {
-                    progressBar?.visibility = GONE
-                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
                 }
-            }.addOnFailureListener {
-                progressBar?.visibility = GONE
-                (context as MainActivity).makeToast(getString(R.string.failed_update_post))
+            } else {
+                if (verifyPostUserInputs(title.text.toString(), content.text.toString())) {
+                    progressBar.visibility = VISIBLE
+                    newsRepository.updateNovelty(
+                        title.text.toString(),
+                        content.text.toString(),
+                        noveltyId
+                    ).addOnSuccessListener {
+                        progressBar?.visibility = GONE
+                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                    }.addOnFailureListener {
+                        progressBar?.visibility = GONE
+                        (context as MainActivity).makeToast(getString(R.string.failed_update_post))
+                    }
+                }
             }
         }
 
@@ -115,20 +102,69 @@ class UpdateNoveltyFragment : Fragment() {
         }
     }
 
+    private fun createNotification(title: String, content: String) {
+        (context as MainActivity).createNotification(title, content, TOPIC_NEWS)
+        checked = false
+    }
 
-    private fun createNotification(title: String, content: String): Boolean {
-        return if (title != "" && content != "") {
-            (context as MainActivity).createNotification(
-                title,
-                content,
-                TOPIC_NEWS
-            )
-            checked = false
-            true
-        } else {
-            (context as MainActivity).makeToast(getString(R.string.empty_notification))
-            false
+    private fun verifyPostNotificationUserInputs(
+        title: String,
+        content: String,
+        notificationContent: String
+    ): Boolean {
+        val notificationContentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_updatePostNotificationContent)
+        val titleInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_updatePostTitle)
+        val contentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_updatePostContent)
+
+        notificationContentInputLayout?.error = ""
+        titleInputLayout?.error = ""
+        contentInputLayout?.error = ""
+
+        if (title.isEmpty()) {
+            titleInputLayout?.error = getString(R.string.empty_title)
+            return false
         }
+
+        if (content.isEmpty()) {
+            contentInputLayout?.error = getString(R.string.empty_content)
+            return false
+        }
+
+        if (notificationContent.isEmpty()) {
+            notificationContentInputLayout?.error =
+                getString(R.string.empty_notification_description)
+            return false
+        }
+
+        return true
+    }
+
+    private fun verifyPostUserInputs(title: String, content: String): Boolean {
+        val notificationContentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_updatePostNotificationContent)
+        val titleInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_updatePostTitle)
+        val contentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_updatePostContent)
+
+        titleInputLayout?.error = ""
+        contentInputLayout?.error = ""
+        notificationContentInputLayout?.error = ""
+
+        if (title.isEmpty()) {
+            titleInputLayout?.error = getString(R.string.empty_title)
+            return false
+        }
+
+        if (content.isEmpty()) {
+            contentInputLayout?.error = getString(R.string.empty_content)
+            return false
+        }
+
+        return true
     }
 
     fun onCheckBoxClicked(view: View) {
@@ -154,6 +190,7 @@ class UpdateNoveltyFragment : Fragment() {
                 }
                 "internalError" -> {
                     //notify user about error
+                    (context as MainActivity).makeToast(getString(R.string.error_loading_novelty))
                     title?.setText("")
                     content?.setText("")
                     Log.d("Error fireStore", "Error loading novelty from fireStore")
