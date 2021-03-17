@@ -37,14 +37,15 @@ class UserPageFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         super.onCreate(savedInstanceState)
 
-        emailInput = view?.findViewById<TextInputEditText>(R.id.user_page_emailTextInputEditText)!!
-        nameInput = view?.findViewById<TextInputEditText>(R.id.user_page_nameTextInputEditText)!!
-        roleInput = view?.findViewById<TextInputEditText>(R.id.user_page_roleTextInputEditText)!!
-        progressBar = view?.findViewById<ProgressBar>(R.id.user_page_progressBar)!!
+        emailInput = view?.findViewById(R.id.user_page_emailTextInputEditText)!!
+        nameInput = view?.findViewById(R.id.user_page_nameTextInputEditText)!!
+        roleInput = view?.findViewById(R.id.user_page_roleTextInputEditText)!!
+        progressBar = view?.findViewById(R.id.user_page_progressBar)!!
         val logoutButton = view?.findViewById<Button>(R.id.user_page_logoutButton)
         val updateButton = view?.findViewById<Button>(R.id.user_page_updateButton)
         val resetPassword = view?.findViewById<TextView>(R.id.user_page_resetPasswordText)
         val deleteAccount = view?.findViewById<TextView>(R.id.user_page_deleteAccountText)
+        val register = view?.findViewById<TextView>(R.id.admin_login_register)
 
         setUserInfoIntoInputFields()
 
@@ -85,6 +86,10 @@ class UserPageFragment : Fragment() {
         }
         deleteAccount?.setOnClickListener {
             deleteAccount()
+        }
+
+        register?.setOnClickListener {
+            (context as MainActivity).changeToFragment(MainActivity.TAG_REGISTER_USER)
         }
     }
 

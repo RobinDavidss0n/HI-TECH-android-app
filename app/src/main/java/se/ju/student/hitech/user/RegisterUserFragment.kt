@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_USER_PAGE
 import se.ju.student.hitech.R
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
@@ -38,7 +39,11 @@ class RegisterUserFragment : Fragment() {
         val name = view?.findViewById<TextInputEditText>(R.id.register_user_nameTextInputEditText)
         val role = view?.findViewById<TextInputEditText>(R.id.register_user_roleTextInputEditText)
         val registerButton = view?.findViewById<Button>(R.id.register_user_registerButton)
+        val backButton = view?.findViewById<Button>(R.id.register_user_goBackButton)
 
+        backButton?.setOnClickListener {
+            (context as MainActivity).changeToFragment(TAG_USER_PAGE)
+        }
 
         registerButton?.setOnClickListener {
             if (verifyRegisterUserInputs(
@@ -81,7 +86,6 @@ class RegisterUserFragment : Fragment() {
         roleInputLayout?.error = ""
 
         if (email.isEmpty()) {
-
             emailInputLayout?.error = getString(R.string.emailEmpty)
             return false
         }

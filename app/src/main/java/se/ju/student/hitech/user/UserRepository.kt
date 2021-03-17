@@ -18,7 +18,6 @@ class UserRepository {
     }
 
     fun checkIfLoggedIn(): Boolean {
-        reloadUser()
         if (auth.currentUser != null) {
             return true
         }
@@ -86,7 +85,6 @@ class UserRepository {
                     }.addOnFailureListener { error ->
                         Log.d("Insert user into database error", error.toString())
                         callback("internalError")
-
                     }
 
             }.addOnFailureListener { error ->

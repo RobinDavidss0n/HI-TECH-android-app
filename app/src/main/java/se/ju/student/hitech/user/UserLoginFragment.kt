@@ -23,7 +23,7 @@ class UserLoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.fragment_admin_login, container, false)
+        inflater.inflate(R.layout.fragment_user_login, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -47,12 +47,6 @@ class UserLoginFragment : Fragment() {
                 progressBar.visibility = View.VISIBLE
                 userLogin(emailInput?.text.toString().trim(), passwordInput?.text.toString())
             }
-        }
-
-        val register = view?.findViewById<TextView>(R.id.admin_login_register)
-
-        register?.setOnClickListener {
-            (context as MainActivity).changeToFragment(MainActivity.TAG_REGISTER_USER)
         }
 
         val forgotPassword = view?.findViewById<TextView>(R.id.admin_login_forgotPassword)
