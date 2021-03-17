@@ -31,7 +31,6 @@
     <string name="user_page_update">Update</string>
     <string name="user_page_deleteAccount">Delete Account</string>
     <string name="new_post">NEW POST</string>
-    <string name="title">Title</string>
     <string name="content">Content</string>
     <string name="notification_description">Notification description</string>
     <string name="create_notification">Create notification</string>
@@ -76,4 +75,10 @@
     <string name="failed_create_notification">Failed to create notification</string>
     <string name="empty_notification">Notification fields can\'t be empty</string>
     <string name="report_bug_email_subject">Report bug - HI TECH Android application</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="location">Location</string>
+    <string name="information_about_event">Information about event</string>
+    <string name="update_event">UPDATE EVENT</string>
 </resources>
