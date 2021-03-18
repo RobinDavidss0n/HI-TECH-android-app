@@ -20,9 +20,11 @@ import kotlinx.coroutines.launch
 import se.ju.student.hitech.events.CreateNewEventFragment
 import se.ju.student.hitech.events.EventsFragment
 import se.ju.student.hitech.events.UpdateEventFragment
+import se.ju.student.hitech.events.UpdateEventFragment.Companion.updateEventFragment
 import se.ju.student.hitech.news.CreateNoveltyFragment
 import se.ju.student.hitech.news.NewsFragment
 import se.ju.student.hitech.news.UpdateNoveltyFragment
+import se.ju.student.hitech.news.UpdateNoveltyFragment.Companion.updateNoveltyFragment
 import se.ju.student.hitech.notifications.NotificationData
 import se.ju.student.hitech.notifications.PushNotification
 import se.ju.student.hitech.notifications.RetrofitInstance
@@ -34,8 +36,6 @@ import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-    var updateNoveltyFragment = UpdateNoveltyFragment()
-    var updateEventFragment = UpdateEventFragment()
     var currentFragmentShowing = ""
 
     companion object {
@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setTheme(R.style.Theme_HITECH)
         setContentView(R.layout.activity_main)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -121,6 +122,15 @@ class MainActivity : AppCompatActivity() {
             TAG_FRAGMENT_ABOUT -> bottomNav.uncheckAllItems()
             TAG_FRAGMENT_ADMIN_LOGIN -> bottomNav.uncheckAllItems()
             TAG_USER_PAGE -> bottomNav.uncheckAllItems()
+        }
+
+        with(supportFragmentManager.beginTransaction()) {
+
+            for (fragment in supportFragmentManager.fragments) {
+                detach(fragment)
+                attach(fragment)
+            }
+            commit()
         }
     }
 
@@ -251,17 +261,6 @@ class MainActivity : AppCompatActivity() {
             fragmentTransaction.detach(fragment)
             fragmentTransaction.attach(fragment)
             fragmentTransaction.commit()
-        }
-    }
-
-    fun reloadAllFragments() {
-        with(supportFragmentManager.beginTransaction()) {
-
-            for (fragment in supportFragmentManager.fragments) {
-                detach(fragment)
-                attach(fragment)
-            }
-            commit()
         }
     }
 

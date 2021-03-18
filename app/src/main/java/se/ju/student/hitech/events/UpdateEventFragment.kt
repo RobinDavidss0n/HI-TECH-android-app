@@ -21,7 +21,7 @@ class UpdateEventFragment : Fragment() {
     private var eventId = 0
 
     companion object {
-        fun newInstance() = UpdateEventFragment()
+        val updateEventFragment = UpdateEventFragment()
     }
 
     override fun onCreateView(
@@ -31,6 +31,11 @@ class UpdateEventFragment : Fragment() {
     ) = FragmentUpdateEventBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

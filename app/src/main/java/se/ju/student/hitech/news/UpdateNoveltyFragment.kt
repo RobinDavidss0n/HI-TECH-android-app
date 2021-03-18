@@ -24,12 +24,21 @@ class UpdateNoveltyFragment : Fragment() {
     private var checked = false
     private var noveltyId = 0
 
+    companion object {
+        val updateNoveltyFragment = UpdateNoveltyFragment()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_update_novelty, container, false)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
