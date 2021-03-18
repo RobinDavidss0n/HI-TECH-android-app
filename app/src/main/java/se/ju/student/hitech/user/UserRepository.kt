@@ -63,7 +63,6 @@ class UserRepository {
 
     fun userLogout() {
         auth.signOut()
-        reloadUser()
     }
 
     fun createUser(

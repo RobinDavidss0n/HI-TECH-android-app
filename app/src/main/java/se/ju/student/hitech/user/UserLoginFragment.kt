@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
+import se.ju.student.hitech.MainActivity.Companion.TAG_USER_PAGE
 import se.ju.student.hitech.R
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
@@ -124,7 +127,11 @@ class UserLoginFragment : Fragment() {
             when (result) {
                 "successful" -> {
                     (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
-                    (context as MainActivity).changeToFragment(MainActivity.TAG_USER_PAGE)
+                    // reload fragments where UI change when logged in
+                    (context as MainActivity).reloadFragment(TAG_USER_PAGE)
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
+                    (context as MainActivity).changeToFragment(TAG_USER_PAGE)
                 }
                 "emailNotFound" -> (context as MainActivity).makeToast(getString(R.string.emailNotFound))
                 "invalidPassword" -> (context as MainActivity).makeToast(getString(R.string.invalidPassword))

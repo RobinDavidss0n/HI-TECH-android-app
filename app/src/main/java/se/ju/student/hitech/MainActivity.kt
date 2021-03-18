@@ -246,6 +246,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun reloadFragment(fragment_tag: String) {
+        val fragment = supportFragmentManager.findFragmentByTag(fragment_tag)
+        if (fragment != null) {
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.detach(fragment)
+            fragmentTransaction.attach(fragment)
+            fragmentTransaction.commit()
+        }
+    }
+
     fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
