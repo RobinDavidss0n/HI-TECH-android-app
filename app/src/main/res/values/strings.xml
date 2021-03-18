@@ -4,7 +4,7 @@
     <string name="events">EVENTS</string>
     <string name="shop">HI SHOP</string>
     <string name="contact">CONTACT</string>
-    <string name="problem">Report bug</string>
+    <string name="problem">Report app problem</string>
     <string name="login">Admin log in</string>
     <string name="about">About HI TECH</string>
     <string name="about_us">ABOUT US</string>
@@ -47,7 +47,7 @@
     <string name="internalError">Something went wrong, check your internet connection and try again.</string>
     <string name="resetPasswordInputError">Write your email here and press *Forgot password?* again.</string>
     <string name="resetPasswordConfirmation">"Do you want a reset link to be sent to </string>
-    <string name="yes">Yes</string>
+    <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="resetConfirmed">A reset link was sent to </string>
     <string name="emailNotFound">No user is tied to this email, please use a correct email.</string>
@@ -74,7 +74,7 @@
     <string name="failed_update_post">Failed to update post</string>
     <string name="failed_create_notification">Failed to create notification</string>
     <string name="empty_notification">Notification fields can\'t be empty</string>
-    <string name="report_bug_email_subject">Report bug - HI TECH Android application</string>
+    <string name="report_bug_email_subject">Report problem - HI TECH Android application</string>
     <string name="title">Title</string>
     <string name="date">Date</string>
     <string name="time">Time</string>

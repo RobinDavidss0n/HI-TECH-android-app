@@ -9,7 +9,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
@@ -183,8 +182,8 @@ class UpdateNoveltyFragment : Fragment() {
     fun clickedNovelty(id: Int) {
         noveltyId = id
 
-        val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
-        val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
+        val title = view?.findViewById<TextInputEditText>(R.id.editTextUpdatePostTitle)
+        val content = view?.findViewById<TextInputEditText>(R.id.editTextUpdatePostContent)
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = VISIBLE

@@ -6,13 +6,16 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.MainActivity.Companion.TAG_USER_PAGE
 import se.ju.student.hitech.R
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
@@ -65,10 +68,12 @@ class UserLoginFragment : Fragment() {
 
         if (email.isEmpty()) {
             progressBar.visibility = View.GONE
-            view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)?.error = getString(R.string.resetPasswordInputError)
+            view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)?.error =
+                getString(R.string.resetPasswordInputError)
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             progressBar.visibility = View.GONE
-            view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)?.error = getString(R.string.invalidEmail)
+            view?.findViewById<TextInputLayout>(R.id.admin_login_emailTextInputLayout)?.error =
+                getString(R.string.invalidEmail)
         } else {
             AlertDialog.Builder(context as MainActivity)
                 .setTitle(getString(R.string.user_page_resetPassword))
@@ -80,7 +85,7 @@ class UserLoginFragment : Fragment() {
                     userRepository.sendPasswordReset(email) { result ->
                         progressBar.visibility = View.GONE
                         when (result) {
-                            "successful" -> (context as MainActivity).makeToast(getString(R.string.resetConfirmed)+" $email!")
+                            "successful" -> (context as MainActivity).makeToast(getString(R.string.resetConfirmed) + " $email!")
                             "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
                         }
                     }
@@ -128,9 +133,9 @@ class UserLoginFragment : Fragment() {
                 "successful" -> {
                     (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
                     // reload fragments where UI changes when logged in
-                    (context as MainActivity).reloadFragment(TAG_USER_PAGE)
-                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
+                    (context as MainActivity).reloadFragment(TAG_USER_PAGE)
                     (context as MainActivity).changeToFragment(TAG_USER_PAGE)
                 }
                 "emailNotFound" -> (context as MainActivity).makeToast(getString(R.string.emailNotFound))

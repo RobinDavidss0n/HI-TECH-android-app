@@ -10,13 +10,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentUpdateEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
 class UpdateEventFragment : Fragment() {
 
-    lateinit var binding: FragmentUpdateEventBinding
+    private lateinit var binding: FragmentUpdateEventBinding
     private var eventId = 0
 
     companion object {

@@ -96,9 +96,11 @@ class NewsRepository {
         db.collection("news").document(id.toString()).get().addOnSuccessListener {
             val novelty = it.toObject(Novelty::class.java)
             if (novelty != null) {
+                Log.d("success loading novelty", it.toString())
                 callback("successful", novelty)
             }
         }.addOnFailureListener {
+            Log.d("error get novelty by id", it.toString())
             callback("internalError", Novelty())
         }
     }

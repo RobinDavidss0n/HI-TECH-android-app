@@ -16,6 +16,8 @@ import android.widget.TextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.R
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
@@ -49,15 +51,17 @@ class UserPageFragment : Fragment() {
 
         setUserInfoIntoInputFields()
 
-        userRepository.getCurrentUserInfo({ _, email ->
-            // HI TECH Board admin account that can't be deleted or updated by mistake
-            if (email == "hitechstyrelsen@gmail.com") {
-                deleteAccount?.visibility = GONE
-                updateButton?.visibility = GONE
-            }
-        }, {
-            (context as MainActivity).makeToast(getString(R.string.errorAccessData))
-        })
+        if (userRepository.checkIfLoggedIn()) {
+            userRepository.getCurrentUserInfo({ _, email ->
+                // HI TECH Board admin account that can't be deleted or updated by mistake
+                if (email == "hitechstyrelsen@gmail.com") {
+                    deleteAccount?.visibility = GONE
+                    updateButton?.visibility = GONE
+                }
+            }, {
+                (context as MainActivity).makeToast(getString(R.string.errorAccessData))
+            })
+        }
 
         updateButton?.setOnClickListener {
             if (verifyUserInputs(
@@ -79,8 +83,8 @@ class UserPageFragment : Fragment() {
             userRepository.userLogout()
             (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
             // reload fragments where UI changes when logged out
-            (context as MainActivity).reloadFragment(MainActivity.TAG_FRAGMENT_NEWS)
-            (context as MainActivity).reloadFragment(MainActivity.TAG_FRAGMENT_EVENTS)
+            (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
+            (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
             (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
         }
 

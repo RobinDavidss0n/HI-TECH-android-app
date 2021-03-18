@@ -34,8 +34,8 @@ import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-    lateinit var updateNoveltyFragment: UpdateNoveltyFragment
-    lateinit var updateEventFragment: UpdateEventFragment
+    var updateNoveltyFragment = UpdateNoveltyFragment()
+    var updateEventFragment = UpdateEventFragment()
     var currentFragmentShowing = ""
 
     companion object {
@@ -67,8 +67,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
         if (savedInstanceState == null) {
-            updateNoveltyFragment = UpdateNoveltyFragment()
-            updateEventFragment = UpdateEventFragment()
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
@@ -253,6 +251,17 @@ class MainActivity : AppCompatActivity() {
             fragmentTransaction.detach(fragment)
             fragmentTransaction.attach(fragment)
             fragmentTransaction.commit()
+        }
+    }
+
+    fun reloadAllFragments() {
+        with(supportFragmentManager.beginTransaction()) {
+
+            for (fragment in supportFragmentManager.fragments) {
+                detach(fragment)
+                attach(fragment)
+            }
+            commit()
         }
     }
 
