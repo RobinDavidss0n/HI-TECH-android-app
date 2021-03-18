@@ -13,40 +13,39 @@
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/messageRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_gravity="end"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/item_chat_right_background"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="iukgrkjfhgrekjhdkjchfgrjkedhkjhfbrnkeujdhbjfhddcxsdfckjhvdjhdfbkjhcgjkdhbudghkjfhgrjkhkjfhrgjhdhfkjhgrkuhkjhrbkjjfhkjhvdbfkjhrbjhdkjdhfuhfbdjdhbfkjhbdhbuidbudffjdhbjkdhbjdhbd"
-                android:layout_gravity="right"
-                android:textSize="18sp"
-                android:textColor="@color/black">
-            </TextView>
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/timeRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:layout_marginLeft="70dp"
+                android:layout_marginRight="10dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="18.30"
-                android:textSize="12sp"
-                android:layout_marginRight="10dp"
-                android:layout_gravity="right"
-                android:textColor="@color/white">
+                android:textColor="@color/white"
+                android:textSize="12sp">
 
             </TextView>
         </LinearLayout>
-
 
 
     </LinearLayout>
