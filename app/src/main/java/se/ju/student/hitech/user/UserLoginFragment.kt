@@ -127,7 +127,7 @@ class UserLoginFragment : Fragment() {
             when (result) {
                 "successful" -> {
                     (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
-                    // reload fragments where UI change when logged in
+                    // reload fragments where UI changes when logged in
                     (context as MainActivity).reloadFragment(TAG_USER_PAGE)
                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
@@ -137,7 +137,6 @@ class UserLoginFragment : Fragment() {
                 "invalidPassword" -> (context as MainActivity).makeToast(getString(R.string.invalidPassword))
                 "emailNotVerified" -> (context as MainActivity).makeToast(getString(R.string.emailNotVerified))
                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
-
             }
         }
     }

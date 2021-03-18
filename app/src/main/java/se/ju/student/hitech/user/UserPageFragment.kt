@@ -78,7 +78,7 @@ class UserPageFragment : Fragment() {
         logoutButton?.setOnClickListener {
             userRepository.userLogout()
             (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
-            // reload fragments where UI change when logged out
+            // reload fragments where UI changes when logged out
             (context as MainActivity).reloadFragment(MainActivity.TAG_FRAGMENT_NEWS)
             (context as MainActivity).reloadFragment(MainActivity.TAG_FRAGMENT_EVENTS)
             (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
