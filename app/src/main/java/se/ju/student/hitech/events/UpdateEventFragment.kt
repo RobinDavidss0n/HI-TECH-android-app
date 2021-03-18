@@ -56,7 +56,11 @@ class UpdateEventFragment : Fragment() {
                 ).addOnSuccessListener {
                     binding.progressBar.visibility = GONE
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
-
+                    binding.etInformation.setText("")
+                    binding.etDate.setText("")
+                    binding.etEventActivity.setText("")
+                    binding.etTime.setText("")
+                    binding.etLocation.setText("")
                 }.addOnFailureListener {
                     binding.progressBar.visibility = GONE
                     (context as MainActivity).makeToast(getString(R.string.failed_update_event))

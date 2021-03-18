@@ -130,7 +130,7 @@
                 android:backgroundTint="#FEDB00"
                 android:fontFamily="@font/avenir_next_bold"
                 android:shadowColor="#FFFFFF"
-                android:text="@string/create_post"
+                android:text="@string/update_event"
                 android:textColor="#000000"
                 android:textColorHighlight="#615555"
                 android:textColorHint="#716666"

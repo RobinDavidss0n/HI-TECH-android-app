@@ -43,9 +43,6 @@ class UpdateNoveltyFragment : Fragment() {
         val updateNoveltyButton = view.findViewById<Button>(R.id.btn_update_post)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
-        title?.setText("")
-        content?.setText("")
-
         progressBar.visibility = GONE
 
         view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
@@ -73,6 +70,9 @@ class UpdateNoveltyFragment : Fragment() {
                             notificationContent.text.toString()
                         )
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                        title.setText("")
+                        content.setText("")
+                        notificationContent.setText("")
                     }.addOnFailureListener {
                         progressBar?.visibility = GONE
                         (context as MainActivity).makeToast(getString(R.string.failed_update_post))
@@ -90,6 +90,9 @@ class UpdateNoveltyFragment : Fragment() {
                     ).addOnSuccessListener {
                         progressBar?.visibility = GONE
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                        title.setText("")
+                        content.setText("")
+                        notificationContent.setText("")
                     }.addOnFailureListener {
                         progressBar?.visibility = GONE
                         (context as MainActivity).makeToast(getString(R.string.failed_update_post))

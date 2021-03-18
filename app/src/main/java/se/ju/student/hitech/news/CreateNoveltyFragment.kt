@@ -40,6 +40,9 @@ class CreateNoveltyFragment : Fragment() {
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = GONE
+        title?.setText("")
+        content?.setText("")
+        notificationContent?.setText("")
 
         view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
             onCheckBoxClicked(it)
@@ -67,6 +70,9 @@ class CreateNoveltyFragment : Fragment() {
                                     notificationContent.text.toString()
                                 )
                                 (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                                title.setText("")
+                                content.setText("")
+                                notificationContent.setText("")
                             }
                             "internalError" -> {
                                 progressBar?.visibility = GONE
@@ -92,6 +98,9 @@ class CreateNoveltyFragment : Fragment() {
                             "successful" -> {
                                 progressBar.visibility = GONE
                                 (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                                title.setText("")
+                                content.setText("")
+                                notificationContent.setText("")
                             }
                             "internalError" -> {
                                 progressBar?.visibility = GONE

@@ -119,7 +119,6 @@ class UserLoginFragment : Fragment() {
     }
 
     private fun userLogin(email: String, password: String) {
-
         userRepository.userLogin(email, password) { result ->
             progressBar.visibility = View.GONE
             when (result) {
