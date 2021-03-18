@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
-
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRecyclerViewMessages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/r1"
-        android:layout_marginBottom="-4dp"
         android:layout_marginTop="20dp"
-        tools:listitem="@layout/item_chat_right"/>
+        android:layout_marginBottom="-4dp"
+        tools:listitem="@layout/item_chat_right" />
 
     <RelativeLayout
         android:id="@+id/r1"
@@ -21,13 +20,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-
         <LinearLayout
             android:id="@+id/sendMessageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
 
             <EditText
                 android:id="@+id/messageInput"
@@ -37,8 +34,7 @@
                 android:layout_marginRight="3dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/avenir_next_bold"
-                android:hint="Ask something..."
+                android:hint="@string/write_something"
                 android:inputType="textShortMessage|textMultiLine"
                 android:padding="15dp"
                 android:textColor="@color/white" />
@@ -48,7 +44,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom"
-                android:layout_marginRight="3dp"
+                android:layout_marginEnd="7dp"
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/send_button_background"
                 android:src="@drawable/ic_send" />
@@ -66,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:text="Join Chat"
+            android:text="@string/join_chat"
             android:textSize="12sp"
             android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/chattingWith"
@@ -77,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:text="Close chat"
+            android:text="@string/close_chat"
             android:textSize="12sp"
             android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/chattingWith"
@@ -87,7 +83,7 @@
             android:id="@+id/chattingWith"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chatting with: Robin"
+            android:text=""
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +96,7 @@
             android:backgroundTint="#FDD609"
             android:fontFamily="@font/avenir_next_bold"
             android:shadowColor="#FFFFFF"
-            android:text="Robin is currently chatting here"
+            android:text=""
             android:textColor="#FF0000"
             android:textColorHighlight="#615555"
             android:textColorHint="#716666"

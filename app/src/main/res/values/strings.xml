@@ -32,4 +32,7 @@
     <string name="user_page_updateUserInfo">Update user info</string>
     <string name="user_page_update">Update</string>
     <string name="user_page_deleteAccount">Delete Account</string>
+    <string name="join_chat">Join Chat</string>
+    <string name="close_chat">Close chat</string>
+    <string name="write_something">Write something...</string>
 </resources>
