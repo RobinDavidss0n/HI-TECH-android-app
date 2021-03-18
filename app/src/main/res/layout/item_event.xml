@@ -8,9 +8,9 @@
         android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/avenir_next_bold"
-        android:text="date"
+        android:text=""
         android:textColor="@color/grey"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,9 +24,7 @@
         app:layout_constraintBottom_toTopOf="@id/tv_location"
         app:layout_constraintEnd_toStartOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_date"
-
-        />
+        app:layout_constraintTop_toBottomOf="@id/tv_date" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -34,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:fontFamily="@font/avenir_next_bold"
-        android:text="title"
+        android:text=""
         android:textColor="@color/yellow"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@id/ic_circle"
@@ -44,7 +42,7 @@
         android:id="@+id/tv_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="location"
+        android:text=""
         android:textColor="@color/yellow"
         android:textSize="15sp"
         app:layout_constraintEnd_toStartOf="@id/tv_time"
@@ -56,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:text="time"
+        android:text=""
         android:textColor="@color/yellow"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@id/tv_location"
@@ -66,10 +64,10 @@
         android:id="@+id/tv_information"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="information"
         android:layout_marginTop="10dp"
-        android:textColor="@color/yellow"
         android:paddingBottom="10dp"
+        android:text=""
+        android:textColor="@color/yellow"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_location" />
@@ -82,6 +80,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

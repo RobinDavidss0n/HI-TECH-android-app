@@ -1,8 +1,6 @@
 package se.ju.student.hitech.events
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -11,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentCreateEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
@@ -36,118 +35,87 @@ class CreateNewEventFragment : Fragment() {
 
         binding.progressBar.visibility = GONE
 
-        binding.etEventActivity.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
-                    binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-            }
-
-        })
-
-        binding.etDate.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
-                    binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-            }
-
-        })
-
-        binding.etTime.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
-                    binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-            }
-
-        })
-
-        binding.etLocation.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
-                    binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-            }
-
-        })
-
-        binding.etInformation.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                binding.btnCreateEvent.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnCreateEvent.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnCreateEvent.isEnabled =
-                    binding.etEventActivity.length() > 0 && binding.etLocation.length() > 0 && binding.etDate.length() > 0 && binding.etTime.length() > 0 && binding.etInformation.length() > 0
-            }
-
-        })
-
         binding.btnCreateEvent.setOnClickListener {
-            binding.progressBar.visibility = VISIBLE
 
-            val title = binding.etEventActivity.text
-            val date = binding.etDate.text
-            val time = binding.etTime.text
-            val location = binding.etLocation.text
-            val information = binding.etInformation.text
+            val title = binding.etEventActivity.text.toString()
+            val date = binding.etDate.text.toString()
+            val time = binding.etTime.text.toString()
+            val location = binding.etLocation.text.toString()
+            val information = binding.etInformation.text.toString()
 
-            eventRepository.addEvent(
-                title.toString(),
-                date.toString(),
-                time.toString(),
-                location.toString(),
-                information.toString()
-            ) { result ->
-                when (result) {
-                    "successful" -> {
-                        binding.progressBar.visibility = GONE
-                        (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
-                    }
-                    "internalError" -> {
-                        binding.progressBar.visibility = GONE
-                        (context as MainActivity).makeToast("Failed to create post")
+            if (verifyEventUserInputs(title, date, time, location, information)) {
+                binding.progressBar.visibility = VISIBLE
+                eventRepository.addEvent(
+                    title,
+                    date,
+                    time,
+                    location,
+                    information
+                ) { result ->
+                    when (result) {
+                        "successful" -> {
+                            binding.progressBar.visibility = GONE
+                            (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
+                            binding.etInformation.setText("")
+                            binding.etDate.setText("")
+                            binding.etEventActivity.setText("")
+                            binding.etTime.setText("")
+                            binding.etLocation.setText("")
+                        }
+                        "internalError" -> {
+                            binding.progressBar.visibility = GONE
+                            (context as MainActivity).makeToast(getString(R.string.failed_create_event))
+                        }
                     }
                 }
+            } else {
+                binding.progressBar.visibility = GONE
             }
-
         }
 
         binding.btnCreateEventBack.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_EVENTS)
         }
+    }
+
+    private fun verifyEventUserInputs(
+        title: String,
+        date: String,
+        time: String,
+        location: String,
+        information: String
+    ): Boolean {
+        binding.textInputLayoutNewEventTitle.error = ""
+        binding.textInputLayoutNewEventDate.error = ""
+        binding.textInputLayoutNewEventTime.error = ""
+        binding.textInputLayoutNewEventLocation.error = ""
+        binding.textInputLayoutNewEventInformation.error = ""
+
+        if (title.isEmpty()) {
+            binding.textInputLayoutNewEventTitle.error = getString(R.string.empty_title)
+            return false
+        }
+
+        if (date.isEmpty()) {
+            binding.textInputLayoutNewEventDate.error = getString(R.string.empty_date)
+            return false
+        }
+
+        if (time.isEmpty()) {
+            binding.textInputLayoutNewEventTime.error = getString(R.string.empty_time)
+            return false
+        }
+
+        if (location.isEmpty()) {
+            binding.textInputLayoutNewEventLocation.error = getString(R.string.empty_location)
+            return false
+        }
+
+        if (information.isEmpty()) {
+            binding.textInputLayoutNewEventInformation.error = getString(R.string.empty_information)
+            return false
+        }
+
+        return true
     }
 }

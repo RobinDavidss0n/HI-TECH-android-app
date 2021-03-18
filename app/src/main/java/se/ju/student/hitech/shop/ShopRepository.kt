@@ -4,7 +4,6 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
-import se.ju.student.hitech.shop.ShopItem
 
 class ShopRepository {
 
@@ -23,6 +22,5 @@ class ShopRepository {
         }.addOnFailureListener {
             Log.d(TAG, "Error getting documents: ", it)
         }
-
     }
 }

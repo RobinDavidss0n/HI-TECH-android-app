@@ -63,7 +63,6 @@ class NewsFragment : Fragment() {
                     }
                     binding.progressBar.visibility = GONE
                 }
-
             }
         }
 
@@ -79,7 +78,6 @@ class NewsFragment : Fragment() {
         binding.fabCreateNewPost.setOnClickListener {
             (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)
         }
-
     }
 
     class NewsViewModel : ViewModel() {
@@ -138,15 +136,19 @@ class NewsFragment : Fragment() {
                         when (it.itemId) {
                             R.id.menu_delete -> {
                                 AlertDialog.Builder(holder.itemView.context)
-                                    .setTitle("Delete post")
-                                    .setMessage("Do you really want to delete this post?")
+                                    .setTitle(holder.itemView.context.getString(R.string.delete_novelty))
+                                    .setMessage(holder.itemView.context.getString(R.string.delete_post_are_you_sure))
                                     .setPositiveButton(
-                                        "YES"
+                                        holder.itemView.context.getString(R.string.yes)
                                     ) { dialog, whichButton ->
                                         // delete event
-                                        newsRepository.deleteNovelty(id)
+                                        newsRepository.deleteNovelty(id).addOnFailureListener {
+                                            (holder.itemView.context as MainActivity).makeToast(
+                                                holder.itemView.context.getString(R.string.error_delete_novelty)
+                                            )
+                                        }
                                     }.setNegativeButton(
-                                        "NO"
+                                        holder.itemView.context.getString(R.string.no)
                                     ) { dialog, whichButton ->
                                         // Do not delete
                                     }.show()

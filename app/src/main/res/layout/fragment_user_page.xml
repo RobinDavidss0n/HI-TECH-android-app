@@ -56,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:backgroundTint="#FDD609"
+        android:backgroundTint="#FEDB00"
         android:fontFamily="@font/avenir_next_bold"
         android:shadowColor="#FFFFFF"
         android:text="@string/User_page_logout"
@@ -112,5 +112,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_page_resetPasswordText" />
+
+    <TextView
+        android:id="@+id/admin_login_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/admin_login_registerText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_page_deleteAccountText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

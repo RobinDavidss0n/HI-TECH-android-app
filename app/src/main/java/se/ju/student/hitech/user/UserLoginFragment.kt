@@ -11,9 +11,13 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
+import se.ju.student.hitech.MainActivity.Companion.TAG_USER_PAGE
 import se.ju.student.hitech.R
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
-class AdminLoginFragment : Fragment() {
+class UserLoginFragment : Fragment() {
 
     lateinit var progressBar: ProgressBar
 
@@ -22,7 +26,7 @@ class AdminLoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.fragment_admin_login, container, false)
+        inflater.inflate(R.layout.fragment_user_login, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -34,10 +38,10 @@ class AdminLoginFragment : Fragment() {
             view?.findViewById<TextInputEditText>(R.id.admin_login_passwordTextInputEditText)
         val loginButton = view?.findViewById<Button>(R.id.admin_login_loginButton)
 
-        progressBar = view?.findViewById<ProgressBar>(R.id.admin_login_progressBar)!!
+        progressBar = view?.findViewById(R.id.admin_login_progressBar)!!
 
         loginButton?.setOnClickListener {
-            UserRepository().userLogout()
+            userRepository.userLogout()
             if (verifyLoginInputs(
                     emailInput?.text.toString().trim(),
                     passwordInput?.text.toString()
@@ -46,13 +50,6 @@ class AdminLoginFragment : Fragment() {
                 progressBar.visibility = View.VISIBLE
                 userLogin(emailInput?.text.toString().trim(), passwordInput?.text.toString())
             }
-
-        }
-
-        val register = view?.findViewById<TextView>(R.id.admin_login_register)
-
-        register?.setOnClickListener {
-            (context as MainActivity).changeToFragment(MainActivity.TAG_REGISTER_USER)
         }
 
         val forgotPassword = view?.findViewById<TextView>(R.id.admin_login_forgotPassword)
@@ -62,8 +59,6 @@ class AdminLoginFragment : Fragment() {
             resetPassword(emailInput?.text.toString().trim())
 
         }
-
-
     }
 
     private fun resetPassword(email: String) {
@@ -82,7 +77,6 @@ class AdminLoginFragment : Fragment() {
                     getString(R.string.yes)
 
                 ) { _, _ ->
-                    val userRepository = UserRepository()
                     userRepository.sendPasswordReset(email) { result ->
                         progressBar.visibility = View.GONE
                         when (result) {
@@ -99,7 +93,6 @@ class AdminLoginFragment : Fragment() {
                 }
                 .show()
         }
-
     }
 
     private fun verifyLoginInputs(email: String, password: String): Boolean {
@@ -129,24 +122,22 @@ class AdminLoginFragment : Fragment() {
     }
 
     private fun userLogin(email: String, password: String) {
-
-        val userRepository = UserRepository()
-
         userRepository.userLogin(email, password) { result ->
             progressBar.visibility = View.GONE
             when (result) {
-
                 "successful" -> {
                     (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
-                    (context as MainActivity).changeToFragment(MainActivity.TAG_USER_PAGE)
+                    // reload fragments where UI changes when logged in
+                    (context as MainActivity).reloadFragment(TAG_USER_PAGE)
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
+                    (context as MainActivity).changeToFragment(TAG_USER_PAGE)
                 }
                 "emailNotFound" -> (context as MainActivity).makeToast(getString(R.string.emailNotFound))
                 "invalidPassword" -> (context as MainActivity).makeToast(getString(R.string.invalidPassword))
                 "emailNotVerified" -> (context as MainActivity).makeToast(getString(R.string.emailNotVerified))
                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
-
             }
         }
-
     }
 }

@@ -27,11 +27,12 @@ class NewsRepository {
                     novelty["content"] = content
                     novelty["id"] = latestId + 1
 
-                    db.collection("news").document(novelty["id"].toString()).set(novelty).addOnCompleteListener {
-                        callback("successful")
-                    }.addOnFailureListener{
-                        callback("internalError")
-                    }
+                    db.collection("news").document(novelty["id"].toString()).set(novelty)
+                        .addOnCompleteListener {
+                            callback("successful")
+                        }.addOnFailureListener {
+                            callback("internalError")
+                        }
                 }
             }
         }
@@ -78,8 +79,8 @@ class NewsRepository {
         }
     }
 
-    fun deleteNovelty(id: Int) {
-        db.collection("news").document(id.toString()).delete()
+    fun deleteNovelty(id: Int): Task<Void> {
+        return db.collection("news").document(id.toString()).delete()
     }
 
     fun updateNovelty(newTitle: String, newContent: String, id: Int): Task<Void> {

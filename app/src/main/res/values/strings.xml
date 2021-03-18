@@ -4,7 +4,7 @@
     <string name="events">EVENTS</string>
     <string name="shop">HI SHOP</string>
     <string name="contact">CONTACT</string>
-    <string name="problem">Report problem</string>
+    <string name="problem">Report bug</string>
     <string name="login">Admin log in</string>
     <string name="about">About HI TECH</string>
     <string name="about_us">ABOUT US</string>
@@ -13,7 +13,6 @@
     <string name="visit_our_website">Visit our website</string>
     <string name="send">Send</string>
     <string name="cancel">Cancel</string>
-    <string name="report_problem_subject_email">Report problem HI TECH Android application</string>
     <string name="choose_email_client">Choose email client..</string>
     <string name="order_now">PLACE AN ORDER</string>
     <string name="about_hi_shop">The HI SHOP is a small store where you can buy everything you need for epic adventures in your overall and the student culture in Jönköping. We have overalls, patches, glue, pencils, towels for the CAPS event and much more.</string>
@@ -32,7 +31,6 @@
     <string name="user_page_update">Update</string>
     <string name="user_page_deleteAccount">Delete Account</string>
     <string name="new_post">NEW POST</string>
-    <string name="title">Title</string>
     <string name="content">Content</string>
     <string name="notification_description">Notification description</string>
     <string name="create_notification">Create notification</string>
@@ -42,7 +40,7 @@
     <string name="invalidEmail">Not valid e-mail</string>
     <string name="passwordEmpty">Password is empty</string>
     <string name="passwordNotLongEnough">Password need to be at least 6 character long</string>
-    <string name="passwordNotMatch">Passwords dose not match</string>
+    <string name="passwordNotMatch">Passwords does not match</string>
     <string name="nameEmpty">Name is empty</string>
     <string name="roleEmpty">Role is empty</string>
     <string name="createUserSuccessful">User was created successfully!</string>
@@ -52,7 +50,7 @@
     <string name="yes">Yes</string>
     <string name="no">NO</string>
     <string name="resetConfirmed">A reset link was sent to </string>
-    <string name="emailNotFound">No user is tied to this email, pleas use a correct email.</string>
+    <string name="emailNotFound">No user is tied to this email, please use a correct email.</string>
     <string name="invalidPassword">Wrong password, try again.</string>
     <string name="emailNotVerified">Check your email to verify your account.</string>
     <string name="loginSuccessful">Login successful!</string>
@@ -64,7 +62,34 @@
     <string name="deleteAccount">Delete account</string>
     <string name="deleteAccountConfirmation">Do you really want to delete your account? This action can not be undone.</string>
     <string name="accountDeleted">Account deleted.</string>
-
-
-
+    <string name="update_post">UPDATE POST</string>
+    <string name="report_issue">What is the issue?</string>
+    <string name="failed_create_post">Failed to create post</string>
+    <string name="delete_event">Delete event</string>
+    <string name="delete_event_are_you_sure">Are you sure you want to delete this event?</string>
+    <string name="failed_update_event">Failed to update event</string>
+    <string name="failed_create_event">Failed to create event</string>
+    <string name="delete_novelty">Delete post</string>
+    <string name="delete_post_are_you_sure">Are you sure you want to delete this post?</string>
+    <string name="failed_update_post">Failed to update post</string>
+    <string name="failed_create_notification">Failed to create notification</string>
+    <string name="empty_notification">Notification fields can\'t be empty</string>
+    <string name="report_bug_email_subject">Report bug - HI TECH Android application</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="location">Location</string>
+    <string name="information_about_event">Information about event</string>
+    <string name="update_event">UPDATE EVENT</string>
+    <string name="empty_title">Title is empty</string>
+    <string name="empty_content">Content is empty</string>
+    <string name="empty_notification_description">Notification description is empty</string>
+    <string name="error_loading_novelty">Error loading novelty</string>
+    <string name="create_event">CREATE EVENT</string>
+    <string name="empty_date">Date is empty</string>
+    <string name="empty_time">Time is empty</string>
+    <string name="empty_location">Location is empty</string>
+    <string name="empty_information">Information is empty</string>
+    <string name="error_delete_event">Failed to delete event</string>
+    <string name="error_delete_novelty">Failed to delete post</string>
 </resources>

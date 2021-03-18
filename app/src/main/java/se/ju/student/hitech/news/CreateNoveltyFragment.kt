@@ -1,9 +1,6 @@
 package se.ju.student.hitech.news
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -11,9 +8,10 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
@@ -35,71 +33,83 @@ class CreateNoveltyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val notificationContent =
-            view.findViewById<EditText>(R.id.editTextNewPostNotificationContent)
-        val title = view.findViewById<EditText>(R.id.editTextNewPostTitle)
-        val content = view.findViewById<EditText>(R.id.editTextNewPostContent)
+            view.findViewById<TextInputEditText>(R.id.editTextNewPostNotificationContent)
+        val title = view.findViewById<TextInputEditText>(R.id.editTextNewPostTitle)
+        val content = view.findViewById<TextInputEditText>(R.id.editTextNewPostContent)
         val createNoveltyButton = view.findViewById<Button>(R.id.btn_create_news_create_post)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = GONE
-
-        title?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                createNoveltyButton?.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                createNoveltyButton?.isEnabled = count > 0
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                createNoveltyButton?.isEnabled = title.length() > 0 && content?.length()!! > 0
-            }
-        })
-
-        content?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                createNoveltyButton?.isEnabled = false
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                createNoveltyButton?.isEnabled = count > 0
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                createNoveltyButton?.isEnabled = content.length() > 0 && title?.length()!! > 0
-            }
-
-        })
+        title?.setText("")
+        content?.setText("")
+        notificationContent?.setText("")
 
         view.findViewById<CheckBox>(R.id.checkbox_notification)?.setOnClickListener {
             onCheckBoxClicked(it)
         }
 
         createNoveltyButton?.setOnClickListener {
-            progressBar?.visibility = VISIBLE
 
-            newsRepository.addNovelty(title!!.text.toString(), content!!.text.toString()){ result ->
-                when(result){
-                    "successful" -> {
-                        if (checked) {
-                            if (createNotification(title.text.toString(), notificationContent?.text.toString())) {
+            if (checked) {
+                if (verifyPostNotificationUserInputs(
+                        title.text.toString(),
+                        content.text.toString(),
+                        notificationContent.text.toString()
+                    )
+                ) {
+                    progressBar?.visibility = VISIBLE
+                    newsRepository.addNovelty(
+                        title.text.toString(),
+                        content.text.toString()
+                    ) { result ->
+                        when (result) {
+                            "successful" -> {
+                                progressBar.visibility = GONE
+                                createNotification(
+                                    title.text.toString(),
+                                    notificationContent.text.toString()
+                                )
                                 (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                                progressBar?.visibility = GONE
-                            } else {
-                                progressBar?.visibility = GONE
-                                (context as MainActivity).makeToast("Failed to create notification")
+                                title.setText("")
+                                content.setText("")
+                                notificationContent.setText("")
                             }
-                        } else{
-                            (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-                            progressBar?.visibility = GONE
+                            "internalError" -> {
+                                progressBar?.visibility = GONE
+                                (context as MainActivity).makeToast(getString(R.string.failed_create_post))
+                            }
                         }
                     }
-                    "internalError" -> {
-                        progressBar?.visibility = GONE
-                        (context as MainActivity).makeToast("Failed to create post")
+                } else {
+                    progressBar?.visibility = GONE
+                }
+            } else {
+                if (verifyPostUserInputs(
+                        title.text.toString(),
+                        content.text.toString()
+                    )
+                ) {
+                    progressBar?.visibility = VISIBLE
+                    newsRepository.addNovelty(
+                        title.text.toString(),
+                        content.text.toString()
+                    ) { result ->
+                        when (result) {
+                            "successful" -> {
+                                progressBar.visibility = GONE
+                                (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+                                title.setText("")
+                                content.setText("")
+                                notificationContent.setText("")
+                            }
+                            "internalError" -> {
+                                progressBar?.visibility = GONE
+                                (context as MainActivity).makeToast(getString(R.string.failed_create_post))
+                            }
+                        }
                     }
+                } else {
+                    progressBar.visibility = GONE
                 }
             }
         }
@@ -110,19 +120,69 @@ class CreateNoveltyFragment : Fragment() {
         }
     }
 
-    private fun createNotification(title: String, content: String): Boolean {
-        return if (title != "" && content != "") {
-            (context as MainActivity).createNotification(
-                title,
-                content,
-                TOPIC_NEWS
-            )
-            checked = false
-            true
-        } else {
-            (context as MainActivity).makeToast("Notification fields can't be empty")
-            false
+    private fun createNotification(title: String, content: String) {
+        (context as MainActivity).createNotification(title, content, TOPIC_NEWS)
+        checked = false
+    }
+
+    private fun verifyPostNotificationUserInputs(
+        title: String,
+        content: String,
+        notificationContent: String
+    ): Boolean {
+        val notificationContentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostNotificationContent)
+        val titleInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostTitle)
+        val contentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostContent)
+
+        notificationContentInputLayout?.error = ""
+        titleInputLayout?.error = ""
+        contentInputLayout?.error = ""
+
+        if (title.isEmpty()) {
+            titleInputLayout?.error = getString(R.string.empty_title)
+            return false
         }
+
+        if (content.isEmpty()) {
+            contentInputLayout?.error = getString(R.string.empty_content)
+            return false
+        }
+
+        if (notificationContent.isEmpty()) {
+            notificationContentInputLayout?.error =
+                getString(R.string.empty_notification_description)
+            return false
+        }
+
+        return true
+    }
+
+    private fun verifyPostUserInputs(title: String, content: String): Boolean {
+        val titleInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostTitle)
+        val contentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostContent)
+        val notificationContentInputLayout =
+            view?.findViewById<TextInputLayout>(R.id.textInputLayout_newPostNotificationContent)
+
+        titleInputLayout?.error = ""
+        contentInputLayout?.error = ""
+        notificationContentInputLayout?.error = ""
+
+        if (title.isEmpty()) {
+            titleInputLayout?.error = getString(R.string.empty_title)
+            return false
+        }
+
+        if (content.isEmpty()) {
+            contentInputLayout?.error = getString(R.string.empty_content)
+            return false
+        }
+
+        return true
     }
 
     fun onCheckBoxClicked(view: View) {

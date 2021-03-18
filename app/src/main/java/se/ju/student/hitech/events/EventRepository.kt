@@ -13,7 +13,14 @@ class EventRepository {
         val eventRepository = EventRepository()
     }
 
-    fun addEvent(title: String, date: String, time: String, location: String, information: String, callback: (String) -> Unit) {
+    fun addEvent(
+        title: String,
+        date: String,
+        time: String,
+        location: String,
+        information: String,
+        callback: (String) -> Unit
+    ) {
 
         loadAllEventsData { result, list ->
             when (result) {
@@ -31,11 +38,12 @@ class EventRepository {
                         "id" to latestId + 1
                     )
 
-                    db.collection("events").document(event["id"].toString()).set(event).addOnCompleteListener {
-                        callback("successful")
-                    }.addOnFailureListener{
-                        callback("internalError")
-                    }
+                    db.collection("events").document(event["id"].toString()).set(event)
+                        .addOnCompleteListener {
+                            callback("successful")
+                        }.addOnFailureListener {
+                            callback("internalError")
+                        }
                 }
             }
         }
@@ -82,11 +90,18 @@ class EventRepository {
         }
     }
 
-    fun deleteEvent(id: Int) {
-        db.collection("events").document(id.toString()).delete()
+    fun deleteEvent(id: Int): Task<Void> {
+        return db.collection("events").document(id.toString()).delete()
     }
 
-    fun updateEvent(newTitle: String, newDate: String, newTime: String, newLocation: String, newInformation: String, id: Int): Task<Void> {
+    fun updateEvent(
+        newTitle: String,
+        newDate: String,
+        newTime: String,
+        newLocation: String,
+        newInformation: String,
+        id: Int
+    ): Task<Void> {
 
         val event = hashMapOf(
             "title" to newTitle,

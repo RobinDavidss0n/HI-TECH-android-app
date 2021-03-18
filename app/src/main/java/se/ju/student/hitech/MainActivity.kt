@@ -2,10 +2,8 @@ package se.ju.student.hitech
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.LocusId
 import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,10 +27,9 @@ import se.ju.student.hitech.notifications.NotificationData
 import se.ju.student.hitech.notifications.PushNotification
 import se.ju.student.hitech.notifications.RetrofitInstance
 import se.ju.student.hitech.shop.ShopFragment
-import se.ju.student.hitech.user.AdminLoginFragment
+import se.ju.student.hitech.user.UserLoginFragment
 import se.ju.student.hitech.user.RegisterUserFragment
 import se.ju.student.hitech.user.UserPageFragment
-import se.ju.student.hitech.user.UserRepository
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import java.lang.Exception
 
@@ -75,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
-                .add(R.id.fragment_container, AdminLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
+                .add(R.id.fragment_container, UserLoginFragment(), TAG_FRAGMENT_ADMIN_LOGIN)
                 .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
                 .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
                 .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
@@ -152,7 +149,7 @@ class MainActivity : AppCompatActivity() {
                 val response = RetrofitInstance.api.postNotification(notification)
 
                 if (response.isSuccessful) {
-                    Log.d(TAG_MAIN_ACTIVITY, "SUCCESSFUL")
+                    Log.d(TAG_MAIN_ACTIVITY, "successful")
                 } else {
                     Log.e(TAG_MAIN_ACTIVITY, response.errorBody().toString())
                 }
@@ -200,7 +197,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showReportProblemAlert() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report_problem, null)
 
@@ -221,7 +217,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendEmail(message: Editable?) {
-        val subject = "Report problem HI TECH Android application"
+        val subject = getString(R.string.report_bug_email_subject)
 
         // email intent to HI TECH IT Manager
         val emailIntent =
@@ -230,13 +226,12 @@ class MainActivity : AppCompatActivity() {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         emailIntent.putExtra(Intent.EXTRA_TEXT, message.toString())
         try {
-            (Intent.createChooser(emailIntent, "Choose email client.."))
+            (Intent.createChooser(emailIntent, getString(R.string.choose_email_client)))
             startActivity(emailIntent)
         } catch (e: Exception) {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
         }
     }
-
 
     fun changeToFragment(fragment_tag: String) {
         currentFragmentShowing = fragment_tag
@@ -251,9 +246,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun reloadFragment(fragment_tag: String) {
+        val fragment = supportFragmentManager.findFragmentByTag(fragment_tag)
+        if (fragment != null) {
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.detach(fragment)
+            fragmentTransaction.attach(fragment)
+            fragmentTransaction.commit()
+        }
+    }
 
     fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
-
 }

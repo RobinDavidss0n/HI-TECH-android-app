@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_USER_PAGE
 import se.ju.student.hitech.R
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class RegisterUserFragment : Fragment() {
 
@@ -37,7 +39,11 @@ class RegisterUserFragment : Fragment() {
         val name = view?.findViewById<TextInputEditText>(R.id.register_user_nameTextInputEditText)
         val role = view?.findViewById<TextInputEditText>(R.id.register_user_roleTextInputEditText)
         val registerButton = view?.findViewById<Button>(R.id.register_user_registerButton)
+        val backButton = view?.findViewById<Button>(R.id.register_user_goBackButton)
 
+        backButton?.setOnClickListener {
+            (context as MainActivity).changeToFragment(TAG_USER_PAGE)
+        }
 
         registerButton?.setOnClickListener {
             if (verifyRegisterUserInputs(
@@ -56,9 +62,7 @@ class RegisterUserFragment : Fragment() {
                     role?.text.toString().trim()
                 )
             }
-
         }
-
     }
 
     private fun verifyRegisterUserInputs(
@@ -82,7 +86,6 @@ class RegisterUserFragment : Fragment() {
         roleInputLayout?.error = ""
 
         if (email.isEmpty()) {
-
             emailInputLayout?.error = getString(R.string.emailEmpty)
             return false
         }
@@ -95,7 +98,6 @@ class RegisterUserFragment : Fragment() {
         if (password.isEmpty()) {
             passwordInputLayout?.error = getString(R.string.passwordEmpty)
             return false
-
         }
 
         if (password.length < 5) {
@@ -107,26 +109,21 @@ class RegisterUserFragment : Fragment() {
         if (rePassword != password) {
             rePasswordInputLayout?.error = getString(R.string.passwordNotMatch)
             return false
-
         }
 
         if (name.isEmpty()) {
             nameInputLayout?.error = getString(R.string.nameEmpty)
             return false
-
         }
 
         if (role.isEmpty()) {
             roleInputLayout?.error = getString(R.string.roleEmpty)
             return false
-
         }
         return true
     }
 
     private fun createUser(email: String, password: String, name: String, role: String) {
-
-        val userRepository = UserRepository()
         userRepository.createUser(email, password, name, role) { result ->
             progressBar?.visibility = View.GONE
             when (result) {
@@ -137,9 +134,7 @@ class RegisterUserFragment : Fragment() {
                     //redirect
                 }
                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
-
             }
         }
-
     }
 }

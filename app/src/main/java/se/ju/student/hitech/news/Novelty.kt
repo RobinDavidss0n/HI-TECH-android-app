@@ -1,6 +1,5 @@
 package se.ju.student.hitech.news
 
-import java.sql.RowId
 import java.sql.Timestamp
 
 data class Novelty(

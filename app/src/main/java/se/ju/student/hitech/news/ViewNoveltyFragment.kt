@@ -2,7 +2,6 @@ package se.ju.student.hitech.news
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -10,11 +9,9 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.LiveData
+import androidx.fragment.app.Fragment
 import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
-import se.ju.student.hitech.news.Novelty
 
 class ViewNoveltyFragment : Fragment() {
 
@@ -50,6 +47,7 @@ class ViewNoveltyFragment : Fragment() {
                         }
                         "internalError" -> {
                             //notify user about error
+                            progressBar?.visibility = GONE
                             Log.d("Error fireStore", "Error loading novelty from fireStore")
                         }
                     }

@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/avenir_next_bold"
-        android:text="UPDATE POST"
+        android:text="@string/update_post"
         android:textColor="@color/yellow"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,58 +29,81 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/editTextUpdatePostTitle"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_updatePostTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="@string/title"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
-                android:id="@+id/editTextUpdatePostContent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="@string/content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePostTitle" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextUpdatePostTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/editTextUpdatePostNotificationContent"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_updatePostContent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="@string/notification_description"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextUpdatePostContent" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout_updatePostTitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextUpdatePostContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_updatePostNotificationContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout_updatePostContent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextUpdatePostNotificationContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/notification_description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/checkbox_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="@string/create_notification"
+                android:layout_marginTop="20dp"
                 android:onClick="onCheckBoxClicked"
+                android:text="@string/create_notification"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editTextUpdatePostNotificationContent" />
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_updatePostNotificationContent" />
 
             <Button
                 android:id="@+id/btn_update_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="300dp"
-                android:background="@drawable/button_background_selector"
-                android:enabled="false"
+                android:layout_marginTop="25dp"
+                android:backgroundTint="#FDD609"
                 android:fontFamily="@font/avenir_next_bold"
-                android:padding="10dp"
-                android:text="UPDATE POST"
-                android:textColor="@color/black"
+                android:shadowColor="#FFFFFF"
+                android:text="@string/update_post"
+                android:textColor="#000000"
+                android:textColorHighlight="#615555"
+                android:textColorHint="#716666"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/checkbox_notification" />
@@ -89,17 +112,20 @@
                 android:id="@+id/btn_update_news_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@color/yellow"
+                android:layout_marginTop="25dp"
+                android:backgroundTint="#FDD609"
                 android:fontFamily="@font/avenir_next_bold"
-                android:padding="10dp"
+                android:shadowColor="#FFFFFF"
                 android:text="@string/go_back"
-                android:textColor="@color/black"
+                android:textColor="#000000"
+                android:textColorHighlight="#615555"
+                android:textColorHint="#716666"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_update_post" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
@@ -109,4 +135,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
