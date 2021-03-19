@@ -9,7 +9,6 @@ import se.ju.student.hitech.notifications.Constants.Companion.CONTENT_TYPE
 import se.ju.student.hitech.notifications.Constants.Companion.SERVER_KEY
 
 interface NotificationAPI {
-
     @Headers("Authorization: key=$SERVER_KEY", "Content-Type:$CONTENT_TYPE")
     @POST("fcm/send")
     suspend fun postNotification(

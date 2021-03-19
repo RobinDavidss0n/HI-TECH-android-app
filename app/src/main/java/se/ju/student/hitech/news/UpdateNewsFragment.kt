@@ -19,13 +19,13 @@ import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
-class UpdateNoveltyFragment : Fragment() {
+class UpdateNewsFragment : Fragment() {
 
     private var checked = false
     private var noveltyId = 0
 
     companion object {
-        val updateNoveltyFragment = UpdateNoveltyFragment()
+        val updateNewsFragment = UpdateNewsFragment()
     }
 
     override fun onCreateView(
@@ -33,7 +33,7 @@ class UpdateNoveltyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_update_novelty, container, false)
+        return inflater.inflate(R.layout.fragment_update_news, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +67,7 @@ class UpdateNoveltyFragment : Fragment() {
                     )
                 ) {
                     progressBar.visibility = VISIBLE
-                    newsRepository.updateNovelty(
+                    newsRepository.updateNews(
                         title.text.toString(),
                         content.text.toString(),
                         noveltyId
@@ -78,6 +78,8 @@ class UpdateNoveltyFragment : Fragment() {
                             notificationContent.text.toString()
                         )
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+
+                        // clear input fields
                         title.setText("")
                         content.setText("")
                         notificationContent.setText("")
@@ -91,13 +93,15 @@ class UpdateNoveltyFragment : Fragment() {
             } else {
                 if (verifyPostUserInputs(title.text.toString(), content.text.toString())) {
                     progressBar.visibility = VISIBLE
-                    newsRepository.updateNovelty(
+                    newsRepository.updateNews(
                         title.text.toString(),
                         content.text.toString(),
                         noveltyId
                     ).addOnSuccessListener {
                         progressBar?.visibility = GONE
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+
+                        // clear input fields
                         title.setText("")
                         content.setText("")
                         notificationContent.setText("")
@@ -196,7 +200,7 @@ class UpdateNoveltyFragment : Fragment() {
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = VISIBLE
-        newsRepository.getNoveltyById(noveltyId) { result, novelty ->
+        newsRepository.getNewsById(noveltyId) { result, novelty ->
             when (result) {
                 "successful" -> {
                     title?.setText(novelty.title)
@@ -205,7 +209,7 @@ class UpdateNoveltyFragment : Fragment() {
                 }
                 "internalError" -> {
                     //notify user about error
-                    (context as MainActivity).makeToast(getString(R.string.error_loading_novelty))
+                    (context as MainActivity).makeToast(getString(R.string.error_loading_news_post))
                     title?.setText("")
                     content?.setText("")
                     Log.d("Error fireStore", "Error loading novelty from fireStore")

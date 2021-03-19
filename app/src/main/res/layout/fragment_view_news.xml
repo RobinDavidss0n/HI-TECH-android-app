@@ -7,7 +7,7 @@
     android:layout_margin="20dp">
 
     <TextView
-        android:id="@+id/newsTitleNoImage"
+        android:id="@+id/textview_view_news_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/avenir_next_bold"
@@ -18,16 +18,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/newsTitleNoImage">
+        app:layout_constraintTop_toBottomOf="@id/textview_view_news_title">
 
         <TextView
-            android:id="@+id/newsContentNoImage"
+            android:id="@+id/textview_news_content"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:text=""
