@@ -1,7 +1,6 @@
 package se.ju.student.hitech.events
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -68,6 +67,7 @@ class UpdateEventFragment : Fragment() {
                     binding.etLocation.setText("")
                 }.addOnFailureListener {
                     binding.progressBar.visibility = GONE
+                    // notify user about error
                     (context as MainActivity).makeToast(getString(R.string.failed_update_event))
                 }
             } else {
@@ -99,7 +99,6 @@ class UpdateEventFragment : Fragment() {
                     binding.etInformation.setText("")
                     binding.etLocation.setText("")
                     binding.etTime.setText("")
-                    Log.d("Error fireStore", "Error loading event from fireStore")
                     binding.progressBar.visibility = GONE
                 }
             }

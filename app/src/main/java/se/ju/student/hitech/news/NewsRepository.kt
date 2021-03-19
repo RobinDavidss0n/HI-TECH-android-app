@@ -18,16 +18,16 @@ class NewsRepository {
         loadAllNewsData { result, list ->
             when (result) {
                 "notFound" -> {
-                    Log.d("Error fireStore", "Error loading novelty from fireStore")
+                    Log.d("Error fireStore", "Error loading news from fireStore")
                 }
                 "successful" -> {
                     latestId = list.last().id
-                    val novelty = HashMap<String, Any>()
-                    novelty["title"] = title
-                    novelty["content"] = content
-                    novelty["id"] = latestId + 1
+                    val news = HashMap<String, Any>()
+                    news["title"] = title
+                    news["content"] = content
+                    news["id"] = latestId + 1
 
-                    db.collection("news").document(novelty["id"].toString()).set(novelty)
+                    db.collection("news").document(news["id"].toString()).set(news)
                         .addOnCompleteListener {
                             callback("successful")
                         }.addOnFailureListener {
@@ -50,8 +50,8 @@ class NewsRepository {
                 } else {
                     val currentNewsList = mutableListOf<News>()
                     querySnapshot?.documents?.forEach { doc ->
-                        val novelty = doc.toObject(News::class.java)!!
-                        currentNewsList.add(novelty)
+                        val newsPost = doc.toObject(News::class.java)!!
+                        currentNewsList.add(newsPost)
                     }
                     callback("successful", currentNewsList)
                 }
@@ -67,8 +67,8 @@ class NewsRepository {
             } else {
                 val currentNewsList = mutableListOf<News>()
                 snapshot.documents.forEach { DocumentSnapshot ->
-                    val novelty = DocumentSnapshot.toObject(News::class.java)!!
-                    currentNewsList.add(novelty)
+                    val newsPost = DocumentSnapshot.toObject(News::class.java)!!
+                    currentNewsList.add(newsPost)
                 }
                 callback("successful", currentNewsList)
             }
@@ -84,23 +84,21 @@ class NewsRepository {
     }
 
     fun updateNews(newTitle: String, newContent: String, id: Int): Task<Void> {
-        val novelty = hashMapOf(
+        val news = hashMapOf(
             "title" to newTitle,
             "content" to newContent,
             "id" to id
         )
-        return db.collection("news").document(id.toString()).set(novelty)
+        return db.collection("news").document(id.toString()).set(news)
     }
 
     fun getNewsById(id: Int, callback: (String, News) -> Unit) {
         db.collection("news").document(id.toString()).get().addOnSuccessListener {
-            val novelty = it.toObject(News::class.java)
-            if (novelty != null) {
-                Log.d("success loading novelty", it.toString())
-                callback("successful", novelty)
+            val news = it.toObject(News::class.java)
+            if (news != null) {
+                callback("successful", news)
             }
         }.addOnFailureListener {
-            Log.d("error get novelty by id", it.toString())
             callback("internalError", News())
         }
     }

@@ -7,7 +7,7 @@ import se.ju.student.hitech.R
 class ViewNewsActivity : AppCompatActivity() {
 
     companion object {
-        const val EXTRA_NOVELTY_ID = "NOVELTY_ID"
+        const val EXTRA_NEWS_ID = "NEWS_ID"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,12 +20,12 @@ class ViewNewsActivity : AppCompatActivity() {
         supportActionBar?.setLogo(R.drawable.ic_hitech_logo_20)
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
-        val noveltyId = intent.getIntExtra(EXTRA_NOVELTY_ID, 0)
+        val newsId = intent.getIntExtra(EXTRA_NEWS_ID, 0)
 
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.frame_layout, ViewNewsFragment.newInstance(noveltyId))
+                .add(R.id.frame_layout, ViewNewsFragment.newInstance(newsId))
                 .commit()
         }
     }

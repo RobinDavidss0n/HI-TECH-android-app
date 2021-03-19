@@ -36,7 +36,7 @@ class CreateNewsFragment : Fragment() {
             view.findViewById<TextInputEditText>(R.id.editTextNewPostNotificationContent)
         val title = view.findViewById<TextInputEditText>(R.id.editTextNewPostTitle)
         val content = view.findViewById<TextInputEditText>(R.id.editTextNewPostContent)
-        val createNoveltyButton = view.findViewById<Button>(R.id.btn_create_news_create_post)
+        val createNewsPostButton = view.findViewById<Button>(R.id.btn_create_news_create_post)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = GONE
@@ -48,7 +48,7 @@ class CreateNewsFragment : Fragment() {
             onCheckBoxClicked(it)
         }
 
-        createNoveltyButton?.setOnClickListener {
+        createNewsPostButton?.setOnClickListener {
 
             if (checked) {
                 if (verifyPostNotificationUserInputs(

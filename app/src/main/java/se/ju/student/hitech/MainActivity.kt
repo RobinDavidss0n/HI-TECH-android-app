@@ -132,8 +132,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setClickedNoveltyId(id: Int) {
-        updateNewsFragment.clickedNovelty(id)
+    fun setClickedNewsId(id: Int) {
+        updateNewsFragment.getClickedNews(id)
     }
 
     fun setClickedEventId(id: Int) {

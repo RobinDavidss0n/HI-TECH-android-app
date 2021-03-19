@@ -24,7 +24,7 @@ import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
-import se.ju.student.hitech.news.ViewNewsActivity.Companion.EXTRA_NOVELTY_ID
+import se.ju.student.hitech.news.ViewNewsActivity.Companion.EXTRA_NEWS_ID
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class NewsFragment : Fragment() {
@@ -111,10 +111,10 @@ class NewsFragment : Fragment() {
         )
 
         override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-            val novelty = news[position]
-            val id = novelty.id
+            val newsPost = news[position]
+            val id = newsPost.id
 
-            holder.binding.textviewNewsTitle.text = novelty.title
+            holder.binding.textviewNewsTitle.text = newsPost.title
             holder.binding.cardNews.setOnClickListener {
 
                 holder.binding.cardNews.context.startActivity(
@@ -122,7 +122,7 @@ class NewsFragment : Fragment() {
                         holder.binding.cardNews.context,
                         ViewNewsActivity::class.java
                     ).apply {
-                        putExtra(EXTRA_NOVELTY_ID, id)
+                        putExtra(EXTRA_NEWS_ID, id)
                     }
                 )
             }
@@ -135,10 +135,10 @@ class NewsFragment : Fragment() {
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_delete -> {
-                                showDeleteNoveltyAlertDialog(holder.itemView.context, id)
+                                showDeleteNewsAlertDialog(holder.itemView.context, id)
                             }
                             R.id.menu_edit -> {
-                                (holder.itemView.context as MainActivity).setClickedNoveltyId(id)
+                                (holder.itemView.context as MainActivity).setClickedNewsId(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
                                     TAG_FRAGMENT_UPDATE_NEWS
                                 )
@@ -155,21 +155,21 @@ class NewsFragment : Fragment() {
 
         override fun getItemCount() = news.size
 
-        private fun showDeleteNoveltyAlertDialog(context: Context, id: Int) {
+        private fun showDeleteNewsAlertDialog(context: Context, id: Int) {
             AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.delete_novelty))
+                .setTitle(context.getString(R.string.delete_news_post))
                 .setMessage(context.getString(R.string.delete_post_are_you_sure))
                 .setPositiveButton(
                     context.getString(R.string.yes)
                 ) { dialog, whichButton ->
-                    // delete event
+                    // delete news post
                     newsRepository.deleteNews(id).addOnFailureListener {
-                        (context as MainActivity).makeToast(context.getString(R.string.error_delete_novelty))
+                        (context as MainActivity).makeToast(context.getString(R.string.error_delete_news_post))
                     }
                 }.setNegativeButton(
                     context.getString(R.string.no)
                 ) { dialog, whichButton ->
-                    // Do not delete novelty
+                    // Do not delete post
                 }.show()
         }
     }

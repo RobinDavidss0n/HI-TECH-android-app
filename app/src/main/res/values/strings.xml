@@ -69,7 +69,7 @@
     <string name="delete_event_are_you_sure">Are you sure you want to delete this event?</string>
     <string name="failed_update_event">Failed to update event</string>
     <string name="failed_create_event">Failed to create event</string>
-    <string name="delete_novelty">Delete post</string>
+    <string name="delete_news_post">Delete post</string>
     <string name="delete_post_are_you_sure">Are you sure you want to delete this post?</string>
     <string name="failed_update_post">Failed to update post</string>
     <string name="failed_create_notification">Failed to create notification</string>
@@ -91,5 +91,5 @@
     <string name="empty_location">Location is empty</string>
     <string name="empty_information">Information is empty</string>
     <string name="error_delete_event">Failed to delete event</string>
-    <string name="error_delete_novelty">Failed to delete post</string>
+    <string name="error_delete_news_post">Failed to delete post</string>
 </resources>

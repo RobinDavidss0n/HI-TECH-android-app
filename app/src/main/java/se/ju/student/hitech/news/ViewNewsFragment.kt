@@ -1,7 +1,6 @@
 package se.ju.student.hitech.news
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -17,12 +16,12 @@ import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 class ViewNewsFragment : Fragment() {
 
     companion object {
-        private const val ARG_NOVELTY_ID = "NOVELTY_ID"
+        private const val ARG_NEWS_ID = "NEWS_ID"
 
-        fun newInstance(noveltyId: Int) =
+        fun newInstance(newsId: Int) =
             ViewNewsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_NOVELTY_ID, noveltyId)
+                    putInt(ARG_NEWS_ID, newsId)
                 }
             }
     }
@@ -44,20 +43,19 @@ class ViewNewsFragment : Fragment() {
         progressBar?.visibility = VISIBLE
 
         arguments?.let {
-            if (it.containsKey(ARG_NOVELTY_ID)) {
-                val noveltyId = requireArguments().getInt(ARG_NOVELTY_ID)
-                newsRepository.getNewsById(noveltyId) { result, novelty ->
+            if (it.containsKey(ARG_NEWS_ID)) {
+                val newsId = requireArguments().getInt(ARG_NEWS_ID)
+                newsRepository.getNewsById(newsId) { result, news ->
                     when (result) {
                         "successful" -> {
-                            title.text = novelty.title
-                            content.text = novelty.content
+                            title.text = news.title
+                            content.text = news.content
                             progressBar?.visibility = GONE
                         }
                         "internalError" -> {
                             //notify user about error
                             (context as MainActivity).makeToast(getString(R.string.error_loading_news_post))
                             progressBar?.visibility = GONE
-                            Log.d("Error fireStore", "Error loading news from fireStore")
                         }
                     }
                 }
