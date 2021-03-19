@@ -19,10 +19,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import se.ju.student.hitech.events.CreateNewEventFragment
 import se.ju.student.hitech.events.EventsFragment
-import se.ju.student.hitech.events.UpdateEventFragment
-import se.ju.student.hitech.news.CreateNoveltyFragment
+import se.ju.student.hitech.events.UpdateEventFragment.Companion.updateEventFragment
+import se.ju.student.hitech.news.CreateNewsFragment
 import se.ju.student.hitech.news.NewsFragment
-import se.ju.student.hitech.news.UpdateNoveltyFragment
+import se.ju.student.hitech.news.UpdateNewsFragment.Companion.updateNewsFragment
 import se.ju.student.hitech.notifications.NotificationData
 import se.ju.student.hitech.notifications.PushNotification
 import se.ju.student.hitech.notifications.RetrofitInstance
@@ -34,9 +34,7 @@ import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-    lateinit var updateNoveltyFragment: UpdateNoveltyFragment
-    lateinit var updateEventFragment: UpdateEventFragment
-    var currentFragmentShowing = ""
+    private var currentFragmentShowing = ""
 
     companion object {
         const val TAG_FRAGMENT_CREATE_NEW_EVENT = "TAG_FRAGMENT_NEW_EVENT"
@@ -49,16 +47,17 @@ class MainActivity : AppCompatActivity() {
         const val TAG_MAIN_ACTIVITY = "MainActivity"
         const val TAG_ADMIN_EMAIL = "it.hitech@js.ju.se"
         const val TOPIC_NEWS = "/topics/news"
-        const val TAG_FRAGMENT_CREATE_NOVELTY = "TAG_FRAGMENT_CREATE_NOVELTY"
+        const val TAG_FRAGMENT_CREATE_NEWS = "TAG_FRAGMENT_CREATE_NEWS"
         const val TAG_REGISTER_USER = "TAG_FRAGMENT_REGISTER_USER"
         const val TAG_USER_PAGE = "TAG_FRAGMENT_USER_PAGE"
         const val TAG_FRAGMENT_UPDATE_EVENT = "TAG_FRAGMENT_UPDATE_EVENT"
-        const val TAG_FRAGMENT_UPDATE_NOVELTY = "TAG_FRAGMENT_UPDATE_NOVELTY"
+        const val TAG_FRAGMENT_UPDATE_NEWS = "TAG_FRAGMENT_UPDATE_NEWS"
         const val TAG_CURRENT_FRAGMENT = "TAG_CURRENT_FRAGMENT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setTheme(R.style.Theme_HITECH)
         setContentView(R.layout.activity_main)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -67,8 +66,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
         if (savedInstanceState == null) {
-            updateNoveltyFragment = UpdateNoveltyFragment()
-            updateEventFragment = UpdateEventFragment()
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, NewsFragment(), TAG_FRAGMENT_NEWS)
@@ -79,14 +76,14 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                 .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
                 .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
-                .add(R.id.fragment_container, CreateNoveltyFragment(), TAG_FRAGMENT_CREATE_NOVELTY)
+                .add(R.id.fragment_container, CreateNewsFragment(), TAG_FRAGMENT_CREATE_NEWS)
                 .add(
                     R.id.fragment_container,
                     CreateNewEventFragment(),
                     TAG_FRAGMENT_CREATE_NEW_EVENT
                 )
                 .add(R.id.fragment_container, updateEventFragment, TAG_FRAGMENT_UPDATE_EVENT)
-                .add(R.id.fragment_container, updateNoveltyFragment, TAG_FRAGMENT_UPDATE_NOVELTY)
+                .add(R.id.fragment_container, updateNewsFragment, TAG_FRAGMENT_UPDATE_NEWS)
                 .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
@@ -135,8 +132,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showClickedNovelty(id: Int) {
-        updateNoveltyFragment.clickedNovelty(id)
+    fun setClickedNewsId(id: Int) {
+        updateNewsFragment.getClickedNews(id)
     }
 
     fun setClickedEventId(id: Int) {
@@ -190,14 +187,14 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.nav_problem -> {
-                showReportProblemAlert()
+                showReportProblemAlertDialog()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun showReportProblemAlert() {
+    private fun showReportProblemAlertDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report_problem, null)
 
         AlertDialog.Builder(this)

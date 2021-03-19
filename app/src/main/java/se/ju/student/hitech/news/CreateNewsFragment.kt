@@ -18,7 +18,7 @@ import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
-class CreateNoveltyFragment : Fragment() {
+class CreateNewsFragment : Fragment() {
 
     private var checked = false
 
@@ -27,7 +27,7 @@ class CreateNoveltyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_create_novelty, container, false)
+        return inflater.inflate(R.layout.fragment_create_news, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,7 +36,7 @@ class CreateNoveltyFragment : Fragment() {
             view.findViewById<TextInputEditText>(R.id.editTextNewPostNotificationContent)
         val title = view.findViewById<TextInputEditText>(R.id.editTextNewPostTitle)
         val content = view.findViewById<TextInputEditText>(R.id.editTextNewPostContent)
-        val createNoveltyButton = view.findViewById<Button>(R.id.btn_create_news_create_post)
+        val createNewsPostButton = view.findViewById<Button>(R.id.btn_create_news_create_post)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = GONE
@@ -48,7 +48,7 @@ class CreateNoveltyFragment : Fragment() {
             onCheckBoxClicked(it)
         }
 
-        createNoveltyButton?.setOnClickListener {
+        createNewsPostButton?.setOnClickListener {
 
             if (checked) {
                 if (verifyPostNotificationUserInputs(
@@ -58,7 +58,7 @@ class CreateNoveltyFragment : Fragment() {
                     )
                 ) {
                     progressBar?.visibility = VISIBLE
-                    newsRepository.addNovelty(
+                    newsRepository.addNews(
                         title.text.toString(),
                         content.text.toString()
                     ) { result ->
@@ -90,7 +90,7 @@ class CreateNoveltyFragment : Fragment() {
                     )
                 ) {
                     progressBar?.visibility = VISIBLE
-                    newsRepository.addNovelty(
+                    newsRepository.addNews(
                         title.text.toString(),
                         content.text.toString()
                     ) { result ->

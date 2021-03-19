@@ -13,21 +13,21 @@ class NewsRepository {
         val newsRepository = NewsRepository()
     }
 
-    fun addNovelty(title: String, content: String, callback: (String) -> Unit) {
+    fun addNews(title: String, content: String, callback: (String) -> Unit) {
 
         loadAllNewsData { result, list ->
             when (result) {
                 "notFound" -> {
-                    Log.d("Error fireStore", "Error loading novelty from fireStore")
+                    Log.d("Error fireStore", "Error loading news from fireStore")
                 }
                 "successful" -> {
                     latestId = list.last().id
-                    val novelty = HashMap<String, Any>()
-                    novelty["title"] = title
-                    novelty["content"] = content
-                    novelty["id"] = latestId + 1
+                    val news = HashMap<String, Any>()
+                    news["title"] = title
+                    news["content"] = content
+                    news["id"] = latestId + 1
 
-                    db.collection("news").document(novelty["id"].toString()).set(novelty)
+                    db.collection("news").document(news["id"].toString()).set(news)
                         .addOnCompleteListener {
                             callback("successful")
                         }.addOnFailureListener {
@@ -39,19 +39,19 @@ class NewsRepository {
     }
 
     fun listenForNewsChanges(
-        callback: (String, MutableList<Novelty>) -> Unit
+        callback: (String, MutableList<News>) -> Unit
     ) {
         db.collection("news").orderBy("id")
             .addSnapshotListener { querySnapshot, error ->
 
                 if (error != null) {
                     Log.w("Messages listener error ", error)
-                    callback("internalError", mutableListOf(Novelty()))
+                    callback("internalError", mutableListOf(News()))
                 } else {
-                    val currentNewsList = mutableListOf<Novelty>()
+                    val currentNewsList = mutableListOf<News>()
                     querySnapshot?.documents?.forEach { doc ->
-                        val novelty = doc.toObject(Novelty::class.java)!!
-                        currentNewsList.add(novelty)
+                        val newsPost = doc.toObject(News::class.java)!!
+                        currentNewsList.add(newsPost)
                     }
                     callback("successful", currentNewsList)
                 }
@@ -59,47 +59,47 @@ class NewsRepository {
     }
 
     private fun loadAllNewsData(
-        callback: (String, MutableList<Novelty>) -> Unit
+        callback: (String, MutableList<News>) -> Unit
     ) {
         db.collection("news").orderBy("id").get().addOnSuccessListener { snapshot ->
             if (snapshot.isEmpty) {
-                callback("notFound", mutableListOf(Novelty()))
+                callback("notFound", mutableListOf(News()))
             } else {
-                val currentNewsList = mutableListOf<Novelty>()
+                val currentNewsList = mutableListOf<News>()
                 snapshot.documents.forEach { DocumentSnapshot ->
-                    val novelty = DocumentSnapshot.toObject(Novelty::class.java)!!
-                    currentNewsList.add(novelty)
+                    val newsPost = DocumentSnapshot.toObject(News::class.java)!!
+                    currentNewsList.add(newsPost)
                 }
                 callback("successful", currentNewsList)
             }
 
         }.addOnFailureListener { error ->
             Log.w("Get user info database error", error)
-            callback("internalError", mutableListOf(Novelty()))
+            callback("internalError", mutableListOf(News()))
         }
     }
 
-    fun deleteNovelty(id: Int): Task<Void> {
+    fun deleteNews(id: Int): Task<Void> {
         return db.collection("news").document(id.toString()).delete()
     }
 
-    fun updateNovelty(newTitle: String, newContent: String, id: Int): Task<Void> {
-        val novelty = hashMapOf(
+    fun updateNews(newTitle: String, newContent: String, id: Int): Task<Void> {
+        val news = hashMapOf(
             "title" to newTitle,
             "content" to newContent,
             "id" to id
         )
-        return db.collection("news").document(id.toString()).set(novelty)
+        return db.collection("news").document(id.toString()).set(news)
     }
 
-    fun getNoveltyById(id: Int, callback: (String, Novelty) -> Unit) {
+    fun getNewsById(id: Int, callback: (String, News) -> Unit) {
         db.collection("news").document(id.toString()).get().addOnSuccessListener {
-            val novelty = it.toObject(Novelty::class.java)
-            if (novelty != null) {
-                callback("successful", novelty)
+            val news = it.toObject(News::class.java)
+            if (news != null) {
+                callback("successful", news)
             }
         }.addOnFailureListener {
-            callback("internalError", Novelty())
+            callback("internalError", News())
         }
     }
 }

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import se.ju.student.hitech.databinding.FragmentShopBinding
-import se.ju.student.hitech.databinding.GridItemViewBinding
+import se.ju.student.hitech.databinding.ItemShopBinding
 
 class ShopFragment : Fragment() {
 
@@ -80,13 +80,13 @@ class ShopFragment : Fragment() {
         }
     }
 
-    class ShopViewHolder(val binding: GridItemViewBinding) : RecyclerView.ViewHolder(binding.root)
+    class ShopViewHolder(val binding: ItemShopBinding) : RecyclerView.ViewHolder(binding.root)
 
     class ShopAdapter(private val shopItems: List<ShopItem>) :
         RecyclerView.Adapter<ShopViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ShopViewHolder(
-            GridItemViewBinding.inflate(
+            ItemShopBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false

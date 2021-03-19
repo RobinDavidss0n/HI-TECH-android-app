@@ -1,7 +1,6 @@
 package se.ju.student.hitech.news
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -9,7 +8,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
@@ -20,17 +18,26 @@ import se.ju.student.hitech.MainActivity.Companion.TOPIC_NEWS
 import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
-class UpdateNoveltyFragment : Fragment() {
+class UpdateNewsFragment : Fragment() {
 
     private var checked = false
-    private var noveltyId = 0
+    private var newsId = 0
+
+    companion object {
+        val updateNewsFragment = UpdateNewsFragment()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_update_novelty, container, false)
+        return inflater.inflate(R.layout.fragment_update_news, container, false)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,7 +47,7 @@ class UpdateNoveltyFragment : Fragment() {
             view.findViewById<TextInputEditText>(R.id.editTextUpdatePostNotificationContent)
         val title = view.findViewById<TextInputEditText>(R.id.editTextUpdatePostTitle)
         val content = view.findViewById<TextInputEditText>(R.id.editTextUpdatePostContent)
-        val updateNoveltyButton = view.findViewById<Button>(R.id.btn_update_post)
+        val updateNewsPostButton = view.findViewById<Button>(R.id.btn_update_post)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar.visibility = GONE
@@ -49,7 +56,7 @@ class UpdateNoveltyFragment : Fragment() {
             onCheckBoxClicked(it)
         }
 
-        updateNoveltyButton?.setOnClickListener {
+        updateNewsPostButton?.setOnClickListener {
 
             if (checked) {
                 if (verifyPostNotificationUserInputs(
@@ -59,10 +66,10 @@ class UpdateNoveltyFragment : Fragment() {
                     )
                 ) {
                     progressBar.visibility = VISIBLE
-                    newsRepository.updateNovelty(
+                    newsRepository.updateNews(
                         title.text.toString(),
                         content.text.toString(),
-                        noveltyId
+                        newsId
                     ).addOnSuccessListener {
                         progressBar?.visibility = GONE
                         createNotification(
@@ -70,6 +77,8 @@ class UpdateNoveltyFragment : Fragment() {
                             notificationContent.text.toString()
                         )
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+
+                        // clear input fields
                         title.setText("")
                         content.setText("")
                         notificationContent.setText("")
@@ -83,13 +92,15 @@ class UpdateNoveltyFragment : Fragment() {
             } else {
                 if (verifyPostUserInputs(title.text.toString(), content.text.toString())) {
                     progressBar.visibility = VISIBLE
-                    newsRepository.updateNovelty(
+                    newsRepository.updateNews(
                         title.text.toString(),
                         content.text.toString(),
-                        noveltyId
+                        newsId
                     ).addOnSuccessListener {
                         progressBar?.visibility = GONE
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
+
+                        // clear input fields
                         title.setText("")
                         content.setText("")
                         notificationContent.setText("")
@@ -180,27 +191,26 @@ class UpdateNoveltyFragment : Fragment() {
         }
     }
 
-    fun clickedNovelty(id: Int) {
-        noveltyId = id
+    fun getClickedNews(id: Int) {
+        newsId = id
 
-        val title = view?.findViewById<EditText>(R.id.editTextUpdatePostTitle)
-        val content = view?.findViewById<EditText>(R.id.editTextUpdatePostContent)
+        val title = view?.findViewById<TextInputEditText>(R.id.editTextUpdatePostTitle)
+        val content = view?.findViewById<TextInputEditText>(R.id.editTextUpdatePostContent)
         val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
 
         progressBar?.visibility = VISIBLE
-        newsRepository.getNoveltyById(noveltyId) { result, novelty ->
+        newsRepository.getNewsById(newsId) { result, news ->
             when (result) {
                 "successful" -> {
-                    title?.setText(novelty.title)
-                    content?.setText(novelty.content)
+                    title?.setText(news.title)
+                    content?.setText(news.content)
                     progressBar?.visibility = GONE
                 }
                 "internalError" -> {
                     //notify user about error
-                    (context as MainActivity).makeToast(getString(R.string.error_loading_novelty))
+                    (context as MainActivity).makeToast(getString(R.string.error_loading_news_post))
                     title?.setText("")
                     content?.setText("")
-                    Log.d("Error fireStore", "Error loading novelty from fireStore")
                     progressBar?.visibility = GONE
                 }
             }

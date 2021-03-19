@@ -1,7 +1,6 @@
 package se.ju.student.hitech.events
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -16,11 +15,11 @@ import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
 class UpdateEventFragment : Fragment() {
 
-    lateinit var binding: FragmentUpdateEventBinding
+    private lateinit var binding: FragmentUpdateEventBinding
     private var eventId = 0
 
     companion object {
-        fun newInstance() = UpdateEventFragment()
+        val updateEventFragment = UpdateEventFragment()
     }
 
     override fun onCreateView(
@@ -30,6 +29,11 @@ class UpdateEventFragment : Fragment() {
     ) = FragmentUpdateEventBinding.inflate(layoutInflater, container, false).run {
         binding = this
         root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,6 +67,7 @@ class UpdateEventFragment : Fragment() {
                     binding.etLocation.setText("")
                 }.addOnFailureListener {
                     binding.progressBar.visibility = GONE
+                    // notify user about error
                     (context as MainActivity).makeToast(getString(R.string.failed_update_event))
                 }
             } else {
@@ -94,7 +99,6 @@ class UpdateEventFragment : Fragment() {
                     binding.etInformation.setText("")
                     binding.etLocation.setText("")
                     binding.etTime.setText("")
-                    Log.d("Error fireStore", "Error loading event from fireStore")
                     binding.progressBar.visibility = GONE
                 }
             }

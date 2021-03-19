@@ -2,7 +2,7 @@ package se.ju.student.hitech.news
 
 import java.sql.Timestamp
 
-data class Novelty(
+data class News(
     val id: Int = 0,
     val title: String = "",
     val content: String = "",

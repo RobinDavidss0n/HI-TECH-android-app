@@ -1,6 +1,7 @@
 package se.ju.student.hitech.news
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,13 +18,13 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.MainActivity
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NOVELTY
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_NOVELTY
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CREATE_NEWS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_NEWS
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
-import se.ju.student.hitech.news.ViewNoveltyActivity.Companion.EXTRA_NOVELTY_ID
+import se.ju.student.hitech.news.ViewNewsActivity.Companion.EXTRA_NEWS_ID
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class NewsFragment : Fragment() {
@@ -66,7 +67,6 @@ class NewsFragment : Fragment() {
             }
         }
 
-        // change to listener?
         loggedIn = userRepository.checkIfLoggedIn()
 
         if (loggedIn) {
@@ -76,12 +76,12 @@ class NewsFragment : Fragment() {
         }
 
         binding.fabCreateNewPost.setOnClickListener {
-            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NOVELTY)
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_CREATE_NEWS)
         }
     }
 
     class NewsViewModel : ViewModel() {
-        var news = MutableLiveData<List<Novelty>>()
+        var news = MutableLiveData<List<News>>()
 
         init {
             newsRepository.listenForNewsChanges { result, list ->
@@ -100,7 +100,7 @@ class NewsFragment : Fragment() {
 
     class NewsViewHolder(val binding: CardNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class NewsAdapter(val news: List<Novelty>) : RecyclerView.Adapter<NewsViewHolder>() {
+    class NewsAdapter(val news: List<News>) : RecyclerView.Adapter<NewsViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NewsViewHolder(
             CardNewsBinding.inflate(
@@ -111,18 +111,18 @@ class NewsFragment : Fragment() {
         )
 
         override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-            val novelty = news[position]
-            val id = novelty.id
+            val newsPost = news[position]
+            val id = newsPost.id
 
-            holder.binding.newsTitleNoImage.text = novelty.title
+            holder.binding.textviewNewsTitle.text = newsPost.title
             holder.binding.cardNews.setOnClickListener {
 
                 holder.binding.cardNews.context.startActivity(
                     Intent(
                         holder.binding.cardNews.context,
-                        ViewNoveltyActivity::class.java
+                        ViewNewsActivity::class.java
                     ).apply {
-                        putExtra(EXTRA_NOVELTY_ID, id)
+                        putExtra(EXTRA_NEWS_ID, id)
                     }
                 )
             }
@@ -135,28 +135,12 @@ class NewsFragment : Fragment() {
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_delete -> {
-                                AlertDialog.Builder(holder.itemView.context)
-                                    .setTitle(holder.itemView.context.getString(R.string.delete_novelty))
-                                    .setMessage(holder.itemView.context.getString(R.string.delete_post_are_you_sure))
-                                    .setPositiveButton(
-                                        holder.itemView.context.getString(R.string.yes)
-                                    ) { dialog, whichButton ->
-                                        // delete event
-                                        newsRepository.deleteNovelty(id).addOnFailureListener {
-                                            (holder.itemView.context as MainActivity).makeToast(
-                                                holder.itemView.context.getString(R.string.error_delete_novelty)
-                                            )
-                                        }
-                                    }.setNegativeButton(
-                                        holder.itemView.context.getString(R.string.no)
-                                    ) { dialog, whichButton ->
-                                        // Do not delete
-                                    }.show()
+                                showDeleteNewsAlertDialog(holder.itemView.context, id)
                             }
                             R.id.menu_edit -> {
-                                (holder.itemView.context as MainActivity).showClickedNovelty(id)
+                                (holder.itemView.context as MainActivity).setClickedNewsId(id)
                                 (holder.itemView.context as MainActivity).changeToFragment(
-                                    TAG_FRAGMENT_UPDATE_NOVELTY
+                                    TAG_FRAGMENT_UPDATE_NEWS
                                 )
                             }
                         }
@@ -170,5 +154,23 @@ class NewsFragment : Fragment() {
         }
 
         override fun getItemCount() = news.size
+
+        private fun showDeleteNewsAlertDialog(context: Context, id: Int) {
+            AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.delete_news_post))
+                .setMessage(context.getString(R.string.delete_post_are_you_sure))
+                .setPositiveButton(
+                    context.getString(R.string.yes)
+                ) { dialog, whichButton ->
+                    // delete news post
+                    newsRepository.deleteNews(id).addOnFailureListener {
+                        (context as MainActivity).makeToast(context.getString(R.string.error_delete_news_post))
+                    }
+                }.setNegativeButton(
+                    context.getString(R.string.no)
+                ) { dialog, whichButton ->
+                    // Do not delete post
+                }.show()
+        }
     }
 }

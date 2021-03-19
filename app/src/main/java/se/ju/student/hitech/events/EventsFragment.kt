@@ -1,6 +1,7 @@
 package se.ju.student.hitech.events
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -73,13 +74,12 @@ class EventsFragment : Fragment() {
             }
         }
 
-        // change to listener?
-        if (userRepository.checkIfLoggedIn()) {
-            loggedIn = true
+        loggedIn = userRepository.checkIfLoggedIn()
+
+        if (loggedIn) {
             binding.fabCreateEvent.visibility = VISIBLE
         } else {
             binding.fabCreateEvent.visibility = GONE
-            loggedIn = false
         }
 
         binding.fabCreateEvent.setOnClickListener {
@@ -135,23 +135,7 @@ class EventsFragment : Fragment() {
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_delete -> {
-                                AlertDialog.Builder(holder.itemView.context)
-                                    .setTitle(holder.itemView.context.getString(R.string.delete_event))
-                                    .setMessage(holder.itemView.context.getString(R.string.delete_event_are_you_sure))
-                                    .setPositiveButton(
-                                        holder.itemView.context.getString(R.string.yes)
-                                    ) { dialog, whichButton ->
-                                        // delete event
-                                        eventRepository.deleteEvent(id).addOnFailureListener {
-                                            (holder.itemView.context as MainActivity).makeToast(
-                                                holder.itemView.context.getString(R.string.error_delete_event)
-                                            )
-                                        }
-                                    }.setNegativeButton(
-                                        holder.itemView.context.getString(R.string.no)
-                                    ) { dialog, whichButton ->
-                                        // Do not delete
-                                    }.show()
+                                showDeleteEventAlertDialog(holder.itemView.context, id)
                             }
                             R.id.menu_edit -> {
                                 (holder.itemView.context as MainActivity).setClickedEventId(id)
@@ -170,6 +154,26 @@ class EventsFragment : Fragment() {
         }
 
         override fun getItemCount() = events.size
+
+        private fun showDeleteEventAlertDialog(context: Context, id: Int) {
+            AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.delete_event))
+                .setMessage(context.getString(R.string.delete_event_are_you_sure))
+                .setPositiveButton(
+                    context.getString(R.string.yes)
+                ) { dialog, whichButton ->
+                    // delete event
+                    eventRepository.deleteEvent(id).addOnFailureListener {
+                        (context as MainActivity).makeToast(
+                            context.getString(R.string.error_delete_event)
+                        )
+                    }
+                }.setNegativeButton(
+                    context.getString(R.string.no)
+                ) { dialog, whichButton ->
+                    // Do not delete event
+                }.show()
+        }
     }
 }
 
