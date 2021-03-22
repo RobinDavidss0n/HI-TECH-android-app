@@ -92,4 +92,9 @@
     <string name="empty_information">Information is empty</string>
     <string name="error_delete_event">Failed to delete event</string>
     <string name="error_delete_news_post">Failed to delete post</string>
+    <string name="join_chat">Join Chat</string>
+    <string name="close_chat">Close chat</string>
+    <string name="write_something">Write something...</string>
+    <string name="select_case">Select a case that best match your question</string>
+    <string name="enter_your_name">Enter your name:</string>
 </resources>

@@ -1,5 +1,6 @@
 package se.ju.student.hitech
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -17,6 +18,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import se.ju.student.hitech.chat.ActiveChatsFragmentUser
+import se.ju.student.hitech.chat.ChatRepository
+import se.ju.student.hitech.chat.ContactCaseFragment
 import se.ju.student.hitech.events.CreateNewEventFragment
 import se.ju.student.hitech.events.EventsFragment
 import se.ju.student.hitech.events.UpdateEventFragment.Companion.updateEventFragment
@@ -31,6 +35,8 @@ import se.ju.student.hitech.user.UserLoginFragment
 import se.ju.student.hitech.user.RegisterUserFragment
 import se.ju.student.hitech.user.UserPageFragment
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
+import android.provider.Settings
+import se.ju.student.hitech.user.UserRepository
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +46,8 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_CREATE_NEW_EVENT = "TAG_FRAGMENT_NEW_EVENT"
         const val TAG_FRAGMENT_SHOP = "TAG_FRAGMENT_SHOP"
         const val TAG_FRAGMENT_EVENTS = "TAG_FRAGMENT_EVENTS"
+        const val TAG_FRAGMENT_CONTACT_CASE = "TAG_FRAGMENT_CONTACT_CASE"
+        const val TAG_FRAGMENT_CONTACT_USER_VIEW = "TAG_FRAGMENT_CONTACT_USER_VIEW"
         const val TAG_FRAGMENT_NEWS = "TAG_FRAGMENT_NEWS"
         const val TAG_FRAGMENT_CONTACT = "TAG_FRAGMENT_CONTACT"
         const val TAG_FRAGMENT_ADMIN_LOGIN = "TAG_FRAGMENT_ADMIN_LOGIN"
@@ -75,6 +83,12 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
                 .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                 .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
+                .add(R.id.fragment_container, ContactCaseFragment(), TAG_FRAGMENT_CONTACT_CASE)
+                .add(
+                    R.id.fragment_container,
+                    ActiveChatsFragmentUser(),
+                    TAG_FRAGMENT_CONTACT_USER_VIEW
+                )
                 .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
                 .add(R.id.fragment_container, CreateNewsFragment(), TAG_FRAGMENT_CREATE_NEWS)
                 .add(
@@ -98,7 +112,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_news -> changeToFragment(TAG_FRAGMENT_NEWS)
                 R.id.nav_events -> changeToFragment(TAG_FRAGMENT_EVENTS)
                 R.id.nav_shop -> changeToFragment(TAG_FRAGMENT_SHOP)
-                R.id.nav_contact -> changeToFragment(TAG_FRAGMENT_CONTACT)
+                R.id.nav_contact -> {
+                    checkWhichContactFragmentToShow { fragment ->
+                        changeToFragment(fragment)
+                    }
+                }
             }
             true
         }
@@ -129,6 +147,47 @@ class MainActivity : AppCompatActivity() {
             topic
         ).also {
             sendNotification(it)
+        }
+    }
+
+    @SuppressLint("HardwareIds")
+    private fun checkWhichContactFragmentToShow(callback: (String) -> Unit) {
+        if (UserRepository().checkIfLoggedIn()) {
+            changeToFragment(TAG_FRAGMENT_CONTACT_USER_VIEW)
+        } else {
+            val androidID = Settings.Secure.getString(
+                this.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+
+            ChatRepository().getChatIDWithAndroidID(androidID) { result, chatID ->
+                when (result) {
+                    "successful" -> {
+                        ChatRepository().setCurrentChatID(chatID)
+                        reloadContactFragment()
+                        callback(TAG_FRAGMENT_CONTACT)
+                    }
+
+                    "notFound" -> {
+                        callback(TAG_FRAGMENT_CONTACT_CASE)
+                    }
+                    "internalError" -> makeToast("Something went wrong, check your internet connection and try again.")
+                }
+            }
+        }
+    }
+
+    fun reloadContactFragment() {
+        val contactFragment = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_CONTACT)
+        if (contactFragment != null) {
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.remove(contactFragment)
+            fragmentTransaction.add(
+                R.id.fragment_container,
+                ContactFragment(),
+                TAG_FRAGMENT_CONTACT
+            )
+            fragmentTransaction.commit()
         }
     }
 
