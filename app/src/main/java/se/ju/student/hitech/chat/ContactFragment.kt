@@ -17,15 +17,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
+import se.ju.student.hitech.chat.ChatRepository.Companion.chatRepository
 import se.ju.student.hitech.user.UserRepository
 import se.ju.student.hitech.databinding.FragmentContactBinding
 import se.ju.student.hitech.handlers.convertTimeToStringHourMinutesFormat
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class ContactFragment : Fragment() {
     private lateinit var binding: FragmentContactBinding
     private val viewModel: ContactViewModel by viewModels()
-    private lateinit var chatRepository: ChatRepository
-    private lateinit var userRepository: UserRepository
+   // private lateinit var chatRepository: ChatRepository
+   // private lateinit var userRepository: UserRepository
     private lateinit var messagesAdapter: ContactAdapter
     private lateinit var currentChatID: String
 
@@ -352,7 +354,6 @@ class ContactFragment : Fragment() {
         private inner class ContactViewHolderLeft(itemView: View) :
             RecyclerView.ViewHolder(itemView) {
 
-
             var messageLeft: TextView = itemView.findViewById(R.id.messageLeft)
             var timeLeft: TextView = itemView.findViewById(R.id.timeLeft)
             fun bind(position: Int) {
@@ -377,9 +378,9 @@ class ContactFragment : Fragment() {
         override fun getItemCount() = currentMessages.size
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            if (currentMessages[position].sentFromAdmin && UserRepository().checkIfLoggedIn()) {
+            if (currentMessages[position].sentFromAdmin && userRepository.checkIfLoggedIn()) {
                 (holder as ContactViewHolderRight).bind(position)
-            } else if (!currentMessages[position].sentFromAdmin && !UserRepository().checkIfLoggedIn()) {
+            } else if (!currentMessages[position].sentFromAdmin && !userRepository.checkIfLoggedIn()) {
                 (holder as ContactViewHolderRight).bind(position)
             } else {
                 (holder as ContactViewHolderLeft).bind(position)
@@ -387,9 +388,9 @@ class ContactFragment : Fragment() {
         }
 
         override fun getItemViewType(position: Int): Int {
-            return if (currentMessages[position].sentFromAdmin && UserRepository().checkIfLoggedIn()) {
+            return if (currentMessages[position].sentFromAdmin && userRepository.checkIfLoggedIn()) {
                 1
-            } else if (!currentMessages[position].sentFromAdmin && !UserRepository().checkIfLoggedIn()) {
+            } else if (!currentMessages[position].sentFromAdmin && !userRepository.checkIfLoggedIn()) {
                 1
             } else {
                 0

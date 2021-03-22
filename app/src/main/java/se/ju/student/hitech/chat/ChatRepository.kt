@@ -12,6 +12,7 @@ class ChatRepository {
 
     companion object {
         private var currentChatID = "noChatSelected"
+        var chatRepository = ChatRepository()
     }
 
 

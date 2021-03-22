@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.chat.ChatRepository.Companion.chatRepository
 import se.ju.student.hitech.databinding.FragmentContactCaseBinding
 
 class ContactCaseFragment : Fragment() {
     lateinit var binding: FragmentContactCaseBinding
-    private val chatRepository = ChatRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
