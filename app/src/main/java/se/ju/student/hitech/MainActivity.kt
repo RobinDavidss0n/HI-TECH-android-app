@@ -1,6 +1,5 @@
 package se.ju.student.hitech
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -35,7 +34,9 @@ import se.ju.student.hitech.user.UserLoginFragment
 import se.ju.student.hitech.user.RegisterUserFragment
 import se.ju.student.hitech.user.UserPageFragment
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
-import android.provider.Settings
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.ProgressBar
 import se.ju.student.hitech.chat.ContactFragment
 import se.ju.student.hitech.user.UserRepository
 import java.lang.Exception
@@ -151,30 +152,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("HardwareIds")
     private fun checkWhichContactFragmentToShow(callback: (String) -> Unit) {
         if (UserRepository().checkIfLoggedIn()) {
             changeToFragment(TAG_FRAGMENT_CONTACT_USER_VIEW)
         } else {
-            val androidID = Settings.Secure.getString(
-                this.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
 
-            ChatRepository().getChatIDWithAndroidID(androidID) { result, chatID ->
+            val progressBar = findViewById<ProgressBar>(R.id.MainProgressBar)
+            progressBar.visibility = VISIBLE
+            ChatRepository.chatRepository.getFirebaseInstallationsID { result, localID ->
                 when (result) {
                     "successful" -> {
-                        ChatRepository().setCurrentChatID(chatID)
-                        reloadContactFragment()
-                        callback(TAG_FRAGMENT_CONTACT)
-                    }
+                        ChatRepository().getChatIDWithLocalID(localID) { result2, chatID ->
+                            when (result2) {
+                                "successful" -> {
+                                    ChatRepository().setCurrentChatID(chatID)
+                                    reloadContactFragment()
+                                    callback(TAG_FRAGMENT_CONTACT)
+                                }
 
-                    "notFound" -> {
-                        callback(TAG_FRAGMENT_CONTACT_CASE)
+                                "notFound" -> {
+                                    callback(TAG_FRAGMENT_CONTACT_CASE)
+                                }
+                                "internalError" -> makeToast("Something went wrong, check your internet connection and try again.")
+                            }
+                            progressBar.visibility = GONE
+
+                        }
                     }
-                    "internalError" -> makeToast("Something went wrong, check your internet connection and try again.")
+                    "internalError" -> {
+                        progressBar.visibility = GONE
+                        makeToast(getString(R.string.internalError))
+                    }
                 }
             }
+
         }
     }
 

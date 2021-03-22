@@ -6,9 +6,11 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.R
 import se.ju.student.hitech.chat.ChatRepository.Companion.chatRepository
 import se.ju.student.hitech.databinding.FragmentContactCaseBinding
 
@@ -63,23 +65,33 @@ class ContactCaseFragment : Fragment() {
         }
     }
 
-    @SuppressLint("HardwareIds")
-    fun createNewChat(case: String) {
+    private fun createNewChat(case: String) {
 
-        val androidID = Settings.Secure.getString(
-            context?.contentResolver,
-            Settings.Secure.ANDROID_ID
-        )
-        val localUsername = binding.localUsername.text.toString()
-        chatRepository.createNewChat(androidID, localUsername, case) { result, chatID ->
+        binding.progressbarContactCase.visibility = View.VISIBLE
+        chatRepository.getFirebaseInstallationsID { result, localID ->
             when (result) {
                 "successful" -> {
-                    ChatRepository().setCurrentChatID(chatID)
-                    (context as MainActivity).reloadContactFragment()
-                    (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+                    val localUsername = binding.localUsername.text.toString()
+                    chatRepository.createNewChat(localID, localUsername, case) { result2, chatID ->
+                        when (result2) {
+                            "successful" -> {
+                                binding.progressbarContactCase.visibility = View.GONE
+                                ChatRepository().setCurrentChatID(chatID)
+                                (context as MainActivity).reloadContactFragment()
+                                (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+                            }
+                            "internalError" -> {
+                                binding.progressbarContactCase.visibility = View.GONE
+                                (context as MainActivity).makeToast(getString(R.string.internalError))
+                            }                        }
+                    }
                 }
-                "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+                "internalError" -> {
+                    binding.progressbarContactCase.visibility = View.GONE
+                    (context as MainActivity).makeToast(getString(R.string.internalError))
+                }
             }
         }
+
     }
 }

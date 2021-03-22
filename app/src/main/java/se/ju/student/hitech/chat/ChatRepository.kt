@@ -2,11 +2,13 @@ package se.ju.student.hitech.chat
 
 import android.util.Log
 import com.google.firebase.firestore.*
+import com.google.firebase.installations.FirebaseInstallations
 import se.ju.student.hitech.handlers.TimeHandler
 
 class ChatRepository {
 
     private val db = FirebaseFirestore.getInstance()
+    private val firebaseInstallations = FirebaseInstallations.getInstance()
     private val timeHandler = TimeHandler()
     private lateinit var currentMessageListener: ListenerRegistration
 
@@ -24,19 +26,35 @@ class ChatRepository {
         currentChatID = newChatID
     }
 
+
+    fun getFirebaseInstallationsID(callback: (String, String) -> Unit){
+        firebaseInstallations.id.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                if (task.result != null){
+                    callback("successful", task.result!!)
+                }else{
+                    callback("internalError", "")
+                }
+                Log.d("Installations", "Installation ID: " + task.result)
+            } else {
+                callback("internalError", "")
+                Log.e("Installations", "Unable to get Installation ID")
+            }
+        }
+    }
+
     fun createNewChat(
-        localAndroidID: String,
+        localID: String,
         localUsername: String,
         case: String,
         callback: (String, String) -> Unit
     ) {
 
         val chat = hashMapOf(
-            "androidIDUser" to localAndroidID,
+            "localID" to localID,
             "case" to case,
             "lastUpdated" to timeHandler.getLocalZoneTimestampInSeconds(),
             "activeAdmin" to "",
-            "isActive" to true,
             "lastSentMsg" to "",
             "localUsername" to localUsername,
             "chatID" to "",
@@ -190,26 +208,22 @@ class ChatRepository {
     fun closeChat(chatID: String, callback: (String) -> Unit) {
 
         db.collection("chats").document(chatID)
-            .update(
-                "isActive", false,
-                "androidIDUser", "",
-                "activeAdmin", ""
-            )
+            .delete()
             .addOnSuccessListener {
                 callback("successful")
             }.addOnFailureListener { error ->
-                Log.w("Deactivate chat database error", error)
+                Log.w("Deleting chat database error", error)
                 callback("internalError")
             }
     }
 
-    fun getChatIDWithAndroidID(
-        androidID: String,
+    fun getChatIDWithLocalID(
+        localID: String,
         callback: (String, String) -> Unit
     ) {
 
         db.collection("chats")
-            .whereEqualTo("androidIDUser", androidID)
+            .whereEqualTo("localID", localID)
             .limit(1)
             .get()
             .addOnSuccessListener { snapshot ->
@@ -277,12 +291,11 @@ class ChatRepository {
     }
 
 
-    fun loadAllActiveChatsAndUpdateIfChanged(
+    fun loadAllChatsAndUpdateIfChanged(
         callback: (String, MutableList<Chat>) -> Unit
     ) {
 
         db.collection("chats")
-            .whereEqualTo("isActive", true)
             .orderBy("lastUpdated", Query.Direction.DESCENDING)
             .addSnapshotListener { querySnapshot, error ->
 
@@ -291,14 +304,14 @@ class ChatRepository {
                     callback("internalError", mutableListOf(Chat()))
                 } else {
 
-                    val activeChatsList = mutableListOf<Chat>()
+                    val chatsList = mutableListOf<Chat>()
                     querySnapshot!!.documents.forEach { doc ->
                         val chat = doc.toObject(Chat::class.java)
                         if (chat != null) {
-                            activeChatsList.add(chat)
+                            chatsList.add(chat)
                         }
                     }
-                    callback("successful", activeChatsList)
+                    callback("successful", chatsList)
                 }
             }
     }

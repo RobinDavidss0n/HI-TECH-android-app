@@ -11,13 +11,24 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_ADMIN_LOGIN
 import se.ju.student.hitech.MainActivity.Companion.TAG_USER_PAGE
 import se.ju.student.hitech.R
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
+import java.util.regex.Pattern
 
 class RegisterUserFragment : Fragment() {
 
     private val progressBar = view?.findViewById<ProgressBar>(R.id.register_user_progressBar)
+    private val passwordPattern: Pattern = Pattern.compile(
+        "^" +
+                "(?=.*[A-Ö])" + //at least one uppercase
+                "(?=.*[a-ö])" + //at least one lowercase
+                "(?=.*\\d)" + //at least one digit
+                "(?=\\S+$)" +  // no white spaces
+                ".{6,}" +  // at least 6 characters
+                "$"
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,8 +111,8 @@ class RegisterUserFragment : Fragment() {
             return false
         }
 
-        if (password.length < 5) {
-            passwordInputLayout?.error = getString(R.string.passwordNotLongEnough)
+        if (!passwordPattern.matcher(password).matches()) {
+            passwordInputLayout?.error = getString(R.string.passwordToWeak)
             return false
 
         }
@@ -131,7 +142,8 @@ class RegisterUserFragment : Fragment() {
                 "successful" -> {
                     (context as MainActivity).makeToast(getString(R.string.createUserSuccessful))
                     userRepository.userLogout()
-                    //redirect
+                    (context as MainActivity).changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
+
                 }
                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
             }

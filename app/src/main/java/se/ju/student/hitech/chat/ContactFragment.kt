@@ -86,10 +86,10 @@ class ContactFragment : Fragment() {
 
     private fun closeChat() {
         AlertDialog.Builder(context as MainActivity)
-            .setTitle("Close chat")
-            .setMessage("Do you want to close the chat?")
+            .setTitle(getString(R.string.close_chat))
+            .setMessage(getString(R.string.close_chat_confirmation))
             .setPositiveButton(
-                "Yes"
+                getString(R.string.yes)
 
             ) { _, _ ->
                 binding.progressbarContact.visibility = VISIBLE
@@ -98,21 +98,11 @@ class ContactFragment : Fragment() {
 
                         "successful" -> {
                             if (UserRepository().checkIfLoggedIn()) {
-                                userRepository.removeChatFromUser(currentChatID) { result2 ->
-                                    when (result2) {
-                                        "successful" -> {
-                                            (context as MainActivity).changeToFragment(
-                                                MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW
-                                            )
-                                        }
-                                        "internalError" -> (context as MainActivity).makeToast(
-                                            getString(
-                                                R.string.internalError
-                                            )
-                                        )
-                                    }
-                                    binding.progressbarContact.visibility = GONE
-                                }
+
+                                (context as MainActivity).changeToFragment(
+                                    MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW
+                                )
+
                             } else {
                                 (context as MainActivity).changeToFragment(
                                     MainActivity.TAG_FRAGMENT_CONTACT_CASE
@@ -128,10 +118,8 @@ class ContactFragment : Fragment() {
                 }
             }
             .setNegativeButton(
-                "NO"
-            ) { _, _ ->
-                //Don't delete
-            }
+                getString(R.string.no)
+            ) { _, _ -> }
             .show()
     }
 
@@ -141,11 +129,10 @@ class ContactFragment : Fragment() {
             when (result) {
                 "false" -> {
                     AlertDialog.Builder(context as MainActivity)
-                        .setTitle("Join chat")
-                        .setMessage("Do you want to join the chat?")
+                        .setTitle(getString(R.string.join_chat))
+                        .setMessage(getString(R.string.join_chat_confirmation))
                         .setPositiveButton(
-                            "Yes"
-
+                            getString(R.string.yes)
                         ) { _, _ ->
                             binding.progressbarContact.visibility = VISIBLE
                             userRepository.getUsername(userRepository.getUserID()) { result, username ->
@@ -177,8 +164,7 @@ class ContactFragment : Fragment() {
                                                 }
 
                                                 "internalError" -> {
-                                                    binding.progressbarContact.visibility =
-                                                        View.GONE
+                                                    binding.progressbarContact.visibility = GONE
                                                     (context as MainActivity).makeToast(getString(R.string.internalError))
                                                 }
                                             }
@@ -192,18 +178,17 @@ class ContactFragment : Fragment() {
                             }
                         }
                         .setNegativeButton(
-                            "NO"
-                        ) { _, _ ->
-                            //Don't delete
-                        }
+                            getString(R.string.no)
+                        ) { _, _ -> }
                         .show()
                 }
                 "true" -> {
                     AlertDialog.Builder(context as MainActivity)
-                        .setTitle("Leave chat")
-                        .setMessage("Do you want to leave the chat?")
+
+                        .setTitle(getString(R.string.leave_chat))
+                        .setMessage(getString(R.string.leave_chat_confirmation))
                         .setPositiveButton(
-                            "Yes"
+                            getString(R.string.yes)
 
                         ) { _, _ ->
                             binding.progressbarContact.visibility = VISIBLE
@@ -231,10 +216,8 @@ class ContactFragment : Fragment() {
                             }
                         }
                         .setNegativeButton(
-                            "NO"
-                        ) { _, _ ->
-                            //Don't delete
-                        }
+                            getString(R.string.no)
+                        ) { _, _ -> }
                         .show()
                 }
                 "internalError" -> {
@@ -256,8 +239,8 @@ class ContactFragment : Fragment() {
                         chatRepository.checkIfCurrentAdminIsInChatOrIfEmpty(
                             userRepository.getUserID(),
                             currentChatID
-                        ) {
-                            when (it) {
+                        ) { result2 ->
+                            when (result2) {
                                 "true" -> {
                                     binding.sendMessageLayout.visibility = VISIBLE
                                     binding.leaveOrJoinChat.visibility = VISIBLE
@@ -276,22 +259,27 @@ class ContactFragment : Fragment() {
                                 }
                                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.error_chat))
                             }
+                            binding.progressbarContact2.visibility = GONE
+
                         }
                     } else {
                         binding.sendMessageLayout.visibility = VISIBLE
                         binding.closeChat.visibility = VISIBLE
-                        if (chat.adminUsername == ""){
+                        if (chat.adminUsername == "") {
                             binding.chattingWith.text =
-                            getString(R.string.wating_for_admin)
-                            
-                        }else{
+                                getString(R.string.wating_for_admin)
+
+                        } else {
                             binding.chattingWith.text =
                                 getString(R.string.chatting_With, chat.adminUsername)
                         }
-
+                        binding.progressbarContact2.visibility = GONE
                     }
                 }
-                "internalError" -> (context as MainActivity).makeToast(getString(R.string.error_chat))
+                "internalError" -> {
+                    binding.progressbarContact2.visibility = GONE
+                    (context as MainActivity).makeToast(getString(R.string.error_chat))
+                }
             }
         }
     }
@@ -340,7 +328,6 @@ class ContactFragment : Fragment() {
                         viewModel.currentMessages.value?.let { it1 ->
                             binding.rvRecyclerViewMessages.scrollToPosition(it1.size - 1)
                         }
-                        Log.d("FireStore", "Message sent.")
                     }
 
                     "internalError" -> {
