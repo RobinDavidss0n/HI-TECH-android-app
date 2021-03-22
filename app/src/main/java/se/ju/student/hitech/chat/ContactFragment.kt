@@ -21,6 +21,7 @@ import se.ju.student.hitech.R
 import se.ju.student.hitech.chat.ChatRepository.Companion.chatRepository
 import se.ju.student.hitech.user.UserRepository
 import se.ju.student.hitech.databinding.FragmentContactBinding
+import se.ju.student.hitech.events.Event
 import se.ju.student.hitech.handlers.convertTimeToStringHourMinutesFormat
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
@@ -68,7 +69,7 @@ class ContactFragment : Fragment() {
         }
 
         loadAllMessagesAndUpdateIfChanged()
-        setText()
+        updateAppearanceForCurrentUser()
 
         binding.sendMessage.setOnClickListener {
             sendMessage()
@@ -96,22 +97,32 @@ class ContactFragment : Fragment() {
                     when (result) {
 
                         "successful" -> {
-                            userRepository.removeChatFromUser(currentChatID) { it2 ->
-                                when (it2) {
-                                    "successful" -> {
-                                        (context as MainActivity).changeToFragment(
-                                            MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW
+                            if (UserRepository().checkIfLoggedIn()) {
+                                userRepository.removeChatFromUser(currentChatID) { result2 ->
+                                    when (result2) {
+                                        "successful" -> {
+                                            (context as MainActivity).changeToFragment(
+                                                MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW
+                                            )
+                                        }
+                                        "internalError" -> (context as MainActivity).makeToast(
+                                            getString(
+                                                R.string.internalError
+                                            )
                                         )
                                     }
-                                    "internalError" -> (context as MainActivity).makeToast("error")
+                                    binding.progressbarContact.visibility = GONE
                                 }
-                                binding.progressbarContact.visibility = GONE
+                            } else {
+                                (context as MainActivity).changeToFragment(
+                                    MainActivity.TAG_FRAGMENT_CONTACT_CASE
+                                )
                             }
                         }
 
                         "internalError" -> {
                             binding.progressbarContact.visibility = GONE
-                            (context as MainActivity).makeToast("error")
+                            (context as MainActivity).makeToast(getString(R.string.internalError))
                         }
                     }
                 }
@@ -148,17 +159,18 @@ class ContactFragment : Fragment() {
                                             when (it) {
                                                 "successful" -> {
 
-                                                    setText()
+                                                    updateAppearanceForCurrentUser()
                                                     userRepository.addChatToUser(
                                                         currentChatID
                                                     ) { it2 ->
                                                         when (it2) {
                                                             "successful" -> {
-                                                                setText()
+                                                                updateAppearanceForCurrentUser()
                                                             }
                                                             "internalError" -> (context as MainActivity).makeToast(
-                                                                "error"
+                                                                getString(R.string.internalError)
                                                             )
+
                                                         }
                                                         binding.progressbarContact.visibility = GONE
                                                     }
@@ -167,14 +179,14 @@ class ContactFragment : Fragment() {
                                                 "internalError" -> {
                                                     binding.progressbarContact.visibility =
                                                         View.GONE
-                                                    (context as MainActivity).makeToast("error")
+                                                    (context as MainActivity).makeToast(getString(R.string.internalError))
                                                 }
                                             }
                                         }
                                     }
                                     "internalError" -> {
                                         binding.progressbarContact.visibility = GONE
-                                        (context as MainActivity).makeToast("error")
+                                        (context as MainActivity).makeToast(getString(R.string.internalError))
                                     }
                                 }
                             }
@@ -204,14 +216,16 @@ class ContactFragment : Fragment() {
                                                     MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW
                                                 )
                                             }
-                                            "internalError" -> (context as MainActivity).makeToast("error")
+                                            "internalError" -> (context as MainActivity).makeToast(
+                                                getString(R.string.internalError)
+                                            )
                                         }
                                         binding.progressbarContact.visibility = GONE
                                     }
 
                                     "internalError" -> {
                                         binding.progressbarContact.visibility = GONE
-                                        (context as MainActivity).makeToast("error")
+                                        (context as MainActivity).makeToast(getString(R.string.internalError))
                                     }
                                 }
                             }
@@ -224,19 +238,20 @@ class ContactFragment : Fragment() {
                         .show()
                 }
                 "internalError" -> {
-                    (context as MainActivity).makeToast("error")
+                    (context as MainActivity).makeToast(getString(R.string.internalError))
                     binding.progressbarContact.visibility = GONE
                 }
             }
         }
     }
 
-    private fun setText() {
+    private fun updateAppearanceForCurrentUser() {
         chatRepository.getChatWithChatID(currentChatID) { result, chat ->
             when (result) {
                 "successful" -> {
                     if (userRepository.checkIfLoggedIn()) {
-                        binding.chattingWith.text = "Chatting With ${chat.localUsername}"
+                        binding.chattingWith.text =
+                            getString(R.string.chatting_With, chat.localUsername)
 
                         chatRepository.checkIfCurrentAdminIsInChatOrIfEmpty(
                             userRepository.getUserID(),
@@ -244,28 +259,39 @@ class ContactFragment : Fragment() {
                         ) {
                             when (it) {
                                 "true" -> {
+                                    binding.sendMessageLayout.visibility = VISIBLE
                                     binding.leaveOrJoinChat.visibility = VISIBLE
-                                    binding.leaveOrJoinChat.text = "Leave chat"
+                                    binding.leaveOrJoinChat.text = getString(R.string.leave_chat)
                                     binding.closeChat.visibility = VISIBLE
                                 }
                                 "empty" -> {
                                     binding.leaveOrJoinChat.visibility = VISIBLE
-                                    binding.leaveOrJoinChat.text = "Join chat"
+                                    binding.leaveOrJoinChat.text = getString(R.string.join_chat)
                                 }
                                 "false" -> {
                                     binding.currentAdmin.visibility = VISIBLE
                                     binding.currentAdmin.text =
-                                        "${chat.adminUsername} is currently chatting here."
+                                        getString(R.string.is_chatting_here, chat.adminUsername)
                                     binding.sendMessageLayout.visibility = GONE
                                 }
-                                "internalError" -> (context as MainActivity).makeToast("error")
+                                "internalError" -> (context as MainActivity).makeToast(getString(R.string.error_chat))
                             }
                         }
                     } else {
-                        binding.chattingWith.text = "Chatting With ${chat.adminUsername}"
+                        binding.sendMessageLayout.visibility = VISIBLE
+                        binding.closeChat.visibility = VISIBLE
+                        if (chat.adminUsername == ""){
+                            binding.chattingWith.text =
+                            getString(R.string.wating_for_admin)
+                            
+                        }else{
+                            binding.chattingWith.text =
+                                getString(R.string.chatting_With, chat.adminUsername)
+                        }
+
                     }
                 }
-                "internalError" -> (context as MainActivity).makeToast("error")
+                "internalError" -> (context as MainActivity).makeToast(getString(R.string.error_chat))
             }
         }
     }
@@ -285,8 +311,13 @@ class ContactFragment : Fragment() {
                         messagesAdapter.notifyDataSetChanged()
                     }
                     "internalError" -> {
-                        //notify user about error
-                        Log.d("Error fireStore", "Error loading activeChat list from fireStore")
+                        val errorList = mutableListOf<Message>()
+                        val error = Message()
+                        //Can't use getString() in ViewModel so that's why it's hard coded
+                        error.msgText =
+                            "Error getting messages, check your internet connection and restart the app."
+                        errorList.add(error)
+                        viewModel.currentMessages.postValue(errorList)
                     }
                 }
                 binding.progressbarContact.visibility = GONE
@@ -311,7 +342,10 @@ class ContactFragment : Fragment() {
                         }
                         Log.d("FireStore", "Message sent.")
                     }
-                    "internalError" -> (context as MainActivity).makeToast("Something went wrong, check your internet connection and try again.")
+
+                    "internalError" -> {
+                        (context as MainActivity).makeToast(getString(R.string.internalError))
+                    }
                 }
             }
         }

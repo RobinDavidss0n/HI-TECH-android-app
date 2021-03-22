@@ -2,7 +2,7 @@ package se.ju.student.hitech.events
 
 data class Event(
     val id: Int = 0,
-    val title: String = "",
+    var title: String = "",
     val location: String = "",
     val date: String = "",
     val time: String = "",

@@ -93,7 +93,7 @@ class ChatRepository {
                 }
 
             }.addOnFailureListener { error ->
-                Log.w("Add user to chat database error", error)
+                Log.w("Check if chat is occupied database error", error)
                 callback("internalError")
             }
     }
@@ -120,7 +120,7 @@ class ChatRepository {
                 }
 
             }.addOnFailureListener { error ->
-                Log.w("Add user to chat database error", error)
+                Log.w("Check if current admin is in chat or empty database error", error)
                 callback("internalError")
             }
     }
@@ -139,7 +139,7 @@ class ChatRepository {
                     callback("notFound", Chat())
                 }
             }.addOnFailureListener { error ->
-                Log.w("Add user to chat database error", error)
+                Log.w("Get chat with id database error", error)
                 callback("internalError", Chat())
             }
     }
@@ -221,7 +221,7 @@ class ChatRepository {
                     }
                 }
             }.addOnFailureListener { error ->
-                Log.w("Get user info database error", error)
+                Log.w("Get chat database error", error)
                 callback("internalError", "")
             }
     }
@@ -232,12 +232,6 @@ class ChatRepository {
             currentMessageListener.remove()
         }
     }
-
-    //En callback funktion som laddar in alla messages till "messagesList" och uppdaterar listan när ändringar görs i databasen
-    //Första gången funktionen kallas kommer den callbacka "loaded" när den laddat in all data, efter det gör den alla uppdateringar i bakgrunden
-    //Listerner behövs tas bort och anropas på nytt om användaren byter chatt
-    //Den kan tas bort genom att anropa "removeCurrentSpecificChatMessagesLoader" vilket bör göras varje gång innan en chatt laddas så inte några chattar mixas av misstag
-    //Hur man anropar funktionen finns under funktionen
 
     fun loadAllMessagesFromSpecificChatAndUpdateIfChanged(
         chatID: String,
@@ -282,22 +276,7 @@ class ChatRepository {
             }
     }
 
-    /*
-    chatRepository.removeCurrentSpecificChatMessagesLoader()
-    chatRepository.loadAllMessagesFromSpecificChatAndUpdateIfChanged(chatID) { result ->
-        when (result) {
-            "loaded" -> {
-                //all data laddat, säkert att sätta in det i viewn
-            }
-            "internalError" -> {
-                //meddela användaren om att något gick fel med att hämta/uppdatera datan
-            }
-        }
-    }
-    */
 
-    //En callback funktion som laddar in alla aktiva chattar till "activeChatsList" och uppdaterar listan och gör en ny callback när ändringar görs i databasen
-    //Hur man anropar funktionen finns under funktionen
     fun loadAllActiveChatsAndUpdateIfChanged(
         callback: (String, MutableList<Chat>) -> Unit
     ) {
@@ -308,7 +287,7 @@ class ChatRepository {
             .addSnapshotListener { querySnapshot, error ->
 
                 if (error != null) {
-                    Log.w("Messages listener error ", error)
+                    Log.w("Chat listener error ", error)
                     callback("internalError", mutableListOf(Chat()))
                 } else {
 
@@ -323,25 +302,8 @@ class ChatRepository {
                 }
             }
     }
-    /*
-     chatRepository.loadAllActiveChatsAndUpdateIfChanged() { result ->
-                when (result) {
-                    "loaded" -> {
-                        //all data laddat, säkert att sätta in det i viewn
-                    }
-                    "internalError" -> {
-                        //meddela användaren om att något gick fel med att hämta/uppdatera datan
-                    }
-                }
-            }
-     */
 
-
-    //En callback funktion som sätter en listener efter nya chattar och callbackar när en ny chatt läggs tills
-    //Används för att skicka en notis om ny chatt
-    //En "Chat" class skickas med callbacken så man kan visa vilket case det är i notisen
-    //Hur man anropar funktionen finns under funktionen
-    fun setNewChatListener(
+    fun setNewChatNotificationListener(
         callback: (String, Chat) -> Unit,
     ) {
         var firstCall = true
@@ -349,7 +311,7 @@ class ChatRepository {
             .addSnapshotListener { querySnapshot, error ->
 
                 if (error != null) {
-                    Log.w("Messages listener error ", error)
+                    Log.w("Chat notification listener error ", error)
                     callback("internalError", Chat())
                 }
 
@@ -370,25 +332,8 @@ class ChatRepository {
             }
     }
 
-    /*
-    chatRepository.setNewChatListener() { result, dataMap ->
-                when (result) {
-                    "newChat" -> {
-                        //skicka notis
-                    }
-                    "internalError" -> {
-                        //meddela användare
-                    }
-                }
-            }
-     */
 
-
-    //En callback funktion som sätter en listener efter nya meddelande för en specifik chatt och callbackar när ett nytt medelande läggs tills
-    //Används för att skicka en notis om nytt meddelande
-    //En "Message" class skickas med callbacken så man kan visa meddelandet i notisen
-    //Hur man anropar funktionen finns under funktionen
-    fun setNewMessagesListener(
+    fun setNewMessagesNotificationListener(
         chatID: String,
         callback: (String, Message) -> Unit,
     ) {
@@ -397,7 +342,7 @@ class ChatRepository {
             .addSnapshotListener { querySnapshot, error ->
 
                 if (error != null) {
-                    Log.w("Messages listener error ", error)
+                    Log.w("Messages notification listener error ", error)
                     callback("internalError", Message())
                 }
 
@@ -418,17 +363,5 @@ class ChatRepository {
             }
     }
 
-    /*
-      chatRepository.setNewMessagesListener(chatID) { result, message ->
-                when (result) {
-                    "newChat" -> {
-                       //skicka notis
-                    }
-                    "internalError" -> {
-                        //Meddela användare om fel
-                    }
-                }
-            }
-     */
 }
 

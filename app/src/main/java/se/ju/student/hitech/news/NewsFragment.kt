@@ -1,7 +1,7 @@
 package se.ju.student.hitech.news
 
 import android.app.AlertDialog
-import android.content.Context
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +26,8 @@ import se.ju.student.hitech.databinding.FragmentNewsBinding
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 import se.ju.student.hitech.news.ViewNewsActivity.Companion.EXTRA_NEWS_ID
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
+import android.content.Context
+import se.ju.student.hitech.events.Event
 
 class NewsFragment : Fragment() {
 
@@ -88,11 +90,16 @@ class NewsFragment : Fragment() {
                 when (result) {
                     "successful" -> {
                         news.postValue(list.asReversed())
+
                     }
                     "internalError" -> {
-                        //notify user about error
-                        Log.d("Error fireStore", "Error loading news list from fireStore")
-                    }
+                        val errorList = mutableListOf<News>()
+                        val error = News()
+                        //Can't use getString() in ViewModel so that's why it's hard coded
+                        error.title = "Error getting news, check your internet connection and restart the app."
+                        errorList.add(error)
+                        news.postValue(errorList)
+                                         }
                 }
             }
         }

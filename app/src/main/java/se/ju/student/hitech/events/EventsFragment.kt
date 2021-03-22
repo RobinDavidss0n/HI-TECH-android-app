@@ -3,6 +3,7 @@ package se.ju.student.hitech.events
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.provider.Settings.Global.getString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.GONE
@@ -95,10 +96,15 @@ class EventsFragment : Fragment() {
                 when (result) {
                     "successful" -> {
                         events.postValue(list.asReversed())
+
                     }
                     "internalError" -> {
-                        //notify user about error
-                        Log.d("Error fireStore", "Error loading news list from fireStore")
+                        val errorList = mutableListOf<Event>()
+                        val error = Event()
+                        //Can't use getString() in ViewModel so that's why it's hard coded
+                        error.title = "Error getting events, check your internet connection and restart the app."
+                        errorList.add(error)
+                        events.postValue(errorList)
                     }
                 }
             }

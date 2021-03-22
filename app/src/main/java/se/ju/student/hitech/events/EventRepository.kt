@@ -1,8 +1,10 @@
 package se.ju.student.hitech.events
 
+import android.provider.Settings.Global.getString
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
+import se.ju.student.hitech.R
 
 class EventRepository {
 
@@ -64,6 +66,7 @@ class EventRepository {
                         val event = doc.toObject(Event::class.java)!!
                         currentEventList.add(event)
                     }
+
                     callback("successful", currentEventList)
                 }
             }

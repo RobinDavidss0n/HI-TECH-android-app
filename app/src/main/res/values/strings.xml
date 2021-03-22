@@ -97,4 +97,12 @@
     <string name="write_something">Write something...</string>
     <string name="select_case">Select a case that best match your question</string>
     <string name="enter_your_name">Enter your name:</string>
+    <string name="error_getting_events">Error getting events, check your internet connection and restart the app.</string>
+    <string name="chatting_With">Chatting with %1$s</string>
+    <string name="leave_chat">Leave chat</string>
+    <string name="is_chatting_here">%1$s is currently chatting here.</string>
+    <string name="error_chat">Error loading all chat functions, check your internet connection and restart the app.</string>
+    <string name="wating_for_admin">Wating for an admin to join</string>
+
+
 </resources>
