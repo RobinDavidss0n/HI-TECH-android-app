@@ -3,6 +3,7 @@ package se.ju.student.hitech.chat
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.MainActivity
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_CONTACT
+import se.ju.student.hitech.chat.ChatRepository.Companion.chatRepository
 import se.ju.student.hitech.databinding.FragmentActiveChatsUserBinding
 import se.ju.student.hitech.databinding.ItemUserChatBinding
 
@@ -49,13 +52,11 @@ class ActiveChatsFragmentUser : Fragment() {
                     }
                 }
             }
-
             binding.progressBarActiveChats.visibility = GONE
         }
     }
 
     class ActiveChatsViewModel : ViewModel() {
-        var chatRepository = ChatRepository()
         var activeChats = MutableLiveData<List<Chat>>()
 
         init {
@@ -95,11 +96,10 @@ class ActiveChatsFragmentUser : Fragment() {
             holder.binding.itemUserChat.setOnClickListener {
                 ChatRepository().setCurrentChatID(chat.chatID.toString())
                 (holder.itemView.context as MainActivity).reloadContactFragment()
-                (holder.itemView.context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+                (holder.itemView.context as MainActivity).changeToFragment(TAG_FRAGMENT_CONTACT)
             }
         }
 
         override fun getItemCount() = activeChats.size
-
     }
 }

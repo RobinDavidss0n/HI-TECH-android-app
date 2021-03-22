@@ -36,6 +36,7 @@ import se.ju.student.hitech.user.RegisterUserFragment
 import se.ju.student.hitech.user.UserPageFragment
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import android.provider.Settings
+import se.ju.student.hitech.chat.ContactFragment
 import se.ju.student.hitech.user.UserRepository
 import java.lang.Exception
 
@@ -81,9 +82,9 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, AboutFragment(), TAG_FRAGMENT_ABOUT)
                 .add(R.id.fragment_container, EventsFragment(), TAG_FRAGMENT_EVENTS)
                 .add(R.id.fragment_container, ShopFragment(), TAG_FRAGMENT_SHOP)
-                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                 .add(R.id.fragment_container, RegisterUserFragment(), TAG_REGISTER_USER)
                 .add(R.id.fragment_container, ContactCaseFragment(), TAG_FRAGMENT_CONTACT_CASE)
+                .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                 .add(
                     R.id.fragment_container,
                     ActiveChatsFragmentUser(),

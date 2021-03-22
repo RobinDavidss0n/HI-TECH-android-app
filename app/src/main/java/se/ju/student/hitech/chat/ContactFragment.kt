@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -26,11 +27,8 @@ import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 class ContactFragment : Fragment() {
     private lateinit var binding: FragmentContactBinding
     private val viewModel: ContactViewModel by viewModels()
-   // private lateinit var chatRepository: ChatRepository
-   // private lateinit var userRepository: UserRepository
     private lateinit var messagesAdapter: ContactAdapter
     private lateinit var currentChatID: String
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,9 +41,6 @@ class ContactFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //binding.progressBarActiveChats.visibility = View.VISIBLE
-        chatRepository = ChatRepository()
-        userRepository = UserRepository()
         currentChatID = chatRepository.getCurrentChatID()
 
         binding.rvRecyclerViewMessages.apply {
@@ -96,7 +91,7 @@ class ContactFragment : Fragment() {
                 "Yes"
 
             ) { _, _ ->
-                binding.progressbarContact.visibility = View.VISIBLE
+                binding.progressbarContact.visibility = VISIBLE
                 chatRepository.closeChat(currentChatID) { result ->
                     when (result) {
 
@@ -110,12 +105,12 @@ class ContactFragment : Fragment() {
                                     }
                                     "internalError" -> (context as MainActivity).makeToast("error")
                                 }
-                                binding.progressbarContact.visibility = View.GONE
+                                binding.progressbarContact.visibility = GONE
                             }
                         }
 
                         "internalError" -> {
-                            binding.progressbarContact.visibility = View.GONE
+                            binding.progressbarContact.visibility = GONE
                             (context as MainActivity).makeToast("error")
                         }
                     }
@@ -129,7 +124,6 @@ class ContactFragment : Fragment() {
             .show()
     }
 
-
     private fun leaveOrJoinChat() {
 
         chatRepository.isChatOccupied(currentChatID) { result ->
@@ -142,7 +136,7 @@ class ContactFragment : Fragment() {
                             "Yes"
 
                         ) { _, _ ->
-                            binding.progressbarContact.visibility = View.VISIBLE
+                            binding.progressbarContact.visibility = VISIBLE
                             userRepository.getUsername(userRepository.getUserID()) { result, username ->
                                 when (result) {
                                     "successful" -> {
@@ -166,8 +160,7 @@ class ContactFragment : Fragment() {
                                                                 "error"
                                                             )
                                                         }
-                                                        binding.progressbarContact.visibility =
-                                                            View.GONE
+                                                        binding.progressbarContact.visibility = GONE
                                                     }
                                                 }
 
@@ -180,7 +173,7 @@ class ContactFragment : Fragment() {
                                         }
                                     }
                                     "internalError" -> {
-                                        binding.progressbarContact.visibility = View.GONE
+                                        binding.progressbarContact.visibility = GONE
                                         (context as MainActivity).makeToast("error")
                                     }
                                 }
@@ -201,7 +194,7 @@ class ContactFragment : Fragment() {
                             "Yes"
 
                         ) { _, _ ->
-                            binding.progressbarContact.visibility = View.VISIBLE
+                            binding.progressbarContact.visibility = VISIBLE
                             chatRepository.removeAdminFromChat(currentChatID) {
                                 when (it) {
                                     "successful" -> userRepository.removeChatFromUser(currentChatID) { it2 ->
@@ -213,11 +206,11 @@ class ContactFragment : Fragment() {
                                             }
                                             "internalError" -> (context as MainActivity).makeToast("error")
                                         }
-                                        binding.progressbarContact.visibility = View.GONE
+                                        binding.progressbarContact.visibility = GONE
                                     }
 
                                     "internalError" -> {
-                                        binding.progressbarContact.visibility = View.GONE
+                                        binding.progressbarContact.visibility = GONE
                                         (context as MainActivity).makeToast("error")
                                     }
                                 }
@@ -232,7 +225,7 @@ class ContactFragment : Fragment() {
                 }
                 "internalError" -> {
                     (context as MainActivity).makeToast("error")
-                    binding.progressbarContact.visibility = View.GONE
+                    binding.progressbarContact.visibility = GONE
                 }
             }
         }
@@ -245,36 +238,33 @@ class ContactFragment : Fragment() {
                     if (userRepository.checkIfLoggedIn()) {
                         binding.chattingWith.text = "Chatting With ${chat.localUsername}"
 
-
                         chatRepository.checkIfCurrentAdminIsInChatOrIfEmpty(
                             userRepository.getUserID(),
                             currentChatID
                         ) {
                             when (it) {
                                 "true" -> {
-                                    binding.leaveOrJoinChat.visibility = View.VISIBLE
+                                    binding.leaveOrJoinChat.visibility = VISIBLE
                                     binding.leaveOrJoinChat.text = "Leave chat"
-                                    binding.closeChat.visibility = View.VISIBLE
+                                    binding.closeChat.visibility = VISIBLE
                                 }
                                 "empty" -> {
-                                    binding.leaveOrJoinChat.visibility = View.VISIBLE
+                                    binding.leaveOrJoinChat.visibility = VISIBLE
                                     binding.leaveOrJoinChat.text = "Join chat"
                                 }
                                 "false" -> {
-                                    binding.currentAdmin.visibility = View.VISIBLE
+                                    binding.currentAdmin.visibility = VISIBLE
                                     binding.currentAdmin.text =
                                         "${chat.adminUsername} is currently chatting here."
-                                    binding.sendMessageLayout.visibility = View.GONE
+                                    binding.sendMessageLayout.visibility = GONE
                                 }
                                 "internalError" -> (context as MainActivity).makeToast("error")
                             }
                         }
-
                     } else {
                         binding.chattingWith.text = "Chatting With ${chat.adminUsername}"
                     }
                 }
-
                 "internalError" -> (context as MainActivity).makeToast("error")
             }
         }
@@ -315,7 +305,6 @@ class ContactFragment : Fragment() {
             ) { result ->
                 when (result) {
                     "successful" -> {
-                        //messagesAdapter.notifyDataSetChanged()
                         binding.messageInput.text.clear()
                         viewModel.currentMessages.value?.let { it1 ->
                             binding.rvRecyclerViewMessages.scrollToPosition(it1.size - 1)
@@ -339,6 +328,11 @@ class ContactFragment : Fragment() {
         private val currentMessages: List<Message>
     ) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        companion object {
+            const val VIEW_TYPE_RIGHT = 1
+            const val VIEW_TYPE_LEFT = 0
+        }
 
         private inner class ContactViewHolderRight(itemView: View) :
             RecyclerView.ViewHolder(itemView) {
@@ -364,11 +358,11 @@ class ContactFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return if (viewType == 1 /* 1 = true, 0 = false */) {
+            return if (viewType == VIEW_TYPE_RIGHT) {
                 ContactViewHolderRight(
                     LayoutInflater.from(context).inflate(R.layout.item_chat_right, parent, false)
                 )
-            } else {
+            } else { // view type left
                 ContactViewHolderLeft(
                     LayoutInflater.from(context).inflate(R.layout.item_chat_left, parent, false)
                 )
@@ -389,11 +383,11 @@ class ContactFragment : Fragment() {
 
         override fun getItemViewType(position: Int): Int {
             return if (currentMessages[position].sentFromAdmin && userRepository.checkIfLoggedIn()) {
-                1
+                VIEW_TYPE_RIGHT
             } else if (!currentMessages[position].sentFromAdmin && !userRepository.checkIfLoggedIn()) {
-                1
+                VIEW_TYPE_RIGHT
             } else {
-                0
+                VIEW_TYPE_LEFT
             }
         }
     }

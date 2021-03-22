@@ -70,8 +70,6 @@ class ChatRepository {
         chatID: String,
         callback: (String) -> Unit
     ) {
-
-
         db.collection("chats").document(chatID)
             .update("activeAdmin", adminID, "adminUsername", adminUsername)
             .addOnSuccessListener {
@@ -79,7 +77,6 @@ class ChatRepository {
             }.addOnFailureListener { error ->
                 Log.w("Add admin to chat database error", error)
                 callback("internalError")
-
             }
     }
 
@@ -125,7 +122,6 @@ class ChatRepository {
             }.addOnFailureListener { error ->
                 Log.w("Add user to chat database error", error)
                 callback("internalError")
-
             }
     }
 
@@ -139,15 +135,12 @@ class ChatRepository {
                     if (chat != null) {
                         callback("successful", chat)
                     }
-
                 } else {
                     callback("notFound", Chat())
-
                 }
             }.addOnFailureListener { error ->
                 Log.w("Add user to chat database error", error)
                 callback("internalError", Chat())
-
             }
     }
 
@@ -187,12 +180,10 @@ class ChatRepository {
                     }.addOnFailureListener { error ->
                         Log.w("Update  lastUpdated in chat error", error)
                         callback("internalError")
-
                     }
             }.addOnFailureListener { error ->
                 Log.w("Send message error", error)
                 callback("internalError")
-
             }
     }
 
@@ -225,7 +216,6 @@ class ChatRepository {
                 if (snapshot.isEmpty) {
                     callback("notFound", "")
                 } else {
-
                     snapshot.documents.forEach { docSnap ->
                         callback("successful", docSnap.id)
                     }
@@ -241,7 +231,6 @@ class ChatRepository {
         if (this::currentMessageListener.isInitialized) {
             currentMessageListener.remove()
         }
-
     }
 
     //En callback funktion som laddar in alla messages till "messagesList" och uppdaterar listan när ändringar görs i databasen
@@ -329,7 +318,6 @@ class ChatRepository {
                         if (chat != null) {
                             activeChatsList.add(chat)
                         }
-
                     }
                     callback("successful", activeChatsList)
                 }
@@ -442,6 +430,5 @@ class ChatRepository {
                 }
             }
      */
-
 }
 
