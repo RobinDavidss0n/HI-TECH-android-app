@@ -3,12 +3,19 @@ package se.ju.student.hitech.chat
 import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.messaging.FirebaseMessaging
+import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.handlers.TimeHandler
+import se.ju.student.hitech.notifications.NotificationData
+import se.ju.student.hitech.notifications.PushNotification
+import kotlin.coroutines.coroutineContext
 
 class ChatRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val firebaseInstallations = FirebaseInstallations.getInstance()
+    private val fbTcm = FirebaseMessaging.getInstance()
+
     private val timeHandler = TimeHandler()
     private lateinit var currentMessageListener: ListenerRegistration
 
@@ -26,16 +33,43 @@ class ChatRepository {
         currentChatID = newChatID
     }
 
+    fun subscribeToNewChatNotifications(callback: (String) -> Unit) {
+        fbTcm.subscribeToTopic("newChat")
+            .addOnCompleteListener {
+                callback("successful")
+            }
+            .addOnFailureListener { error->
+                callback("internalError")
+                Log.w("Create new chat error", error)
 
-    fun getFirebaseInstallationsID(callback: (String, String) -> Unit){
+            }
+    }
+
+    fun unsubscribeToChatNotifications(callback: (String) -> Unit) {
+        fbTcm.unsubscribeFromTopic("newChat")
+            .addOnCompleteListener {
+                callback("successful")
+            }
+            .addOnFailureListener { error->
+                callback("internalError")
+                Log.w("Create new chat error", error)
+
+            }
+    }
+
+    fun createNewChatNotification(title: String, message: String) {
+        MainActivity().createNotification(title, message, "newChat")
+    }
+
+
+    fun getFirebaseInstallationsID(callback: (String, String) -> Unit) {
         firebaseInstallations.id.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                if (task.result != null){
+                if (task.result != null) {
                     callback("successful", task.result!!)
-                }else{
+                } else {
                     callback("internalError", "")
                 }
-                Log.d("Installations", "Installation ID: " + task.result)
             } else {
                 callback("internalError", "")
                 Log.e("Installations", "Unable to get Installation ID")

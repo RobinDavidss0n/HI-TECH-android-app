@@ -19,6 +19,7 @@ import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
 import se.ju.student.hitech.R
+import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class UserPageFragment : Fragment() {
@@ -80,12 +81,7 @@ class UserPageFragment : Fragment() {
         }
 
         logoutButton?.setOnClickListener {
-            userRepository.userLogout()
-            (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
-            // reload fragments where UI changes when logged out
-            (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
-            (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
-            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
+            userLogout()
         }
 
         resetPassword?.setOnClickListener {
@@ -97,6 +93,27 @@ class UserPageFragment : Fragment() {
 
         register?.setOnClickListener {
             (context as MainActivity).changeToFragment(MainActivity.TAG_REGISTER_USER)
+        }
+    }
+
+    private fun userLogout(){
+
+        ChatRepository().unsubscribeToChatNotifications { result ->
+            when (result) {
+                "successful" -> {
+                    userRepository.userLogout()
+                    (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
+                    // reload fragments where UI changes when logged out
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
+                    (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
+
+                }
+                "internalError" -> {
+                    (context as MainActivity).makeToast(getString(R.string.internalError))
+                }
+
+            }
         }
     }
 
