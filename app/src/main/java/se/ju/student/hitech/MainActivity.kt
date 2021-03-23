@@ -30,15 +30,12 @@ import se.ju.student.hitech.notifications.NotificationData
 import se.ju.student.hitech.notifications.PushNotification
 import se.ju.student.hitech.notifications.RetrofitInstance
 import se.ju.student.hitech.shop.ShopFragment
-import se.ju.student.hitech.user.UserLoginFragment
-import se.ju.student.hitech.user.RegisterUserFragment
-import se.ju.student.hitech.user.UserPageFragment
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ProgressBar
 import se.ju.student.hitech.chat.ContactFragment
-import se.ju.student.hitech.user.UserRepository
+import se.ju.student.hitech.user.*
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -63,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_UPDATE_EVENT = "TAG_FRAGMENT_UPDATE_EVENT"
         const val TAG_FRAGMENT_UPDATE_NEWS = "TAG_FRAGMENT_UPDATE_NEWS"
         const val TAG_CURRENT_FRAGMENT = "TAG_CURRENT_FRAGMENT"
+        const val TAG_FRAGMENT_VERIFY_NEW_USER = "TAG_FRAGMENT_VERIFY_NEW_USER"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 .add(R.id.fragment_container, updateEventFragment, TAG_FRAGMENT_UPDATE_EVENT)
                 .add(R.id.fragment_container, updateNewsFragment, TAG_FRAGMENT_UPDATE_NEWS)
+                .add(R.id.fragment_container, VerifyNewUser(), TAG_FRAGMENT_VERIFY_NEW_USER)
                 .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
