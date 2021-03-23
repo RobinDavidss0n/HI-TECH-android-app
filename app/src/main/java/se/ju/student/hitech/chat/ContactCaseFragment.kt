@@ -75,17 +75,28 @@ class ContactCaseFragment : Fragment() {
                                 ChatRepository().subscribeToSpecificChatNotifications(chatID, false) { result3 ->
                                     when (result3) {
                                         "successful" -> {
-                                            chatRepository.setCurrentChatID(chatID)
-                                            chatRepository.createNewChatNotification(getString(R.string.new_chat), case)
-                                            (context as MainActivity).reloadContactFragment()
-                                            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+                                            chatRepository.addMessage(getString(R.string.new_chat_intro), true, chatID){ result4 ->
+                                                when (result4) {
+                                                    "successful" -> {
+
+                                                        chatRepository.setCurrentChatID(chatID)
+                                                        chatRepository.createNewChatNotification(getString(R.string.new_chat), case)
+                                                        (context as MainActivity).reloadContactFragment()
+                                                        (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
+
+                                                    }
+                                                    "internalError" -> {
+                                                        (context as MainActivity).makeToast(getString(R.string.internalError))
+                                                    }
+                                                }
+                                            }
 
                                         }
                                         "internalError" -> {
+                                            binding.progressbarContactCase.visibility = View.GONE
                                             (context as MainActivity).makeToast(getString(R.string.internalError))
                                         }
                                     }
-                                    binding.progressbarContactCase.visibility = View.GONE
                                 }
 
                             }
