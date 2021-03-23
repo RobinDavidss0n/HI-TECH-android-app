@@ -30,7 +30,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
             android:layout_marginBottom="20dp"
             android:orientation="horizontal">
 
@@ -38,17 +38,17 @@
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:text="@string/enter_your_name"
-                android:textColor="@color/white"></TextView>
+                android:textColor="@color/white" />
 
             <EditText
                 android:id="@+id/localUsername"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content"></EditText>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnCase1"
+            android:id="@+id/btnCaseEducation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
@@ -57,11 +57,11 @@
             android:background="@drawable/button_background_selector"
             android:enabled="false"
             android:fontFamily="@font/avenir_next_bold"
-            android:text="Case1"
+            android:text="@string/case_education"
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/btnCase2"
+            android:id="@+id/btnCaseWorkEnvironment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
@@ -70,11 +70,11 @@
             android:background="@drawable/button_background_selector"
             android:enabled="false"
             android:fontFamily="@font/avenir_next_bold"
-            android:text="Case2"
+            android:text="@string/case_work_environment"
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/btnCase3"
+            android:id="@+id/btnCaseEvents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
@@ -83,11 +83,11 @@
             android:background="@drawable/button_background_selector"
             android:enabled="false"
             android:fontFamily="@font/avenir_next_bold"
-            android:text="Case3"
+            android:text="@string/case_event"
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/btnCase4"
+            android:id="@+id/btnCaseOther"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
@@ -96,7 +96,7 @@
             android:background="@drawable/button_background_selector"
             android:enabled="false"
             android:fontFamily="@font/avenir_next_bold"
-            android:text="Case4"
+            android:text="@string/case_other"
             android:textColor="@color/black" />
 
     </LinearLayout>

@@ -27,12 +27,12 @@ class ChatRepository {
     }
 
 
-    fun getFirebaseInstallationsID(callback: (String, String) -> Unit){
+    fun getFirebaseInstallationsID(callback: (String, String) -> Unit) {
         firebaseInstallations.id.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                if (task.result != null){
+                if (task.result != null) {
                     callback("successful", task.result!!)
-                }else{
+                } else {
                     callback("internalError", "")
                 }
                 Log.d("Installations", "Installation ID: " + task.result)
@@ -73,12 +73,10 @@ class ChatRepository {
                     }.addOnFailureListener { error ->
                         Log.w("Create new chat error", error)
                         callback("internalError", "")
-
                     }
             }.addOnFailureListener { error ->
                 Log.w("Create new chat error", error)
                 callback("internalError", "")
-
             }
     }
 
@@ -99,7 +97,6 @@ class ChatRepository {
     }
 
     fun isChatOccupied(chatID: String, callback: (String) -> Unit) {
-
         db.collection("chats").document(chatID)
             .get()
             .addOnSuccessListener { docSnap ->
@@ -144,7 +141,6 @@ class ChatRepository {
     }
 
     fun getChatWithChatID(chatID: String, callback: (String, Chat) -> Unit) {
-
         db.collection("chats").document(chatID)
             .get()
             .addOnSuccessListener { docSnap ->
@@ -163,7 +159,6 @@ class ChatRepository {
     }
 
     fun removeAdminFromChat(chatID: String, callback: (String) -> Unit) {
-
         db.collection("chats").document(chatID)
             .update("activeAdmin", "")
             .addOnSuccessListener {
@@ -176,7 +171,6 @@ class ChatRepository {
 
 
     fun addMessage(msgText: String, isAdmin: Boolean, chatID: String, callback: (String) -> Unit) {
-
         val msg = hashMapOf(
             "sentFromAdmin" to isAdmin,
             "timestamp" to timeHandler.getLocalZoneTimestampInSeconds(),
@@ -206,7 +200,6 @@ class ChatRepository {
     }
 
     fun closeChat(chatID: String, callback: (String) -> Unit) {
-
         db.collection("chats").document(chatID)
             .delete()
             .addOnSuccessListener {
@@ -240,7 +233,6 @@ class ChatRepository {
             }
     }
 
-    //Tar bort den specifika chatt meddelande lyssnaren
     fun removeCurrentSpecificChatMessagesLoader() {
         if (this::currentMessageListener.isInitialized) {
             currentMessageListener.remove()
@@ -276,7 +268,6 @@ class ChatRepository {
                             when (dc.type) {
                                 DocumentChange.Type.ADDED -> {
                                     val message = dc.document.toObject(Message::class.java)
-
                                     callback("newData", mutableListOf(Message()), message)
                                 }
                                 else -> Log.d(
@@ -345,7 +336,6 @@ class ChatRepository {
             }
     }
 
-
     fun setNewMessagesNotificationListener(
         chatID: String,
         callback: (String, Message) -> Unit,
@@ -375,6 +365,5 @@ class ChatRepository {
                 }
             }
     }
-
 }
 

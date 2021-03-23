@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
-import se.ju.student.hitech.events.EventRepository
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
 class DeleteEventAlertDialog : DialogFragment() {

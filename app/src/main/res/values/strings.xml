@@ -94,10 +94,10 @@
     <string name="error_delete_news_post">Failed to delete post</string>
     <string name="join_chat">Join Chat</string>
     <string name="close_chat">Close chat</string>
-    <string name="write_something">Write something...</string>
+    <string name="write_something">Write something…</string>
     <string name="select_case">Select a case that best match your question</string>
     <string name="enter_your_name">Enter your name:</string>
-    <string name="error_getting_events">Error getting events, check your internet connection and restart the app.</string>
+    <string name="error_getting_events">Error loading events, check your internet connection and restart the app.</string>
     <string name="chatting_With">Chatting with %1$s</string>
     <string name="leave_chat">Leave chat</string>
     <string name="is_chatting_here">%1$s is currently chatting here.</string>
@@ -106,6 +106,10 @@
     <string name="close_chat_confirmation">Do you want to close this chat? You will no longer be able to access the chat.</string>
     <string name="join_chat_confirmation">Do you want to join the chat?</string>
     <string name="leave_chat_confirmation">Do you want to leave the chat?</string>
-
-
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="case_education">Education</string>
+    <string name="case_work_environment">Work environment</string>
+    <string name="case_other">Other</string>
+    <string name="case_event">Events</string>
 </resources>

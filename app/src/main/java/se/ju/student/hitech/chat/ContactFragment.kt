@@ -109,7 +109,6 @@ class ContactFragment : Fragment() {
                                 )
                             }
                         }
-
                         "internalError" -> {
                             binding.progressbarContact.visibility = GONE
                             (context as MainActivity).makeToast(getString(R.string.internalError))
@@ -145,7 +144,6 @@ class ContactFragment : Fragment() {
                                         ) {
                                             when (it) {
                                                 "successful" -> {
-
                                                     updateAppearanceForCurrentUser()
                                                     userRepository.addChatToUser(
                                                         currentChatID
@@ -157,7 +155,6 @@ class ContactFragment : Fragment() {
                                                             "internalError" -> (context as MainActivity).makeToast(
                                                                 getString(R.string.internalError)
                                                             )
-
                                                         }
                                                         binding.progressbarContact.visibility = GONE
                                                     }
@@ -260,7 +257,6 @@ class ContactFragment : Fragment() {
                                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.error_chat))
                             }
                             binding.progressbarContact2.visibility = GONE
-
                         }
                     } else {
                         binding.sendMessageLayout.visibility = VISIBLE

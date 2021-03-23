@@ -1,4 +1,7 @@
 package se.ju.student.hitech.dialogs
 
-class JoinChatAlertDialog {
+import androidx.fragment.app.DialogFragment
+
+class JoinChatAlertDialog : DialogFragment(){
+    //TODO
 }

@@ -5,5 +5,5 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 
 class CloseChatAlertDialog : DialogFragment() {
-
+    //TODO
 }

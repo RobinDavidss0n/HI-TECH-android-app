@@ -36,7 +36,6 @@ class CreateNewEventFragment : Fragment() {
         binding.progressBar.visibility = GONE
 
         binding.btnCreateEvent.setOnClickListener {
-
             val title = binding.etEventActivity.text.toString()
             val date = binding.etDate.text.toString()
             val time = binding.etTime.text.toString()
