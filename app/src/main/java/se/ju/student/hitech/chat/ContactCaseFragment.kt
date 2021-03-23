@@ -1,8 +1,6 @@
 package se.ju.student.hitech.chat
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater

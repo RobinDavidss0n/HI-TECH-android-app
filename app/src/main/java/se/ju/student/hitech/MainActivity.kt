@@ -1,15 +1,14 @@
 package se.ju.student.hitech
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -20,6 +19,9 @@ import kotlinx.coroutines.launch
 import se.ju.student.hitech.chat.ActiveChatsFragmentUser
 import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.chat.ContactCaseFragment
+import se.ju.student.hitech.chat.ContactFragment
+import se.ju.student.hitech.dialogs.ReportProblemAlertDialog
+import se.ju.student.hitech.dialogs.ReportProblemAlertDialog.Companion.TAG_REPORT_PROBLEM_DIALOG
 import se.ju.student.hitech.events.CreateNewEventFragment
 import se.ju.student.hitech.events.EventsFragment
 import se.ju.student.hitech.events.UpdateEventFragment.Companion.updateEventFragment
@@ -30,18 +32,11 @@ import se.ju.student.hitech.notifications.NotificationData
 import se.ju.student.hitech.notifications.PushNotification
 import se.ju.student.hitech.notifications.RetrofitInstance
 import se.ju.student.hitech.shop.ShopFragment
-import se.ju.student.hitech.user.UserLoginFragment
 import se.ju.student.hitech.user.RegisterUserFragment
+import se.ju.student.hitech.user.UserLoginFragment
 import se.ju.student.hitech.user.UserPageFragment
-import se.ju.student.hitech.user.UserRepository.Companion.userRepository
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import android.widget.ProgressBar
-import se.ju.student.hitech.chat.ContactFragment
-import se.ju.student.hitech.dialogs.ReportProblemAlertDialog
-import se.ju.student.hitech.dialogs.ReportProblemAlertDialog.Companion.TAG_REPORT_PROBLEM_DIALOG
 import se.ju.student.hitech.user.UserRepository
-import java.lang.Exception
+import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class MainActivity : AppCompatActivity() {
     private var currentFragmentShowing = ""

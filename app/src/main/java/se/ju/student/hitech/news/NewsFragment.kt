@@ -1,6 +1,5 @@
 package se.ju.student.hitech.news
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,14 +21,11 @@ import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_NEWS
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.CardNewsBinding
 import se.ju.student.hitech.databinding.FragmentNewsBinding
+import se.ju.student.hitech.dialogs.DeleteNewsAlertDialog
+import se.ju.student.hitech.dialogs.DeleteNewsAlertDialog.Companion.TAG_DELETE_NEWS_DIALOG
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 import se.ju.student.hitech.news.ViewNewsActivity.Companion.EXTRA_NEWS_ID
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
-import android.content.Context
-import androidx.fragment.app.FragmentManager
-import se.ju.student.hitech.dialogs.DeleteEventAlertDialog
-import se.ju.student.hitech.dialogs.DeleteNewsAlertDialog
-import se.ju.student.hitech.dialogs.DeleteNewsAlertDialog.Companion.TAG_DELETE_NEWS_DIALOG
 
 class NewsFragment : Fragment() {
 

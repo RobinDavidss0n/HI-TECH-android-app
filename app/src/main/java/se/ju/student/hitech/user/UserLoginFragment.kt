@@ -15,7 +15,6 @@ import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
-import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.MainActivity.Companion.TAG_USER_PAGE
 import se.ju.student.hitech.R
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
@@ -60,7 +59,6 @@ class UserLoginFragment : Fragment() {
         forgotPassword?.setOnClickListener {
             progressBar.visibility = View.VISIBLE
             resetPassword(emailInput?.text.toString().trim())
-
         }
     }
 
@@ -80,7 +78,6 @@ class UserLoginFragment : Fragment() {
                 .setMessage(getString(R.string.resetPasswordConfirmation) + " $email?")
                 .setPositiveButton(
                     getString(R.string.yes)
-
                 ) { _, _ ->
                     userRepository.sendPasswordReset(email) { result ->
                         progressBar.visibility = View.GONE
