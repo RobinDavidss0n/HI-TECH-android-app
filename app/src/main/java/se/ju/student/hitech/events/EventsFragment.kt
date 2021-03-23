@@ -1,16 +1,14 @@
 package se.ju.student.hitech.events
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.provider.Settings.Global.getString
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,6 +21,8 @@ import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_UPDATE_EVENT
 import se.ju.student.hitech.R
 import se.ju.student.hitech.databinding.FragmentEventsBinding
 import se.ju.student.hitech.databinding.ItemEventBinding
+import se.ju.student.hitech.dialogs.DeleteEventAlertDialog
+import se.ju.student.hitech.dialogs.DeleteEventAlertDialog.Companion.TAG_DELETE_EVENT_DIALOG
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 import se.ju.student.hitech.user.UserRepository
 
@@ -60,6 +60,8 @@ class EventsFragment : Fragment() {
             registerForContextMenu(this)
         }
 
+        val manager = fragmentManager
+
         viewModel.events.observe(viewLifecycleOwner) {
 
             if (it != null) {
@@ -67,7 +69,7 @@ class EventsFragment : Fragment() {
                 binding.rvEvents.post {
 
                     binding.rvEvents.apply {
-                        adapter = EventAdapter(it)
+                        adapter = EventAdapter(it, manager)
                         adapter?.notifyDataSetChanged()
                     }
                 }
@@ -102,7 +104,8 @@ class EventsFragment : Fragment() {
                         val errorList = mutableListOf<Event>()
                         val error = Event()
                         //Can't use getString() in ViewModel so that's why it's hard coded
-                        error.title = "Error getting events, check your internet connection and restart the app."
+                        error.title =
+                            "Error getting events, check your internet connection and restart the app."
                         errorList.add(error)
                         events.postValue(errorList)
                     }
@@ -113,7 +116,8 @@ class EventsFragment : Fragment() {
 
     class EventViewHolder(val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<EventViewHolder>() {
+    class EventAdapter(private val events: List<Event>, private val manager: FragmentManager?) :
+        RecyclerView.Adapter<EventViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = EventViewHolder(
             ItemEventBinding.inflate(
@@ -141,7 +145,13 @@ class EventsFragment : Fragment() {
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_delete -> {
-                                showDeleteEventAlertDialog(holder.itemView.context, id)
+                                if (manager != null) {
+                                    val deleteEventDialog = DeleteEventAlertDialog()
+                                    var argument = Bundle()
+                                    argument.putInt("event_id", id)
+                                    deleteEventDialog.arguments = argument
+                                    deleteEventDialog.show(manager, TAG_DELETE_EVENT_DIALOG)
+                                }
                             }
                             R.id.menu_edit -> {
                                 (holder.itemView.context as MainActivity).setClickedEventId(id)
@@ -160,26 +170,6 @@ class EventsFragment : Fragment() {
         }
 
         override fun getItemCount() = events.size
-
-        private fun showDeleteEventAlertDialog(context: Context, id: Int) {
-            AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.delete_event))
-                .setMessage(context.getString(R.string.delete_event_are_you_sure))
-                .setPositiveButton(
-                    context.getString(R.string.yes)
-                ) { dialog, whichButton ->
-                    // delete event
-                    eventRepository.deleteEvent(id).addOnFailureListener {
-                        (context as MainActivity).makeToast(
-                            context.getString(R.string.error_delete_event)
-                        )
-                    }
-                }.setNegativeButton(
-                    context.getString(R.string.no)
-                ) { dialog, whichButton ->
-                    // Do not delete event
-                }.show()
-        }
     }
 }
 

@@ -38,6 +38,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ProgressBar
 import se.ju.student.hitech.chat.ContactFragment
+import se.ju.student.hitech.dialogs.ReportProblemAlertDialog
+import se.ju.student.hitech.dialogs.ReportProblemAlertDialog.Companion.TAG_REPORT_PROBLEM_DIALOG
 import se.ju.student.hitech.user.UserRepository
 import java.lang.Exception
 
@@ -258,33 +260,14 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.nav_problem -> {
-                showReportProblemAlertDialog()
+                ReportProblemAlertDialog().show(supportFragmentManager, TAG_REPORT_PROBLEM_DIALOG)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun showReportProblemAlertDialog() {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_report_problem, null)
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.problem)
-            .setView(dialogView)
-            .setPositiveButton(
-                R.string.send
-            ) { dialog, whichButton ->
-                // Send email from users input
-                val mail = dialogView.findViewById<EditText>(R.id.edittext_problem).text
-                sendEmail(mail)
-            }.setNegativeButton(
-                R.string.cancel
-            ) { dialog, whichButton ->
-                // Do nothing
-            }.show()
-    }
-
-    private fun sendEmail(message: Editable?) {
+    fun sendEmail(message: String?) {
         val subject = getString(R.string.report_bug_email_subject)
 
         // email intent to HI TECH IT Manager
