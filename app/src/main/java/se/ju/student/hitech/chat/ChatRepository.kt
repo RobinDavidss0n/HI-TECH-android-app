@@ -3,12 +3,15 @@ package se.ju.student.hitech.chat
 import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.messaging.FirebaseMessaging
+import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.handlers.TimeHandler
 
 class ChatRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val firebaseInstallations = FirebaseInstallations.getInstance()
+    private val TOPIC_NEW_CHAT = "/topics/newChat"
     private val timeHandler = TimeHandler()
     private lateinit var currentMessageListener: ListenerRegistration
 
@@ -26,6 +29,33 @@ class ChatRepository {
         currentChatID = newChatID
     }
 
+    fun subscribeToNewChatNotifications(callback: (String) -> Unit) {
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NEW_CHAT)
+            .addOnCompleteListener {
+                callback("successful")
+            }
+            .addOnFailureListener { error->
+                callback("internalError")
+                Log.w("Create new chat error", error)
+
+            }
+    }
+
+    fun unsubscribeToChatNotifications(callback: (String) -> Unit) {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(TOPIC_NEW_CHAT)
+            .addOnCompleteListener {
+                callback("successful")
+            }
+            .addOnFailureListener { error->
+                callback("internalError")
+                Log.w("Create new chat error", error)
+
+            }
+    }
+
+    fun createNewChatNotification(title: String, message: String) {
+        MainActivity().createNotification(title, message, TOPIC_NEW_CHAT)
+    }
 
     fun getFirebaseInstallationsID(callback: (String, String) -> Unit) {
         firebaseInstallations.id.addOnCompleteListener { task ->
@@ -35,7 +65,6 @@ class ChatRepository {
                 } else {
                     callback("internalError", "")
                 }
-                Log.d("Installations", "Installation ID: " + task.result)
             } else {
                 callback("internalError", "")
                 Log.e("Installations", "Unable to get Installation ID")

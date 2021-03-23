@@ -143,19 +143,8 @@ class ContactFragment : Fragment() {
                                             when (it) {
                                                 "successful" -> {
                                                     updateAppearanceForCurrentUser()
-                                                    userRepository.addChatToUser(
-                                                        currentChatID
-                                                    ) { it2 ->
-                                                        when (it2) {
-                                                            "successful" -> {
-                                                                updateAppearanceForCurrentUser()
-                                                            }
-                                                            "internalError" -> (context as MainActivity).makeToast(
-                                                                getString(R.string.internalError)
-                                                            )
-                                                        }
-                                                        binding.progressbarContact.visibility = GONE
-                                                    }
+                                                    binding.progressbarContact.visibility = GONE
+
                                                 }
 
                                                 "internalError" -> {

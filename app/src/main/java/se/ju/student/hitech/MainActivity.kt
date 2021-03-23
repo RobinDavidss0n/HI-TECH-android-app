@@ -37,6 +37,9 @@ import se.ju.student.hitech.user.UserLoginFragment
 import se.ju.student.hitech.user.UserPageFragment
 import se.ju.student.hitech.user.UserRepository
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
+import se.ju.student.hitech.user.*
+import java.lang.Exception
+
 
 class MainActivity : AppCompatActivity() {
     private var currentFragmentShowing = ""
@@ -60,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_UPDATE_EVENT = "TAG_FRAGMENT_UPDATE_EVENT"
         const val TAG_FRAGMENT_UPDATE_NEWS = "TAG_FRAGMENT_UPDATE_NEWS"
         const val TAG_CURRENT_FRAGMENT = "TAG_CURRENT_FRAGMENT"
+        const val TAG_FRAGMENT_VERIFY_NEW_USER = "TAG_FRAGMENT_VERIFY_NEW_USER"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 .add(R.id.fragment_container, updateEventFragment, TAG_FRAGMENT_UPDATE_EVENT)
                 .add(R.id.fragment_container, updateNewsFragment, TAG_FRAGMENT_UPDATE_NEWS)
+                .add(R.id.fragment_container, VerifyNewUser(), TAG_FRAGMENT_VERIFY_NEW_USER)
                 .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }

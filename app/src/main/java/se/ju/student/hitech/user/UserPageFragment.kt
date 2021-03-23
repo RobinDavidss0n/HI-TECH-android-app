@@ -18,7 +18,9 @@ import com.google.android.material.textfield.TextInputLayout
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
+import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_VERIFY_NEW_USER
 import se.ju.student.hitech.R
+import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class UserPageFragment : Fragment() {
@@ -48,6 +50,7 @@ class UserPageFragment : Fragment() {
         val resetPassword = view?.findViewById<TextView>(R.id.user_page_resetPasswordText)
         val deleteAccount = view?.findViewById<TextView>(R.id.user_page_deleteAccountText)
         val register = view?.findViewById<TextView>(R.id.admin_login_register)
+        val verifyNewUser = view?.findViewById<TextView>(R.id.verify_new_admin)
 
         setUserInfoIntoInputFields()
 
@@ -80,23 +83,44 @@ class UserPageFragment : Fragment() {
         }
 
         logoutButton?.setOnClickListener {
-            userRepository.userLogout()
-            (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
-            // reload fragments where UI changes when logged out
-            (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
-            (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
-            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
+            userLogout()
         }
-
         resetPassword?.setOnClickListener {
             resetPassword()
         }
         deleteAccount?.setOnClickListener {
             deleteAccount()
         }
-
+        deleteAccount?.setOnClickListener {
+            deleteAccount()
+        }
         register?.setOnClickListener {
             (context as MainActivity).changeToFragment(MainActivity.TAG_REGISTER_USER)
+        }
+        verifyNewUser?.setOnClickListener {
+            (context as MainActivity).reloadFragment(TAG_FRAGMENT_VERIFY_NEW_USER)
+            (context as MainActivity).changeToFragment(TAG_FRAGMENT_VERIFY_NEW_USER)
+        }
+    }
+
+    private fun userLogout(){
+
+        ChatRepository().unsubscribeToChatNotifications { result ->
+            when (result) {
+                "successful" -> {
+                    userRepository.userLogout()
+                    (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
+                    // reload fragments where UI changes when logged out
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
+                    (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
+                    (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
+
+                }
+                "internalError" -> {
+                    (context as MainActivity).makeToast(getString(R.string.internalError))
+                }
+
+            }
         }
     }
 
@@ -220,10 +244,20 @@ class UserPageFragment : Fragment() {
             .setPositiveButton(
                 getString(R.string.yes)
             ) { _, _ ->
+
                 userRepository.deleteCurrentUser { result ->
+
                     progressBar.visibility = GONE
                     when (result) {
-                        "successful" -> (context as MainActivity).makeToast(getString(R.string.accountDeleted))
+                        "successful" -> {
+                            userRepository.userLogout()
+                            (context as MainActivity).makeToast(getString(R.string.userLoggedOut))
+                            // reload fragments where UI changes when logged out
+                            (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
+                            (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
+                            (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
+                            (context as MainActivity).makeToast(getString(R.string.accountDeleted))
+                        }
                         "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
                     }
                 }

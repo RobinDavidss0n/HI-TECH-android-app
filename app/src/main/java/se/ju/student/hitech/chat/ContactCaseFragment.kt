@@ -72,8 +72,9 @@ class ContactCaseFragment : Fragment() {
                     chatRepository.createNewChat(localID, localUsername, case) { result2, chatID ->
                         when (result2) {
                             "successful" -> {
+                                chatRepository.setCurrentChatID(chatID)
+                                chatRepository.createNewChatNotification(case, localUsername)
                                 binding.progressbarContactCase.visibility = View.GONE
-                                ChatRepository().setCurrentChatID(chatID)
                                 (context as MainActivity).reloadContactFragment()
                                 (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
                             }

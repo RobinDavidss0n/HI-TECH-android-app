@@ -19,7 +19,7 @@
     <string name="admin_login_loginButton">Login</string>
     <string name="admin_login_passwordInputHint">Password</string>
     <string name="admin_login_emailInputHint">Email</string>
-    <string name="admin_login_registerText">Register</string>
+    <string name="admin_login_registerText">Register new admin</string>
     <string name="admin_login_forgotPasswordText">Forgot password?</string>
     <string name="register_user_repeatPassword">Repeat Password</string>
     <string name="register_user_name">Name</string>
@@ -112,4 +112,12 @@
     <string name="case_work_environment">Work environment</string>
     <string name="case_other">Other</string>
     <string name="case_event">Events</string>
+    <string name="account_made_with_google">You made your account with Google, update your account with your role.</string>
+    <string name="user_not_verified">User needs to be verified by an admin.</string>
+    <string name="verify_new_admin">Verify new admin</string>
+    <string name="verify_user">Verify User</string>
+    <string name="no_user_to_verify">No user to verify</string>
+    <string name="user_verified">User verified successfully!</string>
+    <string name="user_denied">User denied admin acces.</string>
+
 </resources>
