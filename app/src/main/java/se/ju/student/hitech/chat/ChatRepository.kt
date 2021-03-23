@@ -6,16 +6,12 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.handlers.TimeHandler
-import se.ju.student.hitech.notifications.NotificationData
-import se.ju.student.hitech.notifications.PushNotification
-import kotlin.coroutines.coroutineContext
 
 class ChatRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val firebaseInstallations = FirebaseInstallations.getInstance()
-    private val fbTcm = FirebaseMessaging.getInstance()
-
+    private val TOPIC_NEW_CHAT = "/topics/newChat"
     private val timeHandler = TimeHandler()
     private lateinit var currentMessageListener: ListenerRegistration
 
@@ -34,7 +30,7 @@ class ChatRepository {
     }
 
     fun subscribeToNewChatNotifications(callback: (String) -> Unit) {
-        fbTcm.subscribeToTopic("newChat")
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NEW_CHAT)
             .addOnCompleteListener {
                 callback("successful")
             }
@@ -46,7 +42,7 @@ class ChatRepository {
     }
 
     fun unsubscribeToChatNotifications(callback: (String) -> Unit) {
-        fbTcm.unsubscribeFromTopic("newChat")
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(TOPIC_NEW_CHAT)
             .addOnCompleteListener {
                 callback("successful")
             }
@@ -58,7 +54,7 @@ class ChatRepository {
     }
 
     fun createNewChatNotification(title: String, message: String) {
-        MainActivity().createNotification(title, message, "newChat")
+        MainActivity().createNotification(title, message, TOPIC_NEW_CHAT)
     }
 
 

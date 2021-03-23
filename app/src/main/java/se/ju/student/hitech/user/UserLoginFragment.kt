@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.messaging.FirebaseMessaging
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
@@ -134,6 +135,7 @@ class UserLoginFragment : Fragment() {
                     ChatRepository().subscribeToNewChatNotifications { result2 ->
                         when (result2) {
                             "successful" -> {
+
                                 (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
                                 // reload fragments where UI changes when logged in
                                 (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
