@@ -1,8 +1,6 @@
 package se.ju.student.hitech.chat
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -37,36 +35,35 @@ class ContactCaseFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.btnCase1.isEnabled =
+                binding.btnCaseEducation.isEnabled =
                     binding.localUsername.length() > 0
-                binding.btnCase2.isEnabled =
+                binding.btnCaseEvents.isEnabled =
                     binding.localUsername.length() > 0
-                binding.btnCase3.isEnabled =
+                binding.btnCaseWorkEnvironment.isEnabled =
                     binding.localUsername.length() > 0
-                binding.btnCase4.isEnabled =
+                binding.btnCaseOther.isEnabled =
                     binding.localUsername.length() > 0
             }
         })
 
-        binding.btnCase1.setOnClickListener {
-            createNewChat("case1")
+        binding.btnCaseEducation.setOnClickListener {
+            createNewChat(getString(R.string.case_education))
         }
 
-        binding.btnCase2.setOnClickListener {
-            createNewChat("case2")
+        binding.btnCaseEvents.setOnClickListener {
+            createNewChat(getString(R.string.case_event))
         }
 
-        binding.btnCase3.setOnClickListener {
-            createNewChat("case3")
+        binding.btnCaseWorkEnvironment.setOnClickListener {
+            createNewChat(getString(R.string.case_work_environment))
         }
 
-        binding.btnCase4.setOnClickListener {
-            createNewChat("case4")
+        binding.btnCaseOther.setOnClickListener {
+            createNewChat(getString(R.string.case_other))
         }
     }
 
     private fun createNewChat(case: String) {
-
         binding.progressbarContactCase.visibility = View.VISIBLE
         chatRepository.getFirebaseInstallationsID { result, localID ->
             when (result) {
@@ -83,7 +80,8 @@ class ContactCaseFragment : Fragment() {
                             "internalError" -> {
                                 binding.progressbarContactCase.visibility = View.GONE
                                 (context as MainActivity).makeToast(getString(R.string.internalError))
-                            }                        }
+                            }
+                        }
                     }
                 }
                 "internalError" -> {
@@ -92,6 +90,5 @@ class ContactCaseFragment : Fragment() {
                 }
             }
         }
-
     }
 }

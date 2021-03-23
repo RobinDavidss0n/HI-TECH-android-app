@@ -1,7 +1,5 @@
 package se.ju.student.hitech.chat
 
-import java.sql.Timestamp
-
 data class Chat(
     var androidIDUser: String? = null,
     var localUsername: String? = null,

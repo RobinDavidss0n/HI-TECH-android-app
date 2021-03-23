@@ -220,7 +220,6 @@ class UserPageFragment : Fragment() {
             .setPositiveButton(
                 getString(R.string.yes)
             ) { _, _ ->
-
                 userRepository.deleteCurrentUser { result ->
                     progressBar.visibility = GONE
                     when (result) {

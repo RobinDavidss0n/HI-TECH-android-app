@@ -138,12 +138,10 @@ class RegisterUserFragment : Fragment() {
         userRepository.createUser(email, password, name, role) { result ->
             progressBar?.visibility = View.GONE
             when (result) {
-
                 "successful" -> {
                     (context as MainActivity).makeToast(getString(R.string.createUserSuccessful))
                     userRepository.userLogout()
                     (context as MainActivity).changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
-
                 }
                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.internalError))
             }

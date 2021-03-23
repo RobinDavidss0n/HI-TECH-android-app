@@ -1,10 +1,8 @@
 package se.ju.student.hitech.events
 
-import android.provider.Settings.Global.getString
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
-import se.ju.student.hitech.R
 
 class EventRepository {
 
@@ -27,7 +25,7 @@ class EventRepository {
         loadAllEventsData { result, list ->
             when (result) {
                 "notFound" -> {
-                    Log.d("Error fireStore", "Error loading novelty from fireStore")
+                    Log.d("Error fireStore", "Error loading events from fireStore")
                 }
                 "successful" -> {
                     latestId = list.last().id
@@ -58,7 +56,7 @@ class EventRepository {
             .addSnapshotListener { querySnapshot, error ->
 
                 if (error != null) {
-                    Log.w("Messages listener error ", error)
+                    Log.w("Event listener error ", error)
                     callback("internalError", mutableListOf(Event()))
                 } else {
                     val currentEventList = mutableListOf<Event>()
@@ -77,6 +75,7 @@ class EventRepository {
     ) {
         db.collection("events").orderBy("id").get().addOnSuccessListener { snapshot ->
             if (snapshot.isEmpty) {
+                Log.d("Load all events data", "empty snapshot")
                 callback("notFound", mutableListOf(Event()))
             } else {
                 val currentEventList = mutableListOf<Event>()
@@ -88,7 +87,7 @@ class EventRepository {
             }
 
         }.addOnFailureListener { error ->
-            Log.w("Get user info database error", error)
+            Log.w("Load all events data error", error)
             callback("internalError", mutableListOf(Event()))
         }
     }

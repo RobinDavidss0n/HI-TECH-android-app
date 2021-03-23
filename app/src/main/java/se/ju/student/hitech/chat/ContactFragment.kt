@@ -3,7 +3,6 @@ package se.ju.student.hitech.chat
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -19,10 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
 import se.ju.student.hitech.chat.ChatRepository.Companion.chatRepository
-import se.ju.student.hitech.user.UserRepository
 import se.ju.student.hitech.databinding.FragmentContactBinding
-import se.ju.student.hitech.events.Event
 import se.ju.student.hitech.handlers.convertTimeToStringHourMinutesFormat
+import se.ju.student.hitech.user.UserRepository
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class ContactFragment : Fragment() {
@@ -109,7 +107,6 @@ class ContactFragment : Fragment() {
                                 )
                             }
                         }
-
                         "internalError" -> {
                             binding.progressbarContact.visibility = GONE
                             (context as MainActivity).makeToast(getString(R.string.internalError))
@@ -145,7 +142,6 @@ class ContactFragment : Fragment() {
                                         ) {
                                             when (it) {
                                                 "successful" -> {
-
                                                     updateAppearanceForCurrentUser()
                                                     userRepository.addChatToUser(
                                                         currentChatID
@@ -157,7 +153,6 @@ class ContactFragment : Fragment() {
                                                             "internalError" -> (context as MainActivity).makeToast(
                                                                 getString(R.string.internalError)
                                                             )
-
                                                         }
                                                         binding.progressbarContact.visibility = GONE
                                                     }
@@ -260,7 +255,6 @@ class ContactFragment : Fragment() {
                                 "internalError" -> (context as MainActivity).makeToast(getString(R.string.error_chat))
                             }
                             binding.progressbarContact2.visibility = GONE
-
                         }
                     } else {
                         binding.sendMessageLayout.visibility = VISIBLE

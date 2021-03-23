@@ -45,7 +45,7 @@ class NewsRepository {
             .addSnapshotListener { querySnapshot, error ->
 
                 if (error != null) {
-                    Log.w("Messages listener error ", error)
+                    Log.w("Listen for news changes error ", error)
                     callback("internalError", mutableListOf(News()))
                 } else {
                     val currentNewsList = mutableListOf<News>()
@@ -74,7 +74,7 @@ class NewsRepository {
             }
 
         }.addOnFailureListener { error ->
-            Log.w("Get user info database error", error)
+            Log.w("Load all news data error", error)
             callback("internalError", mutableListOf(News()))
         }
     }
