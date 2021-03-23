@@ -60,14 +60,11 @@ class EventsFragment : Fragment() {
             registerForContextMenu(this)
         }
 
-        val manager = fragmentManager
+        val manager = parentFragmentManager
 
         viewModel.events.observe(viewLifecycleOwner) {
-
             if (it != null) {
-
                 binding.rvEvents.post {
-
                     binding.rvEvents.apply {
                         adapter = EventAdapter(it, manager)
                         adapter?.notifyDataSetChanged()
@@ -147,6 +144,7 @@ class EventsFragment : Fragment() {
                             R.id.menu_delete -> {
                                 if (manager != null) {
                                     val deleteEventDialog = DeleteEventAlertDialog()
+                                    // pass the clicked id to the DialogFragment
                                     var argument = Bundle()
                                     argument.putInt("event_id", id)
                                     deleteEventDialog.arguments = argument

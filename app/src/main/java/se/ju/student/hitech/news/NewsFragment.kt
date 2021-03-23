@@ -1,10 +1,8 @@
 package se.ju.student.hitech.news
 
 import android.app.AlertDialog
-import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -27,7 +25,10 @@ import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 import se.ju.student.hitech.news.ViewNewsActivity.Companion.EXTRA_NEWS_ID
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import android.content.Context
-import se.ju.student.hitech.events.Event
+import androidx.fragment.app.FragmentManager
+import se.ju.student.hitech.dialogs.DeleteEventAlertDialog
+import se.ju.student.hitech.dialogs.DeleteNewsAlertDialog
+import se.ju.student.hitech.dialogs.DeleteNewsAlertDialog.Companion.TAG_DELETE_NEWS_DIALOG
 
 class NewsFragment : Fragment() {
 
@@ -56,12 +57,14 @@ class NewsFragment : Fragment() {
             registerForContextMenu(this)
         }
 
+        val manager = parentFragmentManager
+
         viewModel.news.observe(viewLifecycleOwner) {
 
             if (it != null) {
                 binding.rvRecyclerView.post {
                     binding.rvRecyclerView.apply {
-                        adapter = NewsAdapter(it)
+                        adapter = NewsAdapter(it, manager)
                         adapter?.notifyDataSetChanged()
                     }
                     binding.progressBar.visibility = GONE
@@ -96,10 +99,11 @@ class NewsFragment : Fragment() {
                         val errorList = mutableListOf<News>()
                         val error = News()
                         //Can't use getString() in ViewModel so that's why it's hard coded
-                        error.title = "Error getting news, check your internet connection and restart the app."
+                        error.title =
+                            "Error getting news, check your internet connection and restart the app."
                         errorList.add(error)
                         news.postValue(errorList)
-                                         }
+                    }
                 }
             }
         }
@@ -107,7 +111,8 @@ class NewsFragment : Fragment() {
 
     class NewsViewHolder(val binding: CardNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
-    class NewsAdapter(val news: List<News>) : RecyclerView.Adapter<NewsViewHolder>() {
+    class NewsAdapter(val news: List<News>, private val manager: FragmentManager?) :
+        RecyclerView.Adapter<NewsViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NewsViewHolder(
             CardNewsBinding.inflate(
@@ -142,7 +147,17 @@ class NewsFragment : Fragment() {
                     popupMenu.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_delete -> {
-                                showDeleteNewsAlertDialog(holder.itemView.context, id)
+                                if (manager != null) {
+                                    val deleteNewsDialog = DeleteNewsAlertDialog()
+                                    // pass the clicked id to the DialogFragment
+                                    var argument = Bundle()
+                                    argument.putInt("news_id", id)
+                                    deleteNewsDialog.arguments = argument
+                                    deleteNewsDialog.show(
+                                        manager,
+                                        TAG_DELETE_NEWS_DIALOG
+                                    )
+                                }
                             }
                             R.id.menu_edit -> {
                                 (holder.itemView.context as MainActivity).setClickedNewsId(id)
@@ -161,23 +176,5 @@ class NewsFragment : Fragment() {
         }
 
         override fun getItemCount() = news.size
-
-        private fun showDeleteNewsAlertDialog(context: Context, id: Int) {
-            AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.delete_news_post))
-                .setMessage(context.getString(R.string.delete_post_are_you_sure))
-                .setPositiveButton(
-                    context.getString(R.string.yes)
-                ) { dialog, whichButton ->
-                    // delete news post
-                    newsRepository.deleteNews(id).addOnFailureListener {
-                        (context as MainActivity).makeToast(context.getString(R.string.error_delete_news_post))
-                    }
-                }.setNegativeButton(
-                    context.getString(R.string.no)
-                ) { dialog, whichButton ->
-                    // Do not delete post
-                }.show()
-        }
     }
 }

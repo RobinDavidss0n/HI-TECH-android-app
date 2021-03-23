@@ -23,15 +23,16 @@ class DeleteEventAlertDialog : DialogFragment() {
             .setMessage(getString(R.string.delete_event_are_you_sure))
             .setPositiveButton(
                 getString(R.string.yes)
-            ) { dialog, whichButton ->
+            ) { _, _ ->
                 // delete event
                 if (eventId != null) {
                     eventRepository.deleteEvent(eventId).addOnFailureListener {
+                        MainActivity().makeToast(getString(R.string.error_delete_event))
                     }
                 }
             }.setNegativeButton(
                 getString(R.string.no)
-            ) { dialog, whichButton ->
+            ) { _, _ ->
                 // Do not delete event
             }.create()
     }

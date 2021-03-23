@@ -19,13 +19,13 @@ class ReportProblemAlertDialog : DialogFragment() {
             .setView(dialogView)
             .setPositiveButton(
                 R.string.send
-            ) { dialog, whichButton ->
+            ) { _, _ ->
                 // Send email from users input
                 val mail = dialogView.findViewById<EditText>(R.id.edittext_problem).text.toString()
                 (context as MainActivity).sendEmail(mail)
             }.setNegativeButton(
                 R.string.cancel
-            ) { dialog, whichButton ->
+            ) { _, _ ->
                 // Do nothing
             }.create()
     }
