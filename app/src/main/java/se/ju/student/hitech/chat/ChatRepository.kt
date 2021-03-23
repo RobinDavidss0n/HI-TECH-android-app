@@ -12,6 +12,8 @@ class ChatRepository {
     private val db = FirebaseFirestore.getInstance()
     private val firebaseInstallations = FirebaseInstallations.getInstance()
     private val TOPIC_NEW_CHAT = "/topics/newChat"
+    private val TOPIC_MESSAGE_ADMIN = "/topics/admin"
+    private val TOPIC_MESSAGE_LOCAL = "/topics/local"
     private val timeHandler = TimeHandler()
     private lateinit var currentMessageListener: ListenerRegistration
 
@@ -41,7 +43,7 @@ class ChatRepository {
             }
     }
 
-    fun unsubscribeToChatNotifications(callback: (String) -> Unit) {
+    fun unsubscribeTonNewChatNotifications(callback: (String) -> Unit) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(TOPIC_NEW_CHAT)
             .addOnCompleteListener {
                 callback("successful")
@@ -55,6 +57,35 @@ class ChatRepository {
 
     fun createNewChatNotification(title: String, message: String) {
         MainActivity().createNotification(title, message, TOPIC_NEW_CHAT)
+    }
+
+    fun unsubscribeFromSpecificChatNotifications(chatID: String, callback: (String) -> Unit) {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(TOPIC_MESSAGE_ADMIN + chatID)
+            .addOnCompleteListener {
+                callback("successful")
+            }
+            .addOnFailureListener { error->
+                callback("internalError")
+                Log.w("Create new chat error", error)
+
+            }
+    }
+
+    fun subscribeToSpecificChatNotifications(chatID: String, isAdmin: Boolean ,callback: (String) -> Unit) {
+
+        FirebaseMessaging.getInstance().subscribeToTopic(if (isAdmin){TOPIC_MESSAGE_ADMIN}else{TOPIC_MESSAGE_LOCAL} + chatID)
+            .addOnCompleteListener {
+                callback("successful")
+            }
+            .addOnFailureListener { error->
+                callback("internalError")
+                Log.w("Create new chat error", error)
+
+            }
+    }
+
+    fun createMessageNotification(title: String,message: String, isAdmin: Boolean, chatID: String) {
+        MainActivity().createNotification(title, message, if (isAdmin){TOPIC_MESSAGE_LOCAL}else{TOPIC_MESSAGE_ADMIN} + chatID)
     }
 
     fun getFirebaseInstallationsID(callback: (String, String) -> Unit) {

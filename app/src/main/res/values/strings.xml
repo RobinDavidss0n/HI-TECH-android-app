@@ -119,5 +119,7 @@
     <string name="no_user_to_verify">No user to verify</string>
     <string name="user_verified">User verified successfully!</string>
     <string name="user_denied">User denied admin acces.</string>
+    <string name="new_chat">New chat!</string>
+    <string name="new_message">New message!</string>
 
 </resources>

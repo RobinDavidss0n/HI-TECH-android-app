@@ -142,8 +142,20 @@ class ContactFragment : Fragment() {
                                         ) {
                                             when (it) {
                                                 "successful" -> {
-                                                    updateAppearanceForCurrentUser()
-                                                    binding.progressbarContact.visibility = GONE
+
+                                                    ChatRepository().subscribeToSpecificChatNotifications(currentChatID, true) { result2 ->
+                                                        when (result2) {
+                                                            "successful" -> {
+                                                                updateAppearanceForCurrentUser()
+                                                                binding.progressbarContact.visibility = GONE
+
+                                                            }
+                                                            "internalError" -> {
+                                                                (context as MainActivity).makeToast(getString(R.string.internalError))
+                                                                binding.progressbarContact.visibility = GONE
+                                                            }
+                                                        }
+                                                    }
 
                                                 }
 
@@ -181,9 +193,14 @@ class ContactFragment : Fragment() {
                                     "successful" -> userRepository.removeChatFromUser(currentChatID) { it2 ->
                                         when (it2) {
                                             "successful" -> {
-                                                (context as MainActivity).changeToFragment(
-                                                    MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW
-                                                )
+                                                ChatRepository().unsubscribeFromSpecificChatNotifications(currentChatID) { result2 ->
+                                                    when (result2) {
+                                                        "successful" -> { (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW) }
+                                                        "internalError" -> { (context as MainActivity).makeToast(getString(R.string.internalError)) }
+                                                    }
+                                                    binding.progressbarContact.visibility = GONE
+
+                                                }
                                             }
                                             "internalError" -> (context as MainActivity).makeToast(
                                                 getString(R.string.internalError)
@@ -275,11 +292,17 @@ class ContactFragment : Fragment() {
                     "firstSetup" -> {
                         viewModel.messageList = firstFullList
                         viewModel.currentMessages.postValue(viewModel.messageList)
+                        viewModel.currentMessages.value?.let { it1 ->
+                            binding.rvRecyclerViewMessages.scrollToPosition(it1.size - 1)
+                        }
 
                     }
                     "newData" -> {
                         viewModel.messageList.add(newMessage)
                         messagesAdapter.notifyDataSetChanged()
+                        viewModel.currentMessages.value?.let { it1 ->
+                            binding.rvRecyclerViewMessages.scrollToPosition(it1.size - 1)
+                        }
                     }
                     "internalError" -> {
                         val errorList = mutableListOf<Message>()
@@ -307,10 +330,8 @@ class ContactFragment : Fragment() {
             ) { result ->
                 when (result) {
                     "successful" -> {
+                        chatRepository.createMessageNotification(getString(R.string.new_message), msg, userRepository.checkIfLoggedIn(), currentChatID)
                         binding.messageInput.text.clear()
-                        viewModel.currentMessages.value?.let { it1 ->
-                            binding.rvRecyclerViewMessages.scrollToPosition(it1.size - 1)
-                        }
                     }
 
                     "internalError" -> {
