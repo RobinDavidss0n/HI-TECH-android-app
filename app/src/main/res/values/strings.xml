@@ -119,12 +119,10 @@
     <string name="no_user_to_verify">No user to verify</string>
     <string name="user_verified">User verified successfully!</string>
     <string name="user_denied">User denied admin access.</string>
-    <string name="new_chat">New chat!</string>
-    <string name="new_message">New message!</string>
-    <string name="new_chat_intro">Hello! :)
-        We will answer as fast as we can.
-        You can leave the chat and come back to it whenever you want.
-        You will get notified when you get a reply.</string>
+    <string name="new_chat">New chat</string>
+    <string name="new_message">New message</string>
+    <string name="new_chat_intro">Hello! :)         We will answer as fast as we can.         You can leave the chat and come back to it whenever you want.         You will get notified when you get a reply.</string>
     <string name="active_chats">ACTIVE CHATS</string>
     <string name="register">REGISTER</string>
+    <string name="new_event">NEW EVENT</string>
 </resources>
