@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_FRAGMENT_UPDATE_EVENT = "TAG_FRAGMENT_UPDATE_EVENT"
         const val TAG_FRAGMENT_UPDATE_NEWS = "TAG_FRAGMENT_UPDATE_NEWS"
         const val TAG_CURRENT_FRAGMENT = "TAG_CURRENT_FRAGMENT"
+        const val TAG_FRAGMENT_CREDIT = "TAG_FRAGMENT_CREDIT"
         const val TAG_FRAGMENT_VERIFY_NEW_USER = "TAG_FRAGMENT_VERIFY_NEW_USER"
     }
 
@@ -101,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, updateEventFragment, TAG_FRAGMENT_UPDATE_EVENT)
                 .add(R.id.fragment_container, updateNewsFragment, TAG_FRAGMENT_UPDATE_NEWS)
                 .add(R.id.fragment_container, VerifyNewUser(), TAG_FRAGMENT_VERIFY_NEW_USER)
+                .add(R.id.fragment_container, CreditFragment(), TAG_FRAGMENT_CREDIT)
                 .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
@@ -141,6 +143,7 @@ class MainActivity : AppCompatActivity() {
             TAG_FRAGMENT_ABOUT -> bottomNav.uncheckAllItems()
             TAG_FRAGMENT_ADMIN_LOGIN -> bottomNav.uncheckAllItems()
             TAG_USER_PAGE -> bottomNav.uncheckAllItems()
+            TAG_FRAGMENT_CREDIT -> bottomNav.uncheckAllItems()
         }
     }
 
@@ -248,6 +251,11 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     changeToFragment(TAG_FRAGMENT_ADMIN_LOGIN)
                 }
+                return true
+            }
+            R.id.nav_credit -> {
+                changeToFragment(TAG_FRAGMENT_CREDIT)
+                bottomNav.uncheckAllItems()
                 return true
             }
             R.id.nav_about -> {
