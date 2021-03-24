@@ -71,9 +71,9 @@
     <Button
         android:id="@+id/sign_in_google"
         android:layout_width="wrap_content"
-        android:background="@color/black"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
+        android:background="@color/black"
         android:drawableStart="@drawable/ic_google"
         android:paddingStart="40dp"
         android:paddingEnd="40dp"

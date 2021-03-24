@@ -138,7 +138,6 @@ class UserRepository {
             }
     }
 
-
     fun getUsername(adminID: String, callback: (String, String) -> Unit) {
         db.collection("users").document(adminID)
             .get()

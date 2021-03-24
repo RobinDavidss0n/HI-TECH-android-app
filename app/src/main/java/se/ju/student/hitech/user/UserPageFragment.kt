@@ -103,7 +103,7 @@ class UserPageFragment : Fragment() {
         }
     }
 
-    private fun userLogout(){
+    private fun userLogout() {
 
         ChatRepository().unsubscribeTonNewChatNotifications { result ->
             when (result) {

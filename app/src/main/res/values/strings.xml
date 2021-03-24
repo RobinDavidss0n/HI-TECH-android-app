@@ -102,7 +102,7 @@
     <string name="leave_chat">Leave chat</string>
     <string name="is_chatting_here">%1$s is currently chatting here.</string>
     <string name="error_chat">Error loading all chat functions, check your internet connection and restart the app.</string>
-    <string name="wating_for_admin">Waiting for a board member to join</string>
+    <string name="wating_for_admin">Waiting for a Board member to join</string>
     <string name="close_chat_confirmation">Do you want to close this chat? You will no longer be able to access the chat.</string>
     <string name="join_chat_confirmation">Do you want to join the chat?</string>
     <string name="leave_chat_confirmation">Do you want to leave the chat?</string>
@@ -115,16 +115,17 @@
     <string name="account_made_with_google">You made your account with Google, update your account with your role.</string>
     <string name="user_not_verified">User needs to be verified by an admin.</string>
     <string name="verify_new_admin">Verify new admin</string>
-    <string name="verify_user">Verify User</string>
+    <string name="verify_user">Verify Admin</string>
     <string name="no_user_to_verify">No user to verify</string>
     <string name="user_verified">User verified successfully!</string>
     <string name="user_denied">User denied admin access.</string>
     <string name="new_chat">New chat!</string>
     <string name="new_message">New message!</string>
     <string name="new_chat_intro">Hello! :)
-        We will answer as fast as we can!
-        You can close the chat and come back to it whenever you want.
+        We will answer as fast as we can.
+        You can leave the chat and come back to it whenever you want.
         You will get notified when you get a reply.</string>
     <string name="active_chats">ACTIVE CHATS</string>
+    <string name="register">REGISTER</string>
 
 </resources>
