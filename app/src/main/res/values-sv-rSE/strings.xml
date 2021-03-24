@@ -8,7 +8,7 @@
     <string name="problem">Rapportera tekniskt problem</string>
     <string name="login">Logga in som styrelsemedlem</string>
     <string name="about">Om HI TECH</string>
-    <string name="about_us">Om oss</string>
+    <string name="about_us">OM OSS</string>
     <string name="notification_description">Notifikationsinnehåll</string>
     <string name="create_notification">Skapa ny notifikation</string>
     <string name="create_post">SKAPA NYTT INLÄGG</string>
@@ -18,8 +18,8 @@
     <string name="passwordEmpty">Lösenordsfältet är tomt</string>
     <string name="passwordToWeak">Lösenordet måste vara minst 6 tecken långt, innehålla minst en stor bokstav, en liten bokstav och inga blanksteg.</string>
     <string name="passwordNotMatch">Lösenorden matchar inte</string>
-    <string name="nameEmpty">Namnfältet är tomt</string>
-    <string name="roleEmpty">Rollfältet är tomt</string>
+    <string name="nameEmpty">Fältet är tomt</string>
+    <string name="roleEmpty">Fältet är tomt</string>
     <string name="createUserSuccessful">Användare skapad!</string>
     <string name="internalError">Någonting gick fel, kolla din internetuppkoppling och försök igen.</string>
     <string name="resetPasswordInputError">Skriv in din e-postadress här och tryck på *Glömt lösenord?* igen.</string>
@@ -50,7 +50,7 @@
     <string name="delete_post_are_you_sure">Är du säker på att du vill radera detta inlägg?</string>
     <string name="failed_update_post">Misslyckades med att uppdatera inlägg</string>
     <string name="failed_create_notification">Misslyckades med att skapa notifikation</string>
-    <string name="empty_notification">Notifikationsfält kan inte vara tomt</string>
+    <string name="empty_notification">Fältet är tomt</string>
     <string name="report_bug_email_subject">Rapportera tekniskt problem - HI TECH Android App</string>
     <string name="title">Titel</string>
     <string name="date">Datum</string>
@@ -78,15 +78,15 @@
     <string name="location">Plats</string>
     <string name="information_about_event">Information om event</string>
     <string name="update_event">UPPDATERA EVENT</string>
-    <string name="empty_title">Titelfältet är tomt</string>
-    <string name="empty_content">Innehållsfältet är tomt</string>
-    <string name="empty_notification_description">Notifikationsbeskrivningen är tom</string>
+    <string name="empty_title">Fältet är tomt</string>
+    <string name="empty_content">Fältet är tomt</string>
+    <string name="empty_notification_description">Fältet är tomt</string>
     <string name="error_loading_news_post">Kunde inte hämta inlägg</string>
     <string name="create_event">SKAPA NYTT EVENT</string>
-    <string name="empty_date">Datumfältet är tomt</string>
-    <string name="empty_time">Tidfältet är tomt</string>
-    <string name="empty_location">Platsfältet är tomt</string>
-    <string name="empty_information">Informationsfältet är tomt</string>
+    <string name="empty_date">Fältet är tomt</string>
+    <string name="empty_time">Fältet är tomt</string>
+    <string name="empty_location">Fältet är tomt</string>
+    <string name="empty_information">Fältet är tomt</string>
     <string name="error_delete_event">Misslyckades med att radera event</string>
     <string name="error_delete_news_post">Misslyckades med att radera nyhet</string>
     <string name="join_chat">Gå med i chatt</string>
@@ -123,7 +123,7 @@
     <string name="case_education">Utbildning</string>
     <string name="new_event">NYTT EVENT</string>
     <string name="admin_login_emailInputHint">E-post</string>
-    <string name="about_content_more">"HI TECH är mer än bara styrelsemöten. Mer än 150 personer är involverade på något sätt, via kommittéer, projekt och event. HI TECH är en förening som är full av möjligheter och arbetar för att förbättra studentlivet på JTH, varje dag. "</string>
-    <string name="about_content">HI TECH är studentföreningen på Jönköpings Tekniska Högskola. Föreningen har arbetat för att främja studenternas intressen i mer än 30 år. Detta inkluderar att ordna gemensamma aktiviteter, fester, pubkvällar och kick-off; många av de roliga evenemangen som bidrar till ett roligare socialt liv för studenter. HI TECH arbetar också för att främja studentinflytande på JTH.</string>
+    <string name="about_content_more">"HI TECH är mer än bara styrelsemöten. Mer än 150 personer är involverade i föreningen på något sätt, via kommittéer, projekt och event. HI TECH är en förening som är full av möjligheter och arbetar för att förbättra studentlivet på JTH, varje dag. "</string>
+    <string name="about_content">HI TECH är studentföreningen på Jönköpings Tekniska Högskola. Föreningen har arbetat för att främja studenters intressen i mer än 30 år. Detta inkluderar att ordna gemensamma aktiviteter, fester, pubkvällar och kick-off; många av de roliga evenemangen som bidrar till ett roligare socialt liv för studenter. HI TECH arbetar också för att främja studentinflytande på JTH.</string>
     <string name="about_hi_shop">HI SHOPPEN är en liten butik där du kan köpa allt du behöver för äventyr i din ovve och studentkulturen i Jönköping. Vi har overaller, patches, lim, pennor, handdukar för CAPS-evenemanget och mycket mer.</string>
 </resources>
