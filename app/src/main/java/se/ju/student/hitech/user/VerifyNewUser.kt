@@ -63,7 +63,6 @@ class VerifyNewUser : Fragment() {
         goBackButton?.setOnClickListener {
             (context as MainActivity).changeToFragment(MainActivity.TAG_USER_PAGE)
         }
-
     }
 
     private fun verifyUser(userID: String) {

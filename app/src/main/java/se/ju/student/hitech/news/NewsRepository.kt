@@ -5,7 +5,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 
 class NewsRepository {
-
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var latestId: Int = 0
 
@@ -14,7 +13,6 @@ class NewsRepository {
     }
 
     fun addNews(title: String, content: String, callback: (String) -> Unit) {
-
         loadAllNewsData { result, list ->
             when (result) {
                 "notFound" -> {

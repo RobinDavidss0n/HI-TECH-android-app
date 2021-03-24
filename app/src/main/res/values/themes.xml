@@ -14,5 +14,4 @@
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/avenir_next_regular</item>
     </style>
-
 </resources>

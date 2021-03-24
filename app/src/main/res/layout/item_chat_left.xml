@@ -19,17 +19,17 @@
             android:padding="5dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="skjhdilchdlejkbdjkhbekjbdkjhebijk"
+            android:text=""
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/timeLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="18.30"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="12sp">
 

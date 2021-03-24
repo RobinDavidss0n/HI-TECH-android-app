@@ -5,7 +5,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 
 class EventRepository {
-
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var latestId: Int = 0
 

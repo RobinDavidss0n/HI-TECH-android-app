@@ -72,25 +72,36 @@ class ContactCaseFragment : Fragment() {
                     chatRepository.createNewChat(localID, localUsername, case) { result2, chatID ->
                         when (result2) {
                             "successful" -> {
-                                ChatRepository().subscribeToSpecificChatNotifications(chatID, false) { result3 ->
+                                ChatRepository().subscribeToSpecificChatNotifications(
+                                    chatID,
+                                    false
+                                ) { result3 ->
                                     when (result3) {
                                         "successful" -> {
-                                            chatRepository.addMessage(getString(R.string.new_chat_intro), true, chatID){ result4 ->
+                                            chatRepository.addMessage(
+                                                getString(R.string.new_chat_intro),
+                                                true,
+                                                chatID
+                                            ) { result4 ->
                                                 when (result4) {
                                                     "successful" -> {
-
                                                         chatRepository.setCurrentChatID(chatID)
-                                                        chatRepository.createNewChatNotification(getString(R.string.new_chat), case)
+                                                        chatRepository.createNewChatNotification(
+                                                            getString(R.string.new_chat),
+                                                            case
+                                                        )
                                                         (context as MainActivity).reloadContactFragment()
-                                                        (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT)
-
+                                                        (context as MainActivity).changeToFragment(
+                                                            MainActivity.TAG_FRAGMENT_CONTACT
+                                                        )
                                                     }
                                                     "internalError" -> {
-                                                        (context as MainActivity).makeToast(getString(R.string.internalError))
+                                                        (context as MainActivity).makeToast(
+                                                            getString(R.string.internalError)
+                                                        )
                                                     }
                                                 }
                                             }
-
                                         }
                                         "internalError" -> {
                                             binding.progressbarContactCase.visibility = View.GONE
@@ -98,7 +109,6 @@ class ContactCaseFragment : Fragment() {
                                         }
                                     }
                                 }
-
                             }
                             "internalError" -> {
                                 binding.progressbarContactCase.visibility = View.GONE

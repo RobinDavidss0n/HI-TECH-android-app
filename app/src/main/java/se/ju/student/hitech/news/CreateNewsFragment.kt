@@ -19,7 +19,6 @@ import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
 class CreateNewsFragment : Fragment() {
-
     private var checked = false
 
     override fun onCreateView(

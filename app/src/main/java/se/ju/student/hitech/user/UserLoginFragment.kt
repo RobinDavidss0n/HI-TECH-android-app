@@ -25,11 +25,10 @@ import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class UserLoginFragment : Fragment() {
-
     private lateinit var progressBar: ProgressBar
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    companion object{
+    companion object {
         private const val RC_SIGN_IN = 120
     }
 
@@ -73,7 +72,7 @@ class UserLoginFragment : Fragment() {
 
         val signInGoogle = view?.findViewById<Button>(R.id.sign_in_google)
 
-        signInGoogle?.setOnClickListener{
+        signInGoogle?.setOnClickListener {
             progressBar.visibility = View.VISIBLE
             signInGoogle()
         }
@@ -111,7 +110,7 @@ class UserLoginFragment : Fragment() {
                             progressBar.visibility = View.GONE
                         }
                     }
-                    "needsVerification"->{
+                    "needsVerification" -> {
                         (context as MainActivity).makeToast(getString(R.string.user_not_verified))
                         progressBar.visibility = View.GONE
                     }
@@ -199,23 +198,19 @@ class UserLoginFragment : Fragment() {
                     ChatRepository().subscribeToNewChatNotifications { result2 ->
                         when (result2) {
                             "successful" -> {
-
                                 (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
                                 // reload fragments where UI changes when logged in
                                 (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
                                 (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
                                 (context as MainActivity).reloadFragment(TAG_USER_PAGE)
                                 (context as MainActivity).changeToFragment(TAG_USER_PAGE)
-
                             }
                             "internalError" -> {
                                 (context as MainActivity).makeToast(getString(R.string.internalError))
                                 UserRepository().userLogout()
                             }
-
                         }
                     }
-
                 }
                 "emailNotFound" -> (context as MainActivity).makeToast(getString(R.string.emailNotFound))
                 "invalidPassword" -> (context as MainActivity).makeToast(getString(R.string.invalidPassword))

@@ -12,7 +12,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import se.ju.student.hitech.R
 
 class UserRepository {
-
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
@@ -127,7 +126,6 @@ class UserRepository {
     fun verifyUser(
         userID: String, callback: (String) -> Unit
     ) {
-
         db.collection("users").document(userID)
             .update("verified", true)
             .addOnSuccessListener {
@@ -159,8 +157,6 @@ class UserRepository {
                     isEmailVerified() -> callback("successful")
                     else -> callback("emailNotVerified")
                 }
-
-
             }.addOnFailureListener { error ->
                 val e = error.toString()
                 Log.d("User login error", e)
@@ -195,7 +191,6 @@ class UserRepository {
     ) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { registeredUser ->
-
                 val user = hashMapOf(
                     "name" to name,
                     "role" to role
@@ -209,7 +204,6 @@ class UserRepository {
                         Log.w("Insert user into database error", error)
                         callback("internalError")
                     }
-
             }.addOnFailureListener { error ->
                 Log.w("Create user error", error)
                 callback("internalError")
@@ -243,7 +237,6 @@ class UserRepository {
         newRole: String,
         callback: (String) -> Unit
     ) {
-
         db.collection("users").document(getUserID())
             .update("name", newName, "role", newRole)
             .addOnSuccessListener {
@@ -267,11 +260,9 @@ class UserRepository {
             Log.w("Send password reset error", error)
             callback("internalError")
         }
-
     }
 
     fun deleteCurrentUser(callback: (String) -> Unit) {
-
         auth.currentUser!!.delete()
             .addOnSuccessListener {
                 db.collection("users").document(getUserID())
@@ -289,7 +280,6 @@ class UserRepository {
     }
 
     fun denyUser(userID: String, callback: (String) -> Unit) {
-
         db.collection("users").document(userID)
             .delete()
             .addOnSuccessListener {
@@ -301,7 +291,6 @@ class UserRepository {
     }
 
     fun removeChatFromUser(chatID: String, callback: (String) -> Unit) {
-
         db.collection("users").document(getUserID())
             .update("chats", FieldValue.arrayRemove(chatID))
             .addOnSuccessListener {

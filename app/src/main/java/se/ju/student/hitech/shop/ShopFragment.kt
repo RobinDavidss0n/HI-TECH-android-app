@@ -17,7 +17,6 @@ import se.ju.student.hitech.databinding.FragmentShopBinding
 import se.ju.student.hitech.databinding.ItemShopBinding
 
 class ShopFragment : Fragment() {
-
     lateinit var binding: FragmentShopBinding
     private val viewModel: ShopViewModel by viewModels()
 
@@ -38,11 +37,8 @@ class ShopFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.shopItems.observe(viewLifecycleOwner) {
-
             if (it != null) {
-
                 binding.recyclerViewShopItems.post {
-
                     binding.recyclerViewShopItems.apply {
                         layoutManager = GridLayoutManager(context, 2)
                         adapter = ShopAdapter(it)
@@ -69,7 +65,6 @@ class ShopFragment : Fragment() {
     }
 
     class ShopViewModel : ViewModel() {
-
         val shopItems = MutableLiveData<List<ShopItem>>()
         var shopRepository = ShopRepository()
 

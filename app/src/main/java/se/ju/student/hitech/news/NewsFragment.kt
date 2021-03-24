@@ -28,7 +28,6 @@ import se.ju.student.hitech.news.ViewNewsActivity.Companion.EXTRA_NEWS_ID
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class NewsFragment : Fragment() {
-
     lateinit var binding: FragmentNewsBinding
     private val viewModel: NewsViewModel by viewModels()
 
@@ -90,7 +89,6 @@ class NewsFragment : Fragment() {
                 when (result) {
                     "successful" -> {
                         news.postValue(list.asReversed())
-
                     }
                     "internalError" -> {
                         val errorList = mutableListOf<News>()

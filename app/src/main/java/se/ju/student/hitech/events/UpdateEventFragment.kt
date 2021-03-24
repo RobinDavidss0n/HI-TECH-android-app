@@ -14,7 +14,6 @@ import se.ju.student.hitech.databinding.FragmentUpdateEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
 class UpdateEventFragment : Fragment() {
-
     private lateinit var binding: FragmentUpdateEventBinding
     private var eventId = 0
 

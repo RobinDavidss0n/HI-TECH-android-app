@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ShopRepository {
-
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var shopItems = mutableListOf<ShopItem>()
 

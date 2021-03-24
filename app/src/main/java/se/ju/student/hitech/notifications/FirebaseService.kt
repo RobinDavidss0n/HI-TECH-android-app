@@ -19,7 +19,7 @@ import kotlin.random.Random
 
 class FirebaseService : FirebaseMessagingService() {
 
-    companion object{
+    companion object {
         private const val CHANNEL_ID = "notification_channel"
         var sharedPref: SharedPreferences? = null
 
@@ -41,10 +41,11 @@ class FirebaseService : FirebaseMessagingService() {
         super.onMessageReceived(message)
 
         val intent = Intent(this, MainActivity::class.java)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(notificationManager)
         }
 
@@ -63,7 +64,7 @@ class FirebaseService : FirebaseMessagingService() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(notificationManager: NotificationManager){
+    private fun createNotificationChannel(notificationManager: NotificationManager) {
         val channelName = "channel name"
         val channel = NotificationChannel(CHANNEL_ID, channelName, IMPORTANCE_DEFAULT).apply {
             description = "channel description"

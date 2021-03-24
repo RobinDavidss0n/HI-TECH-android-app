@@ -23,5 +23,4 @@
         android:icon="@drawable/ic_chat"
         android:iconTint="@color/yellow"
         android:title="@string/contact" />
-
 </menu>

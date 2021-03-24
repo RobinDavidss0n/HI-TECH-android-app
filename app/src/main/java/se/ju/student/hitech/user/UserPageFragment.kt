@@ -24,7 +24,6 @@ import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class UserPageFragment : Fragment() {
-
     lateinit var progressBar: ProgressBar
     lateinit var emailInput: TextInputEditText
     lateinit var nameInput: TextInputEditText
@@ -169,6 +168,7 @@ class UserPageFragment : Fragment() {
             roleInputLayout?.error = getString(R.string.roleEmpty)
             return false
         }
+
         return true
     }
 
@@ -242,7 +242,6 @@ class UserPageFragment : Fragment() {
             ) { _, _ ->
 
                 userRepository.deleteCurrentUser { result ->
-
                     progressBar.visibility = GONE
                     when (result) {
                         "successful" -> {

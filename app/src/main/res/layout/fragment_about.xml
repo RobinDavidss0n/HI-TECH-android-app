@@ -105,5 +105,5 @@
                 app:layout_constraintTop_toBottomOf="@id/button_visit_website" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>1
+    </ScrollView>
 </RelativeLayout>

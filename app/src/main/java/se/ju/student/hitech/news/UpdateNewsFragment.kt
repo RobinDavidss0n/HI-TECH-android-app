@@ -19,7 +19,6 @@ import se.ju.student.hitech.R
 import se.ju.student.hitech.news.NewsRepository.Companion.newsRepository
 
 class UpdateNewsFragment : Fragment() {
-
     private var checked = false
     private var newsId = 0
 
@@ -57,7 +56,6 @@ class UpdateNewsFragment : Fragment() {
         }
 
         updateNewsPostButton?.setOnClickListener {
-
             if (checked) {
                 if (verifyPostNotificationUserInputs(
                         title.text.toString(),
@@ -77,7 +75,6 @@ class UpdateNewsFragment : Fragment() {
                             notificationContent.text.toString()
                         )
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-
                         // clear input fields
                         title.setText("")
                         content.setText("")
@@ -99,7 +96,6 @@ class UpdateNewsFragment : Fragment() {
                     ).addOnSuccessListener {
                         progressBar?.visibility = GONE
                         (context as MainActivity).changeToFragment(TAG_FRAGMENT_NEWS)
-
                         // clear input fields
                         title.setText("")
                         content.setText("")
