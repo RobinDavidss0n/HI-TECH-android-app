@@ -1,10 +1,8 @@
 package se.ju.student.hitech.user
 
 import android.app.AlertDialog
-import android.content.ContentProviderClient
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -13,15 +11,11 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.messaging.FirebaseMessaging
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_EVENTS
 import se.ju.student.hitech.MainActivity.Companion.TAG_FRAGMENT_NEWS
@@ -77,7 +71,7 @@ class UserLoginFragment : Fragment() {
             }
         }
 
-        val signInGoogle = view?.findViewById<TextView>(R.id.sign_in_google)
+        val signInGoogle = view?.findViewById<Button>(R.id.sign_in_google)
 
         signInGoogle?.setOnClickListener{
             progressBar.visibility = View.VISIBLE
@@ -102,41 +96,32 @@ class UserLoginFragment : Fragment() {
                         ChatRepository().subscribeToNewChatNotifications { result2 ->
                             when (result2) {
                                 "successful" -> {
-
                                     (context as MainActivity).makeToast(getString(R.string.loginSuccessful))
                                     // reload fragments where UI changes when logged in
                                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
                                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
                                     (context as MainActivity).reloadFragment(TAG_USER_PAGE)
                                     (context as MainActivity).changeToFragment(TAG_USER_PAGE)
-
                                 }
                                 "internalError" -> {
                                     (context as MainActivity).makeToast(getString(R.string.internalError))
                                     UserRepository().userLogout()
                                 }
-
                             }
                             progressBar.visibility = View.GONE
                         }
-
                     }
                     "needsVerification"->{
                         (context as MainActivity).makeToast(getString(R.string.user_not_verified))
                         progressBar.visibility = View.GONE
-
                     }
                     "internalError" -> {
                         (context as MainActivity).makeToast(getString(R.string.internalError))
                         UserRepository().userLogout()
                         progressBar.visibility = View.GONE
                     }
-
                 }
-
-
             }
-
         }
     }
 
@@ -144,8 +129,6 @@ class UserLoginFragment : Fragment() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
-
-
 
     private fun resetPassword(email: String) {
 

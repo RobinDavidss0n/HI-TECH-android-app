@@ -25,9 +25,7 @@
                 android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/profile_image"
+                android:layout_marginStart="10dp"
                 android:text="username"
                 android:textSize="18sp" />
 
@@ -35,7 +33,7 @@
                 android:id="@+id/tvCase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:text="TextView" />
         </LinearLayout>
     </LinearLayout>

@@ -114,12 +114,10 @@ class UserPageFragment : Fragment() {
                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
                     (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
-
                 }
                 "internalError" -> {
                     (context as MainActivity).makeToast(getString(R.string.internalError))
                 }
-
             }
         }
     }
@@ -142,7 +140,6 @@ class UserPageFragment : Fragment() {
     private fun verifyUserInputs(
         email: String, name: String, role: String
     ): Boolean {
-
         val emailInputLayout =
             view?.findViewById<TextInputLayout>(R.id.user_page_emailTextInputLayout)
         val nameInputLayout =
@@ -154,7 +151,6 @@ class UserPageFragment : Fragment() {
         roleInputLayout?.error = ""
 
         if (email.isEmpty()) {
-
             emailInputLayout?.error = getString(R.string.emailEmpty)
             return false
         }

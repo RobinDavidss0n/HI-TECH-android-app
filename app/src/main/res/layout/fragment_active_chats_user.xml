@@ -26,7 +26,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/avenir_next_bold"
-            android:text="ACTIVE CHATS"
+            android:text="@string/active_chats"
             android:textColor="@color/yellow"
             android:textSize="30sp" />
 
