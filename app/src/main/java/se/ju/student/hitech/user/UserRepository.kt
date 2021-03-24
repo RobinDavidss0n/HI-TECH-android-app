@@ -1,32 +1,23 @@
 package se.ju.student.hitech.user
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings.Global.getString
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.common.base.Strings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
-import se.ju.student.hitech.chat.Chat
 
 class UserRepository {
-
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
     companion object {
         var userRepository = UserRepository()
     }
-
 
     fun getUserID(): String {
         return auth.currentUser?.uid.toString()
@@ -67,7 +58,6 @@ class UserRepository {
                 if (task.isSuccessful) {
                     val currentUser = auth.currentUser
                     if (currentUser != null) {
-
                         val docRef = db.collection("users").document(currentUser.uid)
                         docRef.get()
                             .addOnSuccessListener { document ->
@@ -94,7 +84,6 @@ class UserRepository {
                                             userLogout()
                                             Log.w("Insert user into database error", error)
                                             callback("internalError")
-
                                         }
                                 }
                             }
@@ -103,13 +92,11 @@ class UserRepository {
                                 Log.w("Insert user into database error", error)
                                 callback("internalError")
                             }
-
                     } else {
                         userLogout()
                         Log.w("Insert user into database error", "No user was found")
                         callback("internalError")
                     }
-
                 } else {
                     userLogout()
                     callback("internalError")
@@ -128,22 +115,17 @@ class UserRepository {
                     val user = doc.toObject(User::class.java)
                     if (user != null) {
                         callback("successful", user, doc.id)
-
                     }
                 }
-
-
             }.addOnFailureListener { error ->
                 Log.w("Get not verified users database error", error)
                 callback("internalError", User(), "")
-
             }
     }
 
     fun verifyUser(
         userID: String, callback: (String) -> Unit
     ) {
-
         db.collection("users").document(userID)
             .update("verified", true)
             .addOnSuccessListener {
@@ -151,10 +133,8 @@ class UserRepository {
             }.addOnFailureListener { error ->
                 Log.w("verify user database error", error)
                 callback("internalError")
-
             }
     }
-
 
     fun getUsername(adminID: String, callback: (String, String) -> Unit) {
         db.collection("users").document(adminID)
@@ -166,7 +146,6 @@ class UserRepository {
             }.addOnFailureListener { error ->
                 Log.w("Get user info database error", error)
                 callback("internalError", "")
-
             }
     }
 
@@ -178,8 +157,6 @@ class UserRepository {
                     isEmailVerified() -> callback("successful")
                     else -> callback("emailNotVerified")
                 }
-
-
             }.addOnFailureListener { error ->
                 val e = error.toString()
                 Log.d("User login error", e)
@@ -214,7 +191,6 @@ class UserRepository {
     ) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { registeredUser ->
-
                 val user = hashMapOf(
                     "name" to name,
                     "role" to role
@@ -227,9 +203,7 @@ class UserRepository {
                     }.addOnFailureListener { error ->
                         Log.w("Insert user into database error", error)
                         callback("internalError")
-
                     }
-
             }.addOnFailureListener { error ->
                 Log.w("Create user error", error)
                 callback("internalError")
@@ -263,7 +237,6 @@ class UserRepository {
         newRole: String,
         callback: (String) -> Unit
     ) {
-
         db.collection("users").document(getUserID())
             .update("name", newName, "role", newRole)
             .addOnSuccessListener {
@@ -277,7 +250,6 @@ class UserRepository {
             }.addOnFailureListener { error ->
                 Log.w("Update user info database error", error)
                 callback("internalError")
-
             }
     }
 
@@ -288,11 +260,9 @@ class UserRepository {
             Log.w("Send password reset error", error)
             callback("internalError")
         }
-
     }
 
     fun deleteCurrentUser(callback: (String) -> Unit) {
-
         auth.currentUser!!.delete()
             .addOnSuccessListener {
                 db.collection("users").document(getUserID())
@@ -310,7 +280,6 @@ class UserRepository {
     }
 
     fun denyUser(userID: String, callback: (String) -> Unit) {
-
         db.collection("users").document(userID)
             .delete()
             .addOnSuccessListener {
@@ -322,7 +291,6 @@ class UserRepository {
     }
 
     fun removeChatFromUser(chatID: String, callback: (String) -> Unit) {
-
         db.collection("users").document(getUserID())
             .update("chats", FieldValue.arrayRemove(chatID))
             .addOnSuccessListener {

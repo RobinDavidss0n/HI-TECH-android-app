@@ -22,7 +22,6 @@ class ChatRepository {
         var chatRepository = ChatRepository()
     }
 
-
     fun getCurrentChatID(): String {
         return currentChatID
     }
@@ -36,10 +35,9 @@ class ChatRepository {
             .addOnCompleteListener {
                 callback("successful")
             }
-            .addOnFailureListener { error->
+            .addOnFailureListener { error ->
                 callback("internalError")
                 Log.w("Create new chat error", error)
-
             }
     }
 
@@ -48,10 +46,9 @@ class ChatRepository {
             .addOnCompleteListener {
                 callback("successful")
             }
-            .addOnFailureListener { error->
+            .addOnFailureListener { error ->
                 callback("internalError")
                 Log.w("Create new chat error", error)
-
             }
     }
 
@@ -64,28 +61,47 @@ class ChatRepository {
             .addOnCompleteListener {
                 callback("successful")
             }
-            .addOnFailureListener { error->
+            .addOnFailureListener { error ->
                 callback("internalError")
                 Log.w("Create new chat error", error)
-
             }
     }
 
-    fun subscribeToSpecificChatNotifications(chatID: String, isAdmin: Boolean ,callback: (String) -> Unit) {
+    fun subscribeToSpecificChatNotifications(
+        chatID: String,
+        isAdmin: Boolean,
+        callback: (String) -> Unit
+    ) {
 
-        FirebaseMessaging.getInstance().subscribeToTopic(if (isAdmin){TOPIC_MESSAGE_ADMIN}else{TOPIC_MESSAGE_LOCAL} + chatID)
+        FirebaseMessaging.getInstance().subscribeToTopic(
+            if (isAdmin) {
+                TOPIC_MESSAGE_ADMIN
+            } else {
+                TOPIC_MESSAGE_LOCAL
+            } + chatID
+        )
             .addOnCompleteListener {
                 callback("successful")
             }
-            .addOnFailureListener { error->
+            .addOnFailureListener { error ->
                 callback("internalError")
                 Log.w("Create new chat error", error)
-
             }
     }
 
-    fun createMessageNotification(title: String,message: String, isAdmin: Boolean, chatID: String) {
-        MainActivity().createNotification(title, message, if (isAdmin){TOPIC_MESSAGE_LOCAL}else{TOPIC_MESSAGE_ADMIN} + chatID)
+    fun createMessageNotification(
+        title: String,
+        message: String,
+        isAdmin: Boolean,
+        chatID: String
+    ) {
+        MainActivity().createNotification(
+            title, message, if (isAdmin) {
+                TOPIC_MESSAGE_LOCAL
+            } else {
+                TOPIC_MESSAGE_ADMIN
+            } + chatID
+        )
     }
 
     fun getFirebaseInstallationsID(callback: (String, String) -> Unit) {
@@ -178,7 +194,6 @@ class ChatRepository {
         chatID: String,
         callback: (String) -> Unit
     ) {
-
         db.collection("chats").document(chatID)
             .get()
             .addOnSuccessListener { docSnap ->
@@ -228,7 +243,6 @@ class ChatRepository {
                 callback("internalError")
             }
     }
-
 
     fun addMessage(msgText: String, isAdmin: Boolean, chatID: String, callback: (String) -> Unit) {
         val msg = hashMapOf(

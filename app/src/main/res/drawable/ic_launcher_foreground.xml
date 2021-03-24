@@ -3,29 +3,30 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-  <group android:scaleX="0.20066218"
-      android:scaleY="0.20066218"
-      android:translateX="25.647177"
-      android:translateY="25.907293">
-    <path
-        android:pathData="m222.192,199.955l28.368,-0l0,-120.176l-28.368,-0z"
-        android:fillColor="#000000"
-        android:strokeColor="#00000000"
-        android:fillType="nonZero"/>
-    <path
-        android:pathData="M179.639,125.683L133.735,125.683L133.735,79.779L105.367,79.779L105.367,125.683l-0.001,-0l0,28.368l0.001,-0l0,45.904l28.368,-0l0,-45.904L179.639,154.051L179.639,199.955L208.007,199.955L208.007,154.051 208.007,125.683 208.007,79.779L179.639,79.779Z"
-        android:fillColor="#000000"
-        android:strokeColor="#00000000"
-        android:fillType="nonZero"/>
-    <path
-        android:pathData="M31.093,199.955L76.997,199.955L76.997,154.051L31.093,154.051Z"
-        android:fillColor="#000000"
-        android:strokeColor="#00000000"
-        android:fillType="nonZero"/>
-    <path
-        android:pathData="m31.093,125.683l45.904,-0l0,-45.904L31.093,79.779Z"
-        android:fillColor="#000000"
-        android:strokeColor="#00000000"
-        android:fillType="nonZero"/>
-  </group>
+    <group
+        android:scaleX="0.20066218"
+        android:scaleY="0.20066218"
+        android:translateX="25.647177"
+        android:translateY="25.907293">
+        <path
+            android:fillColor="#000000"
+            android:fillType="nonZero"
+            android:pathData="m222.192,199.955l28.368,-0l0,-120.176l-28.368,-0z"
+            android:strokeColor="#00000000" />
+        <path
+            android:fillColor="#000000"
+            android:fillType="nonZero"
+            android:pathData="M179.639,125.683L133.735,125.683L133.735,79.779L105.367,79.779L105.367,125.683l-0.001,-0l0,28.368l0.001,-0l0,45.904l28.368,-0l0,-45.904L179.639,154.051L179.639,199.955L208.007,199.955L208.007,154.051 208.007,125.683 208.007,79.779L179.639,79.779Z"
+            android:strokeColor="#00000000" />
+        <path
+            android:fillColor="#000000"
+            android:fillType="nonZero"
+            android:pathData="M31.093,199.955L76.997,199.955L76.997,154.051L31.093,154.051Z"
+            android:strokeColor="#00000000" />
+        <path
+            android:fillColor="#000000"
+            android:fillType="nonZero"
+            android:pathData="m31.093,125.683l45.904,-0l0,-45.904L31.093,79.779Z"
+            android:strokeColor="#00000000" />
+    </group>
 </vector>

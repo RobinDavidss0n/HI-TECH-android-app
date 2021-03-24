@@ -26,7 +26,6 @@ import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 import se.ju.student.hitech.user.UserRepository
 
 class EventsFragment : Fragment() {
-
     lateinit var binding: FragmentEventsBinding
     var userRepository = UserRepository()
     private val viewModel: EventsViewModel by viewModels()
@@ -94,7 +93,6 @@ class EventsFragment : Fragment() {
                 when (result) {
                     "successful" -> {
                         events.postValue(list.asReversed())
-
                     }
                     "internalError" -> {
                         val errorList = mutableListOf<Event>()
@@ -134,7 +132,7 @@ class EventsFragment : Fragment() {
             val id = event.id
 
             if (loggedIn) {
-                holder.binding.icMenu.setOnClickListener {
+                holder.binding.icMenu.setOnClickListener { it ->
                     val popupMenu = PopupMenu(it.context, holder.binding.icMenu)
                     popupMenu.inflate(R.menu.recyclerview_menu)
 

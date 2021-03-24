@@ -96,11 +96,9 @@ class ContactFragment : Fragment() {
 
                         "successful" -> {
                             if (UserRepository().checkIfLoggedIn()) {
-
                                 (context as MainActivity).changeToFragment(
                                     MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW
                                 )
-
                             } else {
                                 (context as MainActivity).changeToFragment(
                                     MainActivity.TAG_FRAGMENT_CONTACT_CASE
@@ -142,21 +140,25 @@ class ContactFragment : Fragment() {
                                         ) {
                                             when (it) {
                                                 "successful" -> {
-
-                                                    ChatRepository().subscribeToSpecificChatNotifications(currentChatID, true) { result2 ->
+                                                    ChatRepository().subscribeToSpecificChatNotifications(
+                                                        currentChatID,
+                                                        true
+                                                    ) { result2 ->
                                                         when (result2) {
                                                             "successful" -> {
                                                                 updateAppearanceForCurrentUser()
-                                                                binding.progressbarContact.visibility = GONE
-
+                                                                binding.progressbarContact.visibility =
+                                                                    GONE
                                                             }
                                                             "internalError" -> {
-                                                                (context as MainActivity).makeToast(getString(R.string.internalError))
-                                                                binding.progressbarContact.visibility = GONE
+                                                                (context as MainActivity).makeToast(
+                                                                    getString(R.string.internalError)
+                                                                )
+                                                                binding.progressbarContact.visibility =
+                                                                    GONE
                                                             }
                                                         }
                                                     }
-
                                                 }
 
                                                 "internalError" -> {
@@ -193,10 +195,20 @@ class ContactFragment : Fragment() {
                                     "successful" -> userRepository.removeChatFromUser(currentChatID) { it2 ->
                                         when (it2) {
                                             "successful" -> {
-                                                ChatRepository().unsubscribeFromSpecificChatNotifications(currentChatID) { result2 ->
+                                                ChatRepository().unsubscribeFromSpecificChatNotifications(
+                                                    currentChatID
+                                                ) { result2 ->
                                                     when (result2) {
-                                                        "successful" -> { (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW) }
-                                                        "internalError" -> { (context as MainActivity).makeToast(getString(R.string.internalError)) }
+                                                        "successful" -> {
+                                                            (context as MainActivity).changeToFragment(
+                                                                MainActivity.TAG_FRAGMENT_CONTACT_USER_VIEW
+                                                            )
+                                                        }
+                                                        "internalError" -> {
+                                                            (context as MainActivity).makeToast(
+                                                                getString(R.string.internalError)
+                                                            )
+                                                        }
                                                     }
                                                     binding.progressbarContact.visibility = GONE
 
@@ -330,7 +342,12 @@ class ContactFragment : Fragment() {
             ) { result ->
                 when (result) {
                     "successful" -> {
-                        chatRepository.createMessageNotification(getString(R.string.new_message), msg, userRepository.checkIfLoggedIn(), currentChatID)
+                        chatRepository.createMessageNotification(
+                            getString(R.string.new_message),
+                            msg,
+                            userRepository.checkIfLoggedIn(),
+                            currentChatID
+                        )
                         binding.messageInput.text.clear()
                     }
 

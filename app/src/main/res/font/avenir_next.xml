@@ -8,4 +8,8 @@
         app:font="@font/avenir_next_regular"
         app:fontStyle="normal"
         app:fontWeight="400" />
+    <font
+        app:font="@font/avenir_next_italic"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
 </font-family>

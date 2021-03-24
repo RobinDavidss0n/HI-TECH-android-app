@@ -25,18 +25,17 @@
                 android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/profile_image"
-                android:text="username"
+                android:layout_marginStart="10dp"
+                android:text=""
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tvCase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="TextView" />
+                android:layout_marginStart="10dp"
+                android:text="" />
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

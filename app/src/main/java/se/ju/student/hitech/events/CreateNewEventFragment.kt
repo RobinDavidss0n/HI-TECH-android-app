@@ -14,7 +14,6 @@ import se.ju.student.hitech.databinding.FragmentCreateEventBinding
 import se.ju.student.hitech.events.EventRepository.Companion.eventRepository
 
 class CreateNewEventFragment : Fragment() {
-
     lateinit var binding: FragmentCreateEventBinding
 
     companion object {

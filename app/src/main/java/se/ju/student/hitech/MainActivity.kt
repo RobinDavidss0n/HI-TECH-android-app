@@ -40,7 +40,6 @@ import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 import se.ju.student.hitech.user.*
 import java.lang.Exception
 
-
 class MainActivity : AppCompatActivity() {
     private var currentFragmentShowing = ""
 
@@ -171,14 +170,12 @@ class MainActivity : AppCompatActivity() {
                                     reloadContactFragment()
                                     callback(TAG_FRAGMENT_CONTACT)
                                 }
-
                                 "notFound" -> {
                                     callback(TAG_FRAGMENT_CONTACT_CASE)
                                 }
                                 "internalError" -> makeToast("Something went wrong, check your internet connection and try again.")
                             }
                             progressBar.visibility = GONE
-
                         }
                     }
                     "internalError" -> {
@@ -187,7 +184,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-
         }
     }
 
@@ -287,11 +283,9 @@ class MainActivity : AppCompatActivity() {
     fun changeToFragment(fragment_tag: String) {
         currentFragmentShowing = fragment_tag
         with(supportFragmentManager.beginTransaction()) {
-
             for (fragment in supportFragmentManager.fragments) {
                 hide(fragment)
             }
-
             show(supportFragmentManager.findFragmentByTag(fragment_tag)!!)
             commit()
         }

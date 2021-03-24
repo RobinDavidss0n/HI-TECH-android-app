@@ -33,7 +33,6 @@ class VerifyNewUser : Fragment() {
 
         var userID = ""
 
-
         userRepository.getNotVerifiedUser() { result, user, id ->
             when (result) {
                 "successful" -> {
@@ -42,7 +41,6 @@ class VerifyNewUser : Fragment() {
                         verifyNewUser?.text = username1
                         userID = id
                     }
-
                 }
                 "internalError" -> {
                     (context as MainActivity).makeToast(getString(R.string.internalError))
@@ -50,28 +48,25 @@ class VerifyNewUser : Fragment() {
             }
         }
 
-
         verifyNewUserButton?.setOnClickListener {
-            if (userID != ""){
+            if (userID != "") {
                 verifyUser(userID)
             }
         }
 
         denyNewUserButton?.setOnClickListener {
-            if (userID != ""){
+            if (userID != "") {
                 denyUser(userID)
             }
         }
 
-
         goBackButton?.setOnClickListener {
             (context as MainActivity).changeToFragment(MainActivity.TAG_USER_PAGE)
         }
-
     }
 
-    private fun verifyUser(userID: String){
-        userRepository.verifyUser(userID){ result ->
+    private fun verifyUser(userID: String) {
+        userRepository.verifyUser(userID) { result ->
             when (result) {
                 "successful" -> {
                     (context as MainActivity).reloadFragment(MainActivity.TAG_FRAGMENT_VERIFY_NEW_USER)
@@ -84,8 +79,8 @@ class VerifyNewUser : Fragment() {
         }
     }
 
-    private fun denyUser(userID: String){
-        userRepository.denyUser(userID){ result ->
+    private fun denyUser(userID: String) {
+        userRepository.denyUser(userID) { result ->
             when (result) {
                 "successful" -> {
                     (context as MainActivity).reloadFragment(MainActivity.TAG_FRAGMENT_VERIFY_NEW_USER)
@@ -97,6 +92,4 @@ class VerifyNewUser : Fragment() {
             }
         }
     }
-
-
 }

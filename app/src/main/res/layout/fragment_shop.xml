@@ -68,7 +68,6 @@
                 app:layout_constraintTop_toBottomOf="@id/button_order" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.core.widget.NestedScrollView>
 
     <ProgressBar

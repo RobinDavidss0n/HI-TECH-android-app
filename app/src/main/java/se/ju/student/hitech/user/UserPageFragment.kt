@@ -24,7 +24,6 @@ import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.user.UserRepository.Companion.userRepository
 
 class UserPageFragment : Fragment() {
-
     lateinit var progressBar: ProgressBar
     lateinit var emailInput: TextInputEditText
     lateinit var nameInput: TextInputEditText
@@ -103,7 +102,7 @@ class UserPageFragment : Fragment() {
         }
     }
 
-    private fun userLogout(){
+    private fun userLogout() {
 
         ChatRepository().unsubscribeTonNewChatNotifications { result ->
             when (result) {
@@ -114,12 +113,10 @@ class UserPageFragment : Fragment() {
                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_EVENTS)
                     (context as MainActivity).reloadFragment(TAG_FRAGMENT_NEWS)
                     (context as MainActivity).changeToFragment(MainActivity.TAG_FRAGMENT_ADMIN_LOGIN)
-
                 }
                 "internalError" -> {
                     (context as MainActivity).makeToast(getString(R.string.internalError))
                 }
-
             }
         }
     }
@@ -142,7 +139,6 @@ class UserPageFragment : Fragment() {
     private fun verifyUserInputs(
         email: String, name: String, role: String
     ): Boolean {
-
         val emailInputLayout =
             view?.findViewById<TextInputLayout>(R.id.user_page_emailTextInputLayout)
         val nameInputLayout =
@@ -154,7 +150,6 @@ class UserPageFragment : Fragment() {
         roleInputLayout?.error = ""
 
         if (email.isEmpty()) {
-
             emailInputLayout?.error = getString(R.string.emailEmpty)
             return false
         }
@@ -173,6 +168,7 @@ class UserPageFragment : Fragment() {
             roleInputLayout?.error = getString(R.string.roleEmpty)
             return false
         }
+
         return true
     }
 
@@ -246,7 +242,6 @@ class UserPageFragment : Fragment() {
             ) { _, _ ->
 
                 userRepository.deleteCurrentUser { result ->
-
                     progressBar.visibility = GONE
                     when (result) {
                         "successful" -> {
