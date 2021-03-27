@@ -16,7 +16,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import se.ju.student.hitech.chat.ActiveChatsFragmentUser
+import se.ju.student.hitech.chat.ActiveChatsFragment
 import se.ju.student.hitech.chat.ChatRepository
 import se.ju.student.hitech.chat.ContactCaseFragment
 import se.ju.student.hitech.chat.ContactFragment
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragment_container, ContactFragment(), TAG_FRAGMENT_CONTACT)
                 .add(
                     R.id.fragment_container,
-                    ActiveChatsFragmentUser(),
+                    ActiveChatsFragment(),
                     TAG_FRAGMENT_CONTACT_USER_VIEW
                 )
                 .add(R.id.fragment_container, UserPageFragment(), TAG_USER_PAGE)
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 .add(R.id.fragment_container, updateEventFragment, TAG_FRAGMENT_UPDATE_EVENT)
                 .add(R.id.fragment_container, updateNewsFragment, TAG_FRAGMENT_UPDATE_NEWS)
-                .add(R.id.fragment_container, VerifyNewUser(), TAG_FRAGMENT_VERIFY_NEW_USER)
+                .add(R.id.fragment_container, VerifyNewUserFragment(), TAG_FRAGMENT_VERIFY_NEW_USER)
                 .commitNow()
             changeToFragment(TAG_FRAGMENT_NEWS)
         }
