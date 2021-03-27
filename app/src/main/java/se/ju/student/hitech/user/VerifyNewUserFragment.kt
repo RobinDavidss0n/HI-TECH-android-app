@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import se.ju.student.hitech.MainActivity
 import se.ju.student.hitech.R
 
-class VerifyNewUser : Fragment() {
+class VerifyNewUserFragment : Fragment() {
     lateinit var userRepository: UserRepository
 
     override fun onCreateView(

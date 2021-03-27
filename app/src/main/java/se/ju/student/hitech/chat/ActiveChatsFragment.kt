@@ -19,7 +19,7 @@ import se.ju.student.hitech.chat.ChatRepository.Companion.chatRepository
 import se.ju.student.hitech.databinding.FragmentActiveChatsUserBinding
 import se.ju.student.hitech.databinding.ItemUserChatBinding
 
-class ActiveChatsFragmentUser : Fragment() {
+class ActiveChatsFragment : Fragment() {
     lateinit var binding: FragmentActiveChatsUserBinding
     private val viewModel: ActiveChatsViewModel by viewModels()
 
