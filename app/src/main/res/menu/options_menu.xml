@@ -4,6 +4,9 @@
         android:id="@+id/nav_login"
         android:title="@string/login" />
     <item
+        android:id="@+id/nav_credit"
+        android:title="@string/app_created_by" />
+    <item
         android:id="@+id/nav_problem"
         android:title="@string/problem" />
     <item

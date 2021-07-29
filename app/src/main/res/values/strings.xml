@@ -37,7 +37,7 @@
     <string name="create_post">CREATE POST</string>
     <string name="go_back">GO BACK</string>
     <string name="emailEmpty">Email is empty</string>
-    <string name="invalidEmail">Not valid e-mail</string>
+    <string name="invalidEmail">Not a valid e-mail address</string>
     <string name="passwordEmpty">Password is empty</string>
     <string name="passwordToWeak">Password need to be at least 6 character long, contain at least one uppercase letter, at least one lowercase letter and no spaces.</string>
     <string name="passwordNotMatch">Passwords does not match</string>
@@ -119,12 +119,15 @@
     <string name="no_user_to_verify">No user to verify</string>
     <string name="user_verified">User verified successfully!</string>
     <string name="user_denied">User denied admin access.</string>
-    <string name="new_chat">New chat!</string>
-    <string name="new_message">New message!</string>
+    <string name="new_chat">New chat</string>
+    <string name="new_message">New message</string>
     <string name="new_chat_intro">Hello! :)
         We will answer as fast as we can.
         You can leave the chat and come back to it whenever you want.
         You will get notified when you get a reply.</string>
     <string name="active_chats">ACTIVE CHATS</string>
     <string name="register">REGISTER</string>
+    <string name="app_created_by">Created by</string>
+    <string name="app_created_by_caps">APP CREATED BY</string>
+    <string name="credit">This application was created by Robin Davidsson, Eric Söderqvist and Adina Valjakka at Jönköping University.</string>
 </resources>

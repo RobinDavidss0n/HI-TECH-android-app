@@ -15,11 +15,22 @@ class NewsRepository {
     fun addNews(title: String, content: String, callback: (String) -> Unit) {
         loadAllNewsData { result, list ->
             when (result) {
-                "notFound" -> {
-                    Log.d("Error fireStore", "Error loading news from fireStore")
-                }
                 "successful" -> {
                     latestId = list.last().id
+                    val news = HashMap<String, Any>()
+                    news["title"] = title
+                    news["content"] = content
+                    news["id"] = latestId + 1
+
+                    db.collection("news").document(news["id"].toString()).set(news)
+                        .addOnCompleteListener {
+                            callback("successful")
+                        }.addOnFailureListener {
+                            callback("internalError")
+                        }
+                }
+                "notFound" -> {
+                    latestId = 0
                     val news = HashMap<String, Any>()
                     news["title"] = title
                     news["content"] = content

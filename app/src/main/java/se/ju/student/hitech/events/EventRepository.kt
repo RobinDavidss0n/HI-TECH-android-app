@@ -20,11 +20,25 @@ class EventRepository {
         information: String,
         callback: (String) -> Unit
     ) {
-
         loadAllEventsData { result, list ->
             when (result) {
                 "notFound" -> {
-                    Log.d("Error fireStore", "Error loading events from fireStore")
+                    latestId = 0
+                    val event = hashMapOf(
+                        "title" to title,
+                        "date" to date,
+                        "time" to time,
+                        "location" to location,
+                        "information" to information,
+                        "id" to latestId + 1
+                    )
+
+                    db.collection("events").document(event["id"].toString()).set(event)
+                        .addOnCompleteListener {
+                            callback("successful")
+                        }.addOnFailureListener {
+                            callback("internalError")
+                        }
                 }
                 "successful" -> {
                     latestId = list.last().id
